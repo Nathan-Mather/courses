@@ -8,6 +8,7 @@
   library(data.table)
   library(Matrix)
   library(DTMCPack)
+library(openxlsx)
   
 #=================================#
 # ==== macro ps 3 problem 1  ====
@@ -292,7 +293,51 @@
 
        
          
+    #=========================================#
+    # ==== try it as xcel to print easier ====
+    #=========================================#
+
+       # create worbook
+       outwb <- openxlsx::createWorkbook("data_1")
        
+       ## Add a worksheet
+       addWorksheet(outwb, "data_b", gridLines = TRUE)
+       addWorksheet(outwb, "data_c", gridLines = TRUE)
+       addWorksheet(outwb, "data_d", gridLines = TRUE)
+       addWorksheet(outwb, "data_e", gridLines = TRUE)
+       addWorksheet(outwb, "conditional_data_e", gridLines = TRUE)
+       addWorksheet(outwb, "data_f", gridLines = TRUE)
+       
+       ## write data to worksheet 1
+       writeData(outwb, sheet = 1, round(output_dt_B, 5), rowNames = FALSE)
+       writeData(outwb, sheet = 2, round(output_dt_C, 5), rowNames = FALSE)
+       writeData(outwb, sheet = 3, round(output_dt_D, 5), rowNames = FALSE)
+       writeData(outwb, sheet = 4, round(E_dt, 5), rowNames = FALSE)
+       writeData(outwb, sheet = 5, round(e_vectors, 5), rowNames = FALSE)
+       writeData(outwb, sheet = 6, round(output_dt, 5), rowNames = FALSE)
+       
+    
+       # ## style for body, col 1
+       bodyStyle_1 <- createStyle(border = "TopBottomLeftRight", borderStyle = "thick", halign = "center")
+       addStyle(outwb, sheet = 1, bodyStyle_1, rows = 1:(nrow(output_dt_B) + 1), cols = 1:5, gridExpand = TRUE)
+       addStyle(outwb, sheet = 2, bodyStyle_1, rows = 1:(nrow(output_dt_C) + 1), cols = 1:5, gridExpand = TRUE)
+       addStyle(outwb, sheet = 3, bodyStyle_1, rows = 1:(nrow(output_dt_D) + 1), cols = 1:5, gridExpand = TRUE)
+       addStyle(outwb, sheet = 4, bodyStyle_1, rows = 1:(nrow(E_dt) + 1), cols = 1:5, gridExpand = TRUE)
+       addStyle(outwb, sheet = 5, bodyStyle_1, rows = 1:(nrow(e_vectors) + 1), cols = 1:5, gridExpand = TRUE)
+       addStyle(outwb, sheet = 6, bodyStyle_1, rows = 1:(nrow(output_dt) + 1), cols = 1:5, gridExpand = TRUE)
+
+       setColWidths(outwb, 1, cols = c(1:5), widths = 15)
+       setColWidths(outwb, 2, cols = c(1:5), widths = 15)
+       setColWidths(outwb, 3, cols = c(1:5), widths = 15)
+       setColWidths(outwb, 4, cols = c(1:5), widths = 15)
+       setColWidths(outwb, 5, cols = c(1:5), widths = 15)
+       setColWidths(outwb, 6, cols = c(1:5), widths = 15)
+
+       # save workbook 
+       openxlsx::saveWorkbook(outwb,  "C:/Users/Nmath_000/Documents/MI_school/macro 605/John_Leahy_stuff/B. Problem sets/pset_3_data/dt_xl.xlsx", overwrite = TRUE)
+       
+        # remove wb 
+       rm(outwb)         
        
        
      
