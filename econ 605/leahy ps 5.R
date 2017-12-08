@@ -15,59 +15,42 @@ ea_start()
   # set parameters of function 
 
 
-# define them o work with for now 
+# define them o work with for now
 gam <- 1.5
 B     <- .98
 min_a = -2
 max_a = 8
-n     = 27
+n     = 50
 min_i = .05
 max_i = 1
 m     = 2
 np_min = -1
 np_max = 1
-# guess an interest rate, start with range of 0 and something huge, 10000 
+# guess an interest rate, start with range of 0 and something huge, 10000
 # but guess something reasonably large so that we hit the upper bound
 rl <- -.5
 rh <- .5
-rg <- 1.021
-
-# create a borrowing constraint 
-# bor_const <- -2
-
-
-# sigma  = 1.50;            % risk aversion              
-# beta   = 0.98;            % subjective discount factor 
-# prob   = [ .8 .2; .5 .5]; % prob(i,j) = probability (s(t+1)=sj | s(t) = si)
-# theta  = 0.05;            % non-interest income if unemployed
-# wage   = 1.00;            % non-interest income if employed
-# Rstart = 1.021;           % initial gross interest rate
-# F      = -2.0;            % borrowing constraint parameter 
-# g      = 0.60;            % relaxation parameter
-# %
-# %   form asset grid
-# %   
-# maxast = 8;                     % maximum value of asset grid   
-# minast = -5;                     % minimum value of asset grid
-# incast = 0.5;                   % size of asset grid increments
-# nasset = round((maxast-minast)/incast+1); % number of grid points
+rg <- .021
+P_mat      =    matrix(c(.8,.5,.2,.5), 2,2)
 
 
 
 
 
-
-
-# hugget_model <- function(gam  = NULL,
-#                          B      = NULL,
-#                          min_a  = NULL,
-#                          max_a  = NULL,
-#                          n      = NULL,
-#                          min_i  = NULL,
-#                          max_i  = NULL,
-#                          m      = NULL,
-#                          np_min = -1,
-#                          np_max = 1){
+hugget_model <- function(gam  = NULL,
+                         B      = NULL,
+                         min_a  = NULL,
+                         max_a  = NULL,
+                         n      = NULL,
+                         min_i  = NULL,
+                         max_i  = NULL,
+                         m      = NULL,
+                         np_min = -1,
+                         np_max = 1,
+                         rl = -.5,
+                         rh = .5,
+                         rg  = .021,
+                         P_mat = NULL){
   
   #=========================#
   # ==== create objects ====
@@ -79,41 +62,42 @@ rg <- 1.021
     # create potential income vector (states)
     S <- data.table( s = seq(min_i,max_i,length.out = m))
   
-    # # inialize a P data.table 
-    # P <- data.table(id_col = seq.int(1,nrow(S)))
-    # 
-    # # create a transition matrix, get a normal distribution centered around i for each entry 
-    # for( i in 1:nrow(S)){
-    #   
-    #   # createa vectory of values for normal(0,1) distribtion
-    #   val <- data.table( v= seq(np_min, np_max, length.out = nrow(S)))
-    #   
-    #   # find the difference of the ith entry from 0
-    #   normalize_val <-  as.numeric(val[i,1,with = FALSE])
-    #   
-    #   # normalize I to be the 0
-    #   val[, v := v - normalize_val]
-    #   
-    #   # now fill in the probabilities of these values from a normal distribution 
-    #   val[, prob := dnorm(v)]
-    #   
-    #   # normalize that to 1 
-    #   val[, prob := prob/(sum(prob))]
-    #   
-    #   # add it to the full data.table 
-    #   P[, paste0("v_", i) := val[, prob]]
-    # }
-    # 
-    # # now get rid of the Id col and make P a matrix 
-    # P[, id_col := NULL]
-    # P <- as.matrix(P)
-    # 
-    # # transpose it because thats how transition matrices work dumn ass #late_fix
-    # P <- t(P)
-    # 
-    
-    # hard code P in #####################   # # # # # # # # # #HARD CODED PROBABILITY TRANSITION MATRIX ######################
-    P <- matrix(c(.8,.5,.5,.5), 2,2)
+    if(!is.null(P_mat)){
+      
+      P <- P_mat
+    }else{
+    # inialize a P data.table
+    P <- data.table(id_col = seq.int(1,nrow(S)))
+
+    # create a transition matrix, get a normal distribution centered around i for each entry
+    for( i in 1:nrow(S)){
+
+      # createa vectory of values for normal(0,1) distribtion
+      val <- data.table( v= seq(np_min, np_max, length.out = nrow(S)))
+
+      # find the difference of the ith entry from 0
+      normalize_val <-  as.numeric(val[i,1,with = FALSE])
+
+      # normalize I to be the 0
+      val[, v := v - normalize_val]
+
+      # now fill in the probabilities of these values from a normal distribution
+      val[, prob := dnorm(v)]
+
+      # normalize that to 1
+      val[, prob := prob/(sum(prob))]
+
+      # add it to the full data.table
+      P[, paste0("v_", i) := val[, prob]]
+    }
+
+    # now get rid of the Id col and make P a matrix
+    P[, id_col := NULL]
+    P <- as.matrix(P)
+
+    # transpose it because thats how transition matrices work dumn ass #late_fix
+    P <- t(P)
+  }
   #==============================================#
   # ==== start iterating over interest rates ====
   #==============================================#
@@ -260,17 +244,17 @@ rg <- 1.021
       
       print(paste0(excess_demand, " excess demand"))
       
-      if(excess_demand >0){
+      if(excess_demand <0){
         
         rl <- rg
       }
       
-      if(excess_demand < 0 ){
+      if(excess_demand > 0 ){
         
         rh <- rg
       }
       
-      if(abs(excess_demand) < .1){
+      if(abs(excess_demand) < .01){
         
         run_flag_1 <- FALSE
       }else{
@@ -284,16 +268,49 @@ rg <- 1.021
       
     }
       
-
+# return interest rate 
+    output_list <- list()
+    output_list[["interest_rate"]] <- rg
+    
+    V[, wealth := (1+rg)*a+s- G]
+    V[, income_dist := lambda_v]
+    
+    
+    output_list[["wealth_dist"]] <-  V
+    
+    return(output_list)
 }
-  
-# hugget_model(gam  =2,
-#              B      = .9,
-#              min_a = -10,
-#              max_a = 10,
-#              n     = 200,
-#              min_i = -1,
-#              max_i = 1,
-#              m     = 3,
-#              np_min = -1,
-#              np_max = 1)
+
+
+#example from aarons post 
+results <- hugget_model(gam         =1.5,
+                         B          = .98,
+                         min_a      = -2,
+                         max_a      = 8,
+                         n          = 50,
+                         min_i      = .05,
+                         max_i      = 1,
+                         m          = 2,
+                         np_min     = -1,
+                         np_max     = 1,
+                         rl         = -.5,
+                         rh         = .5,
+                         rg         =.021,
+                         P_mat      =    matrix(c(.8,.5,.2,.5), 2,2))
+
+
+# example using probability generator so I can check a mean preserving spread 
+results_2 <- hugget_model(gam         =1.5,
+                        B          = .98,
+                        min_a      = -2,
+                        max_a      = 8,
+                        n          = 50,
+                        min_i      = .05,
+                        max_i      = 1,
+                        m          = 5,
+                        np_min     = -1,
+                        np_max     = 1,
+                        rl         = -.5,
+                        rh         = .5,
+                        rg         =.021,
+                        P_mat      =   NULL)
