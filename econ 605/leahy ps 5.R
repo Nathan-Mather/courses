@@ -181,8 +181,8 @@ hugget_model <- function(gam  = NULL,
         V[, b_guess := b_guess_new]
         V <- V[, c("s", "a", "b_guess", "G")]
         
-        # if error is small, stop
-        if(abs(error) < .0001){run_flag_2 <- FALSE}
+        # if error is small, stop, but also make sure it runs at least 10 becuase less is sketch 
+        if(abs(error) < .0001 & n_iter_2 >= 10 ){run_flag_2 <- FALSE}
       }
       print(paste0(n_iter_2, " iterations to converge"))
       
@@ -196,6 +196,7 @@ hugget_model <- function(gam  = NULL,
       lam_2 <- lam_1[, c("s", "a", "id")]
       setnames(lam_2, c("s", "a"), c("s_prime", "a_prime"))
       
+  
       lam <- merge(lam_1, lam_2, "id", allow.cartesian = TRUE)
       
       # melt p to get long a to a transition prob 
@@ -204,9 +205,21 @@ hugget_model <- function(gam  = NULL,
       P_l[, s := S]
       P_l <- melt.data.table(P_l, id.vars = "s", variable.name = "s_prime", value.name = "trans_prob", variable.factor = FALSE)
       P_l[, s_prime := as.numeric(s_prime)]
+      
+      
+      # convert to chaaracter so the moerge works properly 
+      lam[, colnames(lam)] <- lapply(lam[,colnames(lam), with = FALSE],  as.character)
+      P_l[, colnames(P_l)] <- lapply(P_l[,colnames(P_l), with = FALSE],  as.character)
+      
+      
       # merge on trans probs 
-      lam <- merge(lam, P_l, c("s", "s_prime"))
+      lam<- merge(lam, P_l, c("s", "s_prime"))
     
+      
+      # convert bakc to numeric 
+      lam[, colnames(lam)] <- lapply(lam[,colnames(lam), with = FALSE],  as.numeric)
+      
+      
       # fill in s to s trasition probabiliies 
       lam[G!=a_prime, trans_prob := 0]
       
@@ -339,6 +352,9 @@ results_4 <- hugget_model(gam         =1.5,
                           rg         =.021,
                           P_mat      =   NULL)
 
+
+
+
 #=======================#
 # ==== plot results ====
 #=======================#
@@ -361,6 +377,7 @@ plot_4
 save(results,  file = "C:/Users/Nmath_000/Documents/MI_school/macro 605/John_Leahy_stuff/B. Problem sets/pset_5_data/results_1.rdata")
 save(results_2,  file = "C:/Users/Nmath_000/Documents/MI_school/macro 605/John_Leahy_stuff/B. Problem sets/pset_5_data/results_2.rdata")
 save(results_3,  file = "C:/Users/Nmath_000/Documents/MI_school/macro 605/John_Leahy_stuff/B. Problem sets/pset_5_data/results_3.rdata")
+save(results_4,  file = "C:/Users/Nmath_000/Documents/MI_school/macro 605/John_Leahy_stuff/B. Problem sets/pset_5_data/results_4.rdata")
 
 
 
