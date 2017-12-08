@@ -6,32 +6,31 @@ library(easimple)
 library(data.table)
 library(Matrix)
 library(DTMCPack)
+library(ggplot2)
 
-ea_start()
+# ea_start()
 #=============================#
 # ==== set function parms ====
 #=============================#
 
-  # set parameters of function 
 
-
-# define them o work with for now
-gam <- 1.5
-B     <- .98
-min_a = -2
-max_a = 8
-n     = 50
-min_i = .05
-max_i = 1
-m     = 2
-np_min = -1
-np_max = 1
-# guess an interest rate, start with range of 0 and something huge, 10000
-# but guess something reasonably large so that we hit the upper bound
-rl <- -.5
-rh <- .5
-rg <- .021
-P_mat      =    matrix(c(.8,.5,.2,.5), 2,2)
+# # define them o work with for now
+# gam <- 1.5
+# B     <- .98
+# min_a = -2
+# max_a = 8
+# n     = 50
+# min_i = .05
+# max_i = 1
+# m     = 2
+# np_min = -1
+# np_max = 1
+# # guess an interest rate, start with range of 0 and something huge, 10000
+# # but guess something reasonably large so that we hit the upper bound
+# rl <- -.5
+# rh <- .5
+# rg <- .021
+# P_mat      =    matrix(c(.8,.5,.2,.5), 2,2)
 
 
 
@@ -52,6 +51,7 @@ hugget_model <- function(gam  = NULL,
                          rg  = .021,
                          P_mat = NULL){
   
+  start_time <- Sys.time()
   #=========================#
   # ==== create objects ====
   #=========================#
@@ -164,7 +164,6 @@ hugget_model <- function(gam  = NULL,
           
         }
         
-
       
         #  need to actually get what the argmax values are because we need a policy function 
         V[, G := max.col(V[, -c("a", "s", "b_guess", "G")])]
@@ -176,14 +175,14 @@ hugget_model <- function(gam  = NULL,
         V$b_guess_new <- apply(V[, -c("a", "s", "b_guess", "G")], 1, max)
 
         # check if the best guess has converged, check that the distance between guess and true value is small
-        error <- V[, max(abs(b_guess_new - b_guess)) ]
+        error <- V[, max(abs((b_guess_new - b_guess)/b_guess)) ]
         
         # strip V back down to its needed compnents 
         V[, b_guess := b_guess_new]
         V <- V[, c("s", "a", "b_guess", "G")]
         
         # if error is small, stop
-        if(abs(error) < .1){run_flag_2 <- FALSE}
+        if(abs(error) < .0001){run_flag_2 <- FALSE}
       }
       print(paste0(n_iter_2, " iterations to converge"))
       
@@ -216,18 +215,6 @@ hugget_model <- function(gam  = NULL,
       
       # create actual matrix 
       lam_m <- as.matrix(lam_m[, -c("s", "a")])
-   
-      # # find ergotic distribution
-      # lambda_e <- eigen(t(lam_m))
-      # 
-      # # find eigen value of 1
-      # eig <- min(which( 1.000001>as.numeric(lambda_e$values) & as.numeric(lambda_e$values) >.999999998))
-      # 
-      # lambda <- lambda_e$vectors[,eig]
-      # lambda <- as.matrix(lambda/sum(lambda))
-      # 
-      # lambda <- as.numeric(lambda)
-      # sum(lambda)
       
       lambda <- copy(lam_m)
       for(i in 1:100){
@@ -278,6 +265,11 @@ hugget_model <- function(gam  = NULL,
     
     output_list[["wealth_dist"]] <-  V
     
+    
+    time_to_run <- as.numeric(Sys.time() - start_time, units = "mins")
+    
+    output_list[["run_time"]] <- time_to_run
+    output_list[["total_iterations"]] <- n_iter_1
     return(output_list)
 }
 
@@ -314,3 +306,63 @@ results_2 <- hugget_model(gam         =1.5,
                         rh         = .5,
                         rg         =.021,
                         P_mat      =   NULL)
+
+# increase wealth mobility. (the surfs no longer stay in their feifs)
+results_3 <- hugget_model(gam         =1.5,
+                          B          = .98,
+                          min_a      = -2,
+                          max_a      = 8,
+                          n          = 50,
+                          min_i      = .05,
+                          max_i      = 1,
+                          m          = 5,
+                          np_min     = -.5,
+                          np_max     = .5,
+                          rl         = -.5,
+                          rh         = .5,
+                          rg         =.021,
+                          P_mat      =   NULL)
+
+# increase wealth mobility more. (random communism)
+results_4 <- hugget_model(gam         =1.5,
+                          B          = .98,
+                          min_a      = -2,
+                          max_a      = 8,
+                          n          = 50,
+                          min_i      = .05,
+                          max_i      = 1,
+                          m          = 5,
+                          np_min     = -.25,
+                          np_max     = .25,
+                          rl         = -.5,
+                          rh         = .5,
+                          rg         =.021,
+                          P_mat      =   NULL)
+
+#=======================#
+# ==== plot results ====
+#=======================#
+# set plot attributes
+
+plot_1 <- ggplot(data = results$wealth_dist, aes(x = wealth, y = income_dist)) + geom_point(size = 1) 
+plot_2 <- ggplot(data = results_2$wealth_dist, aes(x = wealth, y = income_dist)) + geom_point(size = 1) 
+plot_3 <- ggplot(data = results_3$wealth_dist, aes(x = wealth, y = income_dist)) + geom_point(size = 1) 
+plot_4 <- ggplot(data = results_4$wealth_dist, aes(x = wealth, y = income_dist)) + geom_point(size = 1) 
+
+plot_1
+plot_2
+plot_3 
+plot_4
+#=======================#
+# ==== save results ====
+#=======================#
+
+
+save(results,  file = "C:/Users/Nmath_000/Documents/MI_school/macro 605/John_Leahy_stuff/B. Problem sets/pset_5_data/results_1.rdata")
+save(results_2,  file = "C:/Users/Nmath_000/Documents/MI_school/macro 605/John_Leahy_stuff/B. Problem sets/pset_5_data/results_2.rdata")
+save(results_3,  file = "C:/Users/Nmath_000/Documents/MI_school/macro 605/John_Leahy_stuff/B. Problem sets/pset_5_data/results_3.rdata")
+
+
+
+
+
