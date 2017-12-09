@@ -14,23 +14,23 @@ library(ggplot2)
 #=============================#
 
 
-# # define them o work with for now
-# gam <- 1.5
-# B     <- .98
-# min_a = -2
-# max_a = 8
-# n     = 50
-# min_i = .05
-# max_i = 1
-# m     = 2
-# np_min = -1
-# np_max = 1
-# # guess an interest rate, start with range of 0 and something huge, 10000
-# # but guess something reasonably large so that we hit the upper bound
-# rl <- -.5
-# rh <- .5
-# rg <- .021
-# P_mat      =    matrix(c(.8,.5,.2,.5), 2,2)
+# define them o work with for now
+gam <- 1.5
+B     <- .98
+min_a = -2
+max_a = 8
+n     = 50
+min_i = .05
+max_i = 1
+m     = 2
+np_min = -1
+np_max = 1
+# guess an interest rate, start with range of 0 and something huge, 10000
+# but guess something reasonably large so that we hit the upper bound
+rl <- -.5
+rh <- .5
+rg <- .021
+P_mat      =    matrix(c(.8,.5,.2,.5), 2,2)
 
 
 
@@ -165,14 +165,26 @@ hugget_model <- function(gam  = NULL,
         }
         
       
-        #  need to actually get what the argmax values are because we need a policy function 
-        V[, G := max.col(V[, -c("a", "s", "b_guess", "G")])]
-        
-        # fill it in with actual choice 
-        V[, G := A[G]]
+        # #  need to actually get what the argmax values are because we need a policy function 
+        # V[, G := max.col(V[, -c("a", "s", "b_guess", "G")])]
+        # 
+        # # fill it in with actual choice 
+        # V[, G := A[G]]
          
         # now we select the max to get update to our best gess of the value function 
         V$b_guess_new <- apply(V[, -c("a", "s", "b_guess", "G")], 1, max)
+        
+        V[, G := as.character(G)]
+        
+        # need to actually get what the argmax values are because we need a policy function, dont use the busted ass
+        # max.col function because for whatever reason max.col 
+        for(col in colnames(V[, -c("a", "s", "b_guess", "G", "b_guess_new")])){
+          
+          V[get(col) == b_guess_new, G := paste(col)]
+          
+        }
+        
+        V[, G := ea_scan(G, 2, "_")]
 
         # check if the best guess has converged, check that the distance between guess and true value is small
         error <- V[, max(abs((b_guess_new - b_guess)/b_guess)) ]
@@ -185,6 +197,10 @@ hugget_model <- function(gam  = NULL,
         if(abs(error) < .0001 & n_iter_2 >= 10 ){run_flag_2 <- FALSE}
       }
       print(paste0(n_iter_2, " iterations to converge"))
+      
+      # convert G to numeric 
+      V[, G := as.numeric(G)]
+      V[, G := A[G]]
       
       #==============================#
       # ==== find ergotic lambda ====
@@ -254,7 +270,7 @@ hugget_model <- function(gam  = NULL,
         rh <- rg
       }
       
-      if(abs(excess_demand) < .01){
+      if(abs(excess_demand) < .1){
         
         run_flag_1 <- FALSE
       }else{
@@ -353,22 +369,70 @@ results_4 <- hugget_model(gam         =1.5,
                           P_mat      =   NULL)
 
 
+# increase gamma with #2 parms 
+results_5 <- hugget_model(gam         =6,
+                          B          = .98,
+                          min_a      = -2,
+                          max_a      = 8,
+                          n          = 50,
+                          min_i      = .05,
+                          max_i      = 1,
+                          m          = 5,
+                          np_min     = -1,
+                          np_max     = 1,
+                          rl         = -.5,
+                          rh         = .5,
+                          rg         =.021,
+                          P_mat      =   NULL)
+
+
+# decrease beta with #2 parms 
+results_5 <- hugget_model(gam         =1.5,
+                          B          = .7,
+                          min_a      = -2,
+                          max_a      = 8,
+                          n          = 50,
+                          min_i      = .05,
+                          max_i      = 1,
+                          m          = 5,
+                          np_min     = -1,
+                          np_max     = 1,
+                          rl         = -.5,
+                          rh         = .5,
+                          rg         =.021,
+                          P_mat      =   NULL)
+
+
+
+
 
 
 #=======================#
 # ==== plot results ====
 #=======================#
-# set plot attributes
+# # set plot attributes
+# 
+# plot_1 <- ggplot(data = results$wealth_dist, aes(x = wealth, y = income_dist)) + geom_point(size = 1) 
+# plot_2 <- ggplot(data = results_2$wealth_dist, aes(x = wealth, y = income_dist)) + geom_point(size = 1) 
+# plot_3 <- ggplot(data = results_3$wealth_dist, aes(x = wealth, y = income_dist)) + geom_point(size = 1) 
+# plot_4 <- ggplot(data = results_4$wealth_dist, aes(x = wealth, y = income_dist)) + geom_point(size = 1) 
+# 
 
-plot_1 <- ggplot(data = results$wealth_dist, aes(x = wealth, y = income_dist)) + geom_point(size = 1) 
-plot_2 <- ggplot(data = results_2$wealth_dist, aes(x = wealth, y = income_dist)) + geom_point(size = 1) 
-plot_3 <- ggplot(data = results_3$wealth_dist, aes(x = wealth, y = income_dist)) + geom_point(size = 1) 
-plot_4 <- ggplot(data = results_4$wealth_dist, aes(x = wealth, y = income_dist)) + geom_point(size = 1) 
+bar_1 <- ggplot(data = results$wealth_dist, aes(x = wealth, y = income_dist)) + geom_col(width = .001, alpha = .5) + ylim(c(0,.05))
+bar_2 <- ggplot(data = results_2$wealth_dist, aes(x = wealth, y = income_dist)) + geom_col(width = .005, alpha = .5) +  ylim(c(0,.05))
+bar_3 <- ggplot(data = results_3$wealth_dist, aes(x = wealth, y = income_dist)) + geom_col(width = .005, alpha = .5) +   ylim(c(0,.05))
+bar_4 <- ggplot(data = results_4$wealth_dist, aes(x = wealth, y = income_dist)) + geom_col(width = .005,alpha = .5) + ylim(c(0,.05))
 
-plot_1
-plot_2
-plot_3 
-plot_4
+bar_1
+bar_2
+bar_3
+bar_4
+
+
+# plot_1
+# plot_2
+# plot_3 
+# plot_4
 #=======================#
 # ==== save results ====
 #=======================#
@@ -380,6 +444,7 @@ save(results_3,  file = "C:/Users/Nmath_000/Documents/MI_school/macro 605/John_L
 save(results_4,  file = "C:/Users/Nmath_000/Documents/MI_school/macro 605/John_Leahy_stuff/B. Problem sets/pset_5_data/results_4.rdata")
 
 
-
-
+for(n in 1:4){
+ggsave(paste0("C:/Users/Nmath_000/Documents/MI_school/macro 605/John_Leahy_stuff/B. Problem sets/graphs/pset_5_plot_", n, ".png"), plot = get(paste0("bar_", n)), device = "png", height = 20, width = 20)
+}
 
