@@ -14,23 +14,23 @@ library(ggplot2)
 #=============================#
 
 
-# define them o work with for now
-gam <- 1.5
-B     <- .98
-min_a = -2
-max_a = 8
-n     = 50
-min_i = .05
-max_i = 1
-m     = 2
-np_min = -1
-np_max = 1
-# guess an interest rate, start with range of 0 and something huge, 10000
-# but guess something reasonably large so that we hit the upper bound
-rl <- -.5
-rh <- .5
-rg <- .021
-P_mat      =    matrix(c(.8,.5,.2,.5), 2,2)
+# # variables to run code line by line with 
+# gam <- 1.5
+# B     <- .98
+# min_a = -2
+# max_a = 8
+# n     = 50
+# min_i = .05
+# max_i = 1
+# m     = 2
+# np_min = -1
+# np_max = 1
+# # guess an interest rate, start with range of 0 and something huge, 10000
+# # but guess something reasonably large so that we hit the upper bound
+# rl <- -.5
+# rh <- .5
+# rg <- .021
+# P_mat      =    matrix(c(.8,.5,.2,.5), 2,2)
 
 
 
@@ -95,7 +95,7 @@ hugget_model <- function(gam  = NULL,
     P[, id_col := NULL]
     P <- as.matrix(P)
 
-    # transpose it because thats how transition matrices work dumn ass #late_fix
+    # transpose it because thats how transition matrices work  #late_fix
     P <- t(P)
   }
   #==============================================#
