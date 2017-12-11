@@ -370,11 +370,11 @@ results_4 <- hugget_model(gam         =1.5,
 
 
 # increase gamma with #2 parms 
-results_5 <- hugget_model(gam         =6,
+results_5 <- hugget_model(gam         =3,
                           B          = .98,
                           min_a      = -2,
                           max_a      = 8,
-                          n          = 50,
+                          n          = 75,
                           min_i      = .05,
                           max_i      = 1,
                           m          = 5,
@@ -387,7 +387,7 @@ results_5 <- hugget_model(gam         =6,
 
 
 # decrease beta with #2 parms 
-results_5 <- hugget_model(gam         =1.5,
+results_6 <- hugget_model(gam         =1.5,
                           B          = .7,
                           min_a      = -2,
                           max_a      = 8,
@@ -403,9 +403,9 @@ results_5 <- hugget_model(gam         =1.5,
                           P_mat      =   NULL)
 
 
-
-
-
+results_2$interest_rate
+results_5$interest_rate
+results_6$interest_rate
 
 #=======================#
 # ==== plot results ====
@@ -442,9 +442,15 @@ save(results,  file = "C:/Users/Nmath_000/Documents/MI_school/macro 605/John_Lea
 save(results_2,  file = "C:/Users/Nmath_000/Documents/MI_school/macro 605/John_Leahy_stuff/B. Problem sets/pset_5_data/results_2.rdata")
 save(results_3,  file = "C:/Users/Nmath_000/Documents/MI_school/macro 605/John_Leahy_stuff/B. Problem sets/pset_5_data/results_3.rdata")
 save(results_4,  file = "C:/Users/Nmath_000/Documents/MI_school/macro 605/John_Leahy_stuff/B. Problem sets/pset_5_data/results_4.rdata")
+save(results_5,  file = "C:/Users/Nmath_000/Documents/MI_school/macro 605/John_Leahy_stuff/B. Problem sets/pset_5_data/results_5.rdata")
+save(results_6,  file = "C:/Users/Nmath_000/Documents/MI_school/macro 605/John_Leahy_stuff/B. Problem sets/pset_5_data/results_6.rdata")
 
 
 for(n in 1:4){
 ggsave(paste0("C:/Users/Nmath_000/Documents/MI_school/macro 605/John_Leahy_stuff/B. Problem sets/graphs/pset_5_plot_", n, ".png"), plot = get(paste0("bar_", n)), device = "png", height = 20, width = 20)
 }
+
+
+
+
 
