@@ -404,6 +404,8 @@ results_6 <- hugget_model(gam         =1.5,
 
 
 results_2$interest_rate
+results_3$interest_rate
+results_4$interest_rate
 results_5$interest_rate
 results_6$interest_rate
 
@@ -452,5 +454,18 @@ ggsave(paste0("C:/Users/Nmath_000/Documents/MI_school/macro 605/John_Leahy_stuff
 
 
 
+#=========================#
+# ==== laod in rdtata ====
+#=========================#
 
 
+data_list <- list()
+for(i in 1:6){
+data_list[[i]] <- ea_load(paste0("C:/Users/Nmath_000/Documents/MI_school/macro 605/John_Leahy_stuff/B. Problem sets/pset_5_data/results_", i, ".rdata"))
+
+}
+
+
+data_list[[2]]$interest_rate
+data_list[[3]]$interest_rate
+data_list[[4]]$interest_rate

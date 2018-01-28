@@ -1,0 +1,99 @@
+#======================#
+# ==== Metrics PS3 ====
+#======================#
+
+  # clear objects and console 
+  rm(list = ls(pos = ".GlobalEnv"), pos = ".GlobalEnv")
+  options(scipen = 999)
+  cat("\f")
+
+  # load packages
+  library(data.table)
+  library(ggplot2)
+  library(Matrix)
+  
+#====================================#
+# ==== Monte Carlo Simulation 3d ====
+#====================================#
+
+  # set seed for replication
+  # set.seed()
+  
+
+  # write a function to do the simulation 
+  mc_function <- function(n_obs = 100, r = 10000, B = c(0.4,0.9)){
+    
+    # initalize list for results 
+    results_list <- vector("list", length = r)
+    
+    for(i in 1:r){
+    
+      # create data table of values 
+      dt <- data.table(x1 = 1, x2 = runif(n_obs, 1,2), u = rnorm(n_obs, mean = 0, sd = sqrt(2)))
+    
+      # calculate y value 
+      dt[, y := x1*B[[1]] + x2*B[[2]] + u]
+      
+      # convert to marices 
+      X <- as.matrix(dt[, c("x1", "x2")])
+      Y <- as.matrix(dt[ ,"y"])
+      
+      # get B estimates 
+      B_hats <- Matrix::solve(Matrix::crossprod(X))%*%(Matrix::crossprod(X, Y))
+      
+      # put results in the list 
+      results_list[[i]] <- data.table(iteration = i, ratio = B_hats[1,]/B_hats[2,], 
+                                      `number of Observations` = as.character(paste0(n_obs, " Observations")))
+    }
+    
+    # bind the list 
+    results <- rbindlist(results_list)
+    
+    # calculate standard deveation 
+    sd_hat <- sd(sqrt(n_obs)*results$ratio)
+      
+    # Z the results 
+    results[, z := sqrt(n_obs)*(ratio - B[1]/B[2])/ sd_hat]
+    
+    
+    
+    # reuturn the results 
+    return(results)
+  }
+
+  # run the function for n = 100, 500, 1000 
+  output_list <- lapply(c(100,500, 1000), mc_function)
+  
+  # bind likst 
+  ouput_long <- rbindlist(output_list)
+  
+  # creat factor 
+  ouput_long[, `number of Observations` := factor(`number of Observations`, 
+                                                  levels = c("100 Observations", "500 Observations",  "1000 Observations"))]
+
+
+  # create plot 
+  density_plot <- ggplot(ouput_long, aes(z, group =  `number of Observations`,  
+                                         linetype = `number of Observations`, 
+                                         colour = `number of Observations`)) + 
+    geom_density(bw = .1694) + ylab("Density") + xlab("Standard Normal Position") + 
+    ggtitle("Monte Carlo Distribution for B1/B2") + xlim(c(-3,3))  + 
+    scale_linetype_manual(values = c(`100 Observations` = "twodash", `500 Observations` = "4C88C488", `1000 Observations` = "dashed")) + 
+    stat_function(fun=dnorm, color="black", linetype = "solid") 
+  
+  print(density_plot)
+  
+  
+
+#=====================#
+# ==== save stuff ====
+#=====================#
+
+
+  # save plot 
+  ggsave(paste0("C:/Users/Nmath_000/Documents/MI_school/metrics 672/Problem Sets/plots/pset_3_monte_carlo.png"), plot = density_plot, device = "png", height = 6, width = 9)
+  
+  
+  
+  
+  
