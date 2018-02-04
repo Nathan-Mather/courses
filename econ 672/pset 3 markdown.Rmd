@@ -1,3 +1,18 @@
+---
+title: "pset 3 metrics"
+output: pdf_document
+theme: journal
+self_contained: TRUE
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r , echo=TRUE, include=TRUE, tidy=FALSE, tidy.opts=list(width.cutoff=80)}
+
+
 #======================#
 # ==== Metrics PS3 ====
 #======================#
@@ -44,7 +59,7 @@
       
       # put results in the list 
       results_list[[i]] <- data.table(iteration = i, ratio = B_hats[1,]/B_hats[2,], 
-                                      `number of Observations` = as.character(paste0(n_obs, " Observations")))
+                            `number of Observations` = as.character(paste0(n_obs, " Observations")))
     }
     
     # bind the list 
@@ -70,7 +85,9 @@
   
   # creat factor 
   ouput_long[, `number of Observations` := factor(`number of Observations`, 
-                                                  levels = c("100 Observations", "500 Observations",  "1000 Observations"))]
+                                                  levels = c("100 Observations", 
+                                                             "500 Observations",  
+                                                             "1000 Observations"))]
 
 
   # create plot 
@@ -79,33 +96,30 @@
                                          colour = `number of Observations`)) + 
     geom_density(bw = .1694) + ylab("Density") + xlab("Standard Normal Position") + 
     ggtitle("Monte Carlo Distribution for B1/B2") + xlim(c(-3,3))  + 
-    scale_linetype_manual(values = c(`100 Observations` = "twodash", `500 Observations` = "4C88C488", `1000 Observations` = "dashed")) + 
+    scale_linetype_manual(values = c(`100 Observations` = "twodash",
+                                     `500 Observations` = "4C88C488", 
+                                     `1000 Observations` = "dashed")) + 
     stat_function(fun=dnorm, color="black", linetype = "solid") 
   
   
-  # print plot
-  print(density_plot)
   
-  
-
 #=====================#
 # ==== save stuff ====
 #=====================#
 
 
   # save plot 
-  ggsave(paste0("C:/Users/Nmath_000/Documents/MI_school/metrics 672/Problem Sets/plots/pset_3_monte_carlo.png"), plot = density_plot, device = "png", height = 6, width = 9)
+  ggsave(paste0("C:/Users/Nmath_000/Documents/MI_school/metrics 672/Problem Sets/plots/pset_3_monte_carlo.png"),
+         plot = density_plot, device = "png", height = 6, width = 9)
   
-  
-  
-#===============================================#
-# ==== run the accompanying markdown script ====
-#===============================================#
+#=====================#
+# ==== print plot ====
+#=====================#
 
-  rmarkdown::render(input =  "C:/Users/Nmath_000/Documents/R/nm_public/courses/econ 672/pset 3 markdown.Rmd",
-                    output_format = "pdf_document",
-                    output_file = paste0("C:/Users/Nmath_000/Documents/MI_school/metrics 672/Problem Sets/code to print/", "pset3_code", ".pdf")) 
+  
+  print(density_plot)
   
   
   
   
+```
