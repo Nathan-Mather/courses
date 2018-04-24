@@ -62,6 +62,7 @@ out_dt[, gamma_pi := gamma_pi - gamma_pi1]
 out_dt[, time := 1:nrow(out_dt)]
 
 #=========================#
+# ==== plot that shizz ====
 #=========================#
 
 plot_attributes <- theme(plot.background    = element_rect(fill  = "white"),
@@ -91,6 +92,7 @@ print(plot_2)
 # ==== plug in other values ====
 #===============================#
 
+#note this is some ugly coding. Not proud of what is about to happen
 
 # plug in values they asked for and compare, then return to normal
 B <- .9
