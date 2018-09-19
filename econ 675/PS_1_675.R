@@ -34,9 +34,10 @@ cat("\f")
   # ==== write function for q2 ====
   #================================#
   
-    x = x_data
-    y = y_data
-    
+    # commented out, but usefull for line by line debug 
+    # x = x_data
+    # y = y_data
+    # 
     mat_reg <- function(x = NULL, y = NULL, opt_chol = FALSE, CI_level = .95){
       
       # get matrix size parameters 
