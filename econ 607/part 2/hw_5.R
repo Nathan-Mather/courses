@@ -89,7 +89,7 @@ plot_2 <- plot_2 + labs(x = "Time", y = "Inflation",  title = "Inflation Over Ti
 print(plot_2)
 
 #===============================#
-# ==== plug in other values ====
+# ==== plug in other values ====-
 #===============================#
 
 #note this is some ugly coding. Not proud of what is about to happen
@@ -119,7 +119,7 @@ gamma_pi -gamma_pi1
 
 theta <- 1/.16
 
-k <- 0.23
+k <- 0.033
 
 gamma_y <- -1/(theta*(1-rho*eps) + (phi_pi-rho*eps)*k/(1-B*rho*eps) + phi_y)
 gamma_pi <- gamma_y*k/(1-B*rho*eps)
