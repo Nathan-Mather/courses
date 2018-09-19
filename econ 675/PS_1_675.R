@@ -6,6 +6,7 @@ library(data.table)
 library(Matrix)
 library(lmtest)
 library(sandwich)
+library(broom)
 
 # clear objects and script 
 rm(list = ls(pos = ".GlobalEnv"), pos = ".GlobalEnv")
@@ -65,10 +66,19 @@ cat("\f")
       
       # calculate residuals 
       my_resid <- y - x%*%B
-     
-      # calculate asymptotic variance 
-      V <- solve(crossprod(x, x)) %*% (t(x) %*% diag(as.numeric(my_resid^2), nrow = n_row, ncol = n_row) %*% x) %*% solve(crossprod(x, x)) 
       
+      # see if I need to use cholesky 
+      if(!opt_chol){
+     
+        # calculate asymptotic variance 
+        V <- solve(crossprod(x, x)) %*% (t(x) %*% diag(as.numeric(my_resid^2), nrow = n_row, ncol = n_row) %*% x) %*% solve(crossprod(x, x)) 
+      
+      }else{
+        
+        A_inv <-   chol2inv(chol_m) %*% (t(x) %*% diag(as.numeric(my_resid^2), nrow = n_row, ncol = n_row) %*% x) %*% chol2inv(chol_m)
+        V <- A_inv 
+        
+        }
       sqrt(diag(V))
 
     #======================#
@@ -94,8 +104,13 @@ cat("\f")
       # drop v_hat cause I dont need it 
       out_dt[, V_hat := NULL]
       
+      # create list to return 
+      out_list <- list() 
       
-      return(out_dt[])
+      out_list[["results"]] <- out_dt
+      out_list[["varcov"]] <- V
+      
+      return(out_list)
       
 }
       
@@ -107,9 +122,12 @@ cat("\f")
   reg_1 <- mat_reg(x = x_data, y = y_data, opt_chol = FALSE)
   reg_2 <- mat_reg(x = x_data, y = y_data, opt_chol = TRUE)
     
-  # compare coefficients 
-  coeff_diff <- reg_1[, beta] - reg_2[, beta]
-    
+  # compare coefficients, differences are just floating point errors 
+  coeff_diff <- reg_1[["results"]][, beta] - reg_2[["results"]][, beta]
+  
+  # compare varcov NOTE: differences are just floating point errors 
+  all.equal(reg_1$varcov, reg_2$varcov)
+  reg_1$varcov -  reg_2$varcov
 #============================#
 # ==== Question 2 part 5 ====
 #============================#
@@ -137,8 +155,8 @@ cat("\f")
     x_la <- as.matrix(lalonde_dt[, c("const", x_vars), with = FALSE])
     
     # run function on this data 
-    lalonde_reg_dt <- mat_reg(x = x_la, y = y_la)
-    
+    lalonde_reg <- mat_reg(x = x_la, y = y_la)
+    lalonde_reg_dt <- lalonde_reg[["results"]]
   #===================#
   # ==== using lm ====
   #===================#
@@ -154,6 +172,7 @@ cat("\f")
       
     # get robust standard errors. I use HCO to match my math above 
     # any differnces are floating point errors 
-    coeftest(lalonde_lm, vcov = vcovHC(lalonde_lm, type="HC0"))
-   
+    lm_robust <- data.table(tidy(coeftest(lalonde_lm, vcov = vcovHC(lalonde_lm, type="HC0"))))
+    lm_robust
+    
     
