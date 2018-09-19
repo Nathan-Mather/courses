@@ -1,0 +1,193 @@
+
+%-----------------------------------------------------------------------------------
+%	PACKAGES AND OTHER DOCUMENT CONFIGURATIONS
+%----------------------------------------------------------------------------------
+
+
+
+\documentclass[11pt]{article}
+
+\setlength{\parindent}{0in}
+
+\newcommand{\Var}{\mathrm{Var}}
+
+\newcommand{\Cov}{\mathrm{Cov}}
+
+\newcommand{\plim}{\rightarrow_{p}}
+
+\usepackage{amsmath, amsfonts}
+
+\usepackage{bm}
+
+% Expectation symbol
+\newcommand{\E}{\mathrm{E}}
+
+
+%----------------------------------------------------------------------------------
+%	TITLE AND AUTHOR(S)
+%----------------------------------------------------------------------------------
+
+\title{Econ 675 Assignment 1} % The article title
+
+
+\author{Nathan Mather} % The article author(s) 
+
+\date{\today} % An optional date to appear under the author(s)
+
+
+%----------------------------------------------------------------------------------
+\begin{document}
+	
+%------------------------------------------------------------------------------
+%	TABLE OF CONTENTS & LISTS OF FIGURES AND TABLES
+%------------------------------------------------------------------------------
+\maketitle % Print the title/author/date block
+
+\setcounter{tocdepth}{2} % Set the depth of the table of contents to show sections and subsections only
+
+\tableofcontents % Print the table of contents
+
+\listoffigures % Print the list of figures
+
+\listoftables % Print the list of tables
+	
+%-------------------------------------------------------------
+% Question 1 
+%-------------------------------------------------------------
+
+\section{Question 1: Simple Linear Regression with Measurement Error}
+\subsection{OLS estimator}
+$\hat{\beta}_{ls} = (\tilde{x}'\tilde{x})^{-1}\tilde{x}'y$ and we want to show that $\hat{\beta}_{ls} 	\rightarrow_{p} \lambda\beta$
+\\
+\\
+First note that
+ 
+\begin{displaymath}
+y=\beta(\tilde{x}-\mu)+\epsilon = \beta\tilde{x} + (\epsilon-\beta\mu)
+\end{displaymath}
+
+So The measurement error in $x$ becomes part of the error term in the regression. This means OLS will lead to a negative bias in $\hat{\beta}_{ls}$ if the true $\beta$ is positive and a positive bias in $\hat{\beta}_{ls}$ if the true $\beta$ is negative (an attenuation bias). In order to determine the magnitude of the bias consider the following. 
+
+$$\hat{\beta}_{ls} = \frac{\mathrm{Cov}(\tilde{x},y)}{\mathrm{Var}(\tilde{x})}  
+ = \frac{\mathrm{Cov}(x + \mu, \beta x + \epsilon )}{\mathrm{Var}(x + \mu)} 
+ = \frac{\beta \Cov(x,x) + \Cov(x,\epsilon) + \Cov(\mu, \beta x) + \Cov(\mu, \epsilon)}{\Var(x + \mu)}$$
+ 
+ $$ = \frac{\beta \Var(x) }{\Var(x + \mu)} \rightarrow_{p} \frac{\beta \sigma_{x}^2}{\sigma_{x}^2 + \sigma_{\mu}^2} = \lambda \beta$$
+ 
+ $$\text{This implies that } \lambda = \frac{\sigma_{x}^2}{\sigma_{x}^2 + \sigma_{\mu}^2} $$
+ 
+\subsection{Standard Errors}
+
+Start with $ \hat{\epsilon} = y - \hat{\beta}_{ls}(x + \mu) $ \\
+\\
+ Now add and subtract the True error term $\epsilon = y - \beta x$ and collect terms to get $ \hat{\epsilon} + \epsilon - \epsilon = \epsilon - (y - \beta x) + y - \hat{\beta_{ls}} x - \hat{\beta}_{ls}\mu = \epsilon + (\beta - \hat{\beta}_{ls})x - \hat{\beta}_{ls} \mu$
+ \\ \\
+ recall that $\hat{\beta}_{ls} \rightarrow_{p} \lambda \beta $ and that $ \epsilon, x, \mu$ are all uncorrelated. This implies that $\hat{\sigma_{\epsilon}^2} \plim \sigma_{\epsilon}^2 + (1-\lambda)^2 \beta^2\sigma_{x}^2 + \lambda^2 \beta^2 \sigma_{\mu}^2$
+ \\ \\ 
+ so this is biased upwards since we are adding positive terms to the true value 
+ \\ \\ 
+ next to compute the probability limit of $\hat{\sigma}_{\epsilon}^2 (\tilde{x}'\tilde{x}/n)^{-1}$
+ 
+ $$ \hat{\sigma}_{\epsilon}^2 (\tilde{x}'\tilde{x}/n)^{-1} = \frac{\hat{\sigma}_{\epsilon}^2}{\hat{\sigma}_{\tilde{x}}^2} \plim \frac{ \sigma_{\epsilon}^2 + (1-\lambda)^2 \beta^2\sigma_{x}^2 + \lambda^2 \beta^2 \sigma_{\mu}^2}{\sigma_{x}^2 + \sigma_{\mu}^2}$$
+ 
+$$ =\frac{\sigma_{x}^2}{\sigma_{x}^2 + \sigma_{\mu}^2}(\frac{\sigma_{\epsilon}^2}{\sigma_{x}^2}) + \frac{\sigma_{x}^2}{\sigma_{x}^2 + \sigma_{\mu}^2}(1-\lambda)^2 \beta^2 + \frac{\sigma_{\mu}^2}{\sigma_{x}^2 + \sigma_{\mu}^2} \lambda^2 \beta^2  = \lambda(\frac{\sigma_{\epsilon}^2}{\sigma_{x}^2}) + \lambda (1-\lambda)^2 \beta^2 + (1-\lambda) \lambda^2 \beta^2  $$
+
+now note that $  \lambda (1-\lambda)^2 \beta^2 + (1-\lambda) \lambda^2 \beta^2 = \beta^2\lambda (1-\lambda)[(1-\lambda) + \lambda] = \beta^2 \lambda (1-\lambda)$
+
+Combining these gives us that 
+
+$$ \frac{\hat{\sigma}_{\epsilon}^2}{\hat{\sigma}_{\tilde{x}}^2} \plim  \frac{\lambda \sigma_{\epsilon}^2}{\sigma_{x}^2} + \lambda(1-\lambda)\beta^2 $$
+
+multiplying the first term by $\lambda$ biases the result downwards but the second term is positive so it biases the result upwards. So the overall result of the bias cannot be signed in general 
+
+\subsection{t-test}
+
+$$\frac{\hat{\beta}_{ls}}{\sqrt{\hat{\sigma}_{\epsilon}^2(\tilde{x}'\tilde{x}/n)^{-1}}} \plim \frac{\lambda \beta}{\sqrt{\lambda \frac{ \sigma_{\epsilon}^2}{\sigma_{x}^2} + \lambda(1-\lambda)\beta^2 }} 
+= \frac{\sqrt{\lambda}\beta}{\sqrt{ \frac{ \sigma_{\epsilon}^2}{\sigma_{x}^2} + (1-\lambda)\beta^2 }}$$
+
+which is smaller than 
+$$ \frac{\beta}{\sqrt{\frac{\sigma_{\epsilon}^2}{\sigma_{x}^2}}}$$
+
+So the t-test is downward biased 
+
+\subsection{Second measurement, Consistency}
+
+$$ y = x\beta + \epsilon$$
+
+
+by assumption $ \E[\check{x} \epsilon] = 0 $ \\ 
+Now multiply y by $ \check{x}'$ and take the expectation to get $ \E[\check{x}'y]=\E[\check{x}'x]\beta$ \\
+Now assuming $\E[\check{x}'x]$ is full rank we get $\beta =(\E[\check{x}'x])^{-1}\E[\check{x}'y]$ \\
+So $\hat{\beta}_{IV}=(\check{x}'x)^{-1}\check{x}'y$\\
+Now to show it is consistent \\
+$\hat{\beta}_{IV}=(\check{x}'x)^{-1}\check{x}'(x\beta  + \epsilon) = \beta + (\frac{\check{x}'x}{n})^{-1}(\frac{\check{x}'\epsilon}{n}) \plim \beta$ \\
+since $\E[\check{x}'\epsilon] = 0$ so $\frac{\check{x}'\epsilon}{n} \plim 0$ by LLN
+
+\subsection{Second measurement, Distribution}
+
+$$\sqrt{n}(\hat{\beta}_{IV}-\beta) = (\check{x}'x)^{-1}\check{x}'\epsilon = \sqrt{n}\left(\frac{\check{x}'x}{n}\right)^{-1}\left(\frac{\check{x}'\epsilon}{n}\right)$$
+Now using the CLT we get 
+$$\sqrt{n}\left(\frac{\check{x}'\epsilon}{n}\right) \xrightarrow{d} N(0,\E[\check{x}'\epsilon'\epsilon\check{x}])$$
+Now all together we get 
+$$\sqrt{n}(\hat{\beta}_{IV}-\beta) \xrightarrow{d} N(0,\E[\check{x}'x]\E[\check{x}'\epsilon'\epsilon\check{x}]E[x\check{x}'])$$
+
+\subsection{Second measurement, Inference}
+To create a confidence interval robust to Standard errors we want to use the following, unsimplified, version of the asymptotic variance estimator. 
+
+$$Avar(\hat{\beta}_{IV}) = (\check{x}'x)^{-1}\left( \sum_{i=1}^{n}\epsilon_{i}^2 \check{x}_i' \check{x}_i \right) (\check{x}'x)^{-1}$$
+
+\subsection{Validation sample, Consistency}
+
+First note that $(\frac{1}{n}\tilde{x}'\tilde{x}) \plim \sigma_x^2 + \sigma_u^2$ and as shown in part 1 $\hat{\beta}_{ls} \plim \beta \frac{\sigma_{x}^2}{\sigma_{x}^2 + \sigma_{\mu}^2}$\\
+
+Now we define $\hat{\beta}_{VS} = \hat{\beta}_{ls}\left(\frac{1}{n}\frac{\tilde{x}'\tilde{x}}{\check{\sigma}_x^2} \right)$ \\
+
+and by the CMT we get that $\hat{\beta}_{VS} \plim \beta$
+
+
+
+
+
+\section{Question 2: Implementing Least-Squares Estimators}
+
+\subsection{part 1}
+
+Start by adding and subtracting $x \tilde{\beta}$ to get 
+$$ (y-x\tilde{\beta} + x\tilde{\beta} - x\beta)'W(y-x\tilde{\beta} + x\tilde{\beta} - x\beta) $$
+$$ = (y-x\tilde{\beta})'W(y-x\tilde{\beta}) + (y-x\tilde{\beta})'W(x\tilde{\beta} - x\beta) + (x\tilde{\beta} - x\beta)'W(y-x\tilde{\beta}) + (x\tilde{\beta} - x\beta)'W(x\tilde{\beta} - x\beta)$$
+$$ = (y-x\tilde{\beta})'W(y-x\tilde{\beta}) + 2(x\tilde{\beta} - x\beta)'W(y-x\tilde{\beta}) + (x\tilde{\beta} - x\beta)'W(x\tilde{\beta} - x\beta)$$
+
+Now we need to find $\tilde{\beta}$ to minimize this equation. We want to set the middle term to zero so we need a $\tilde{\beta}$ such that $\tilde{\beta}'x'W(y-x\tilde{\beta}) = \beta'x'W(y-x\tilde{\beta})$
+\\ \\ 
+we pick $\tilde{\beta}$ such that $x'W(y-x\tilde{\beta}) = 0$ giving us $$\tilde{\beta}=(x'W'x)^{-1}(x'Wy)$$
+
+Now when we minimize over $\beta$ the first term is irrelevent as it does not include a $\beta$. The middle term is 0 so it does not matter. The last term is positive semi definite and so it is minimized by setting $\beta = \tilde{\beta}$
+
+\subsection{Part 2}
+
+$$ \sqrt{n} (\hat{\beta}(w)- \beta) = \sqrt{n}((x'Wx)^{-1}x'W(x\beta+\epsilon)-\beta)  
+= \sqrt{n}((x'Wx)^{-1}x'W \epsilon)$$ \\
+$$ = ((\frac{1}{n}x'Wx)^{-1} \sqrt{n} (\frac{1}{n} x'W\epsilon))$$
+
+under appropriate assumptions we have by LLN that $ (\frac{1}{n}x'Wx) \plim A $ \\
+We also have that $  \sqrt{n} (\frac{1}{n} x'W\epsilon) \rightarrow_{d} \mathcal{N}(0,B)$ by CLT  \\
+In this case we get $ B = \frac{1}{n}  \mathbb{V}[x'W\epsilon] = \frac{1}{n} \mathbb{E}[x'W\epsilon'\epsilon Wx] $\\
+And we have that $ V(W) = A^{-1}BA^{-1} $
+ 
+\subsection{Part 3}
+
+To estimate $V(W) = A^{-1}BA^{-1} $ we are mostly just putting hats on things 
+
+$$\hat{A} = \frac{1}{n}(x'\hat{W}x)$$ 
+$$\hat{B} = \frac{1}{n}(x'\hat{W} \hat{\epsilon}' \hat{\epsilon} \hat{W}x)$$
+
+ so that gives us 
+ 
+ $$ \hat{V}(W) = \frac{1}{n} (x'\hat{W}x)^{-1} (x'\hat{W} \hat{\epsilon}' \hat{\epsilon} \hat{W}x) (x'\hat{W}x)^{-1} $$
+%------------------------------------------------
+% end doc
+%------------------------------------------------
+\end{document}
+
+
+

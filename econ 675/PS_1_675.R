@@ -128,6 +128,7 @@ cat("\f")
   # compare varcov NOTE: differences are just floating point errors 
   all.equal(reg_1$varcov, reg_2$varcov)
   reg_1$varcov -  reg_2$varcov
+  
 #============================#
 # ==== Question 2 part 5 ====
 #============================#
@@ -172,7 +173,8 @@ cat("\f")
       
     # get robust standard errors. I use HCO to match my math above 
     # any differnces are floating point errors 
-    lm_robust <- data.table(tidy(coeftest(lalonde_lm, vcov = vcovHC(lalonde_lm, type="HC0"))))
-    lm_robust
+    lm_robust <- coeftest(lalonde_lm, vcov = vcovHC(lalonde_lm, type="HC0"))
     
+    lm_robust_dt <- data.table(tidy(lm_robust))
+
     
