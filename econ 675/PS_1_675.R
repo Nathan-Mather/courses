@@ -4,15 +4,17 @@
 
 library(data.table)
 library(Matrix)
+library(lmtest)
+library(sandwich)
 
 # clear objects and script 
 rm(list = ls(pos = ".GlobalEnv"), pos = ".GlobalEnv")
 options(scipen = 999)
 cat("\f")
 
-#=====================#
-# ==== Question 2 ====
-#=====================#
+#=============================#
+# ==== Question 2  part 4 ====
+#=============================#
 
   #=========================#
   # ==== geneerate data ====
@@ -30,11 +32,10 @@ cat("\f")
   #================================#
   # ==== write function for q2 ====
   #================================#
-    
-    # define vars for line by line 
-    x <- x_data
-    y <- y_data
   
+    x = x_data
+    y = y_data
+    
     mat_reg <- function(x = NULL, y = NULL, opt_chol = FALSE, CI_level = .95){
       
       # get matrix size parameters 
@@ -63,11 +64,13 @@ cat("\f")
     #=====================#
       
       # calculate residuals 
-      resid <- y - x%*%B
+      my_resid <- y - x%*%B
      
       # calculate asymptotic variance 
-      V <- solve(crossprod(x, x)) %*% (t(x) %*% diag(as.numeric(resid^2), nrow = n_row, ncol = n_row) %*% x)
+      V <- solve(crossprod(x, x)) %*% (t(x) %*% diag(as.numeric(my_resid^2), nrow = n_row, ncol = n_row) %*% x) %*% solve(crossprod(x, x)) 
       
+      sqrt(diag(V))
+
     #======================#
     # ==== other stats ====
     #======================#
@@ -76,17 +79,20 @@ cat("\f")
       out_dt <- data.table(beta = as.numeric(B), V_hat = diag(V) )
       
       # calculate standard errors 
-      out_dt[, se := sqrt(V_hat)/sqrt(n_row)]
+      out_dt[, se := sqrt(V_hat)]
       
       # calculate t test 
       out_dt[, t_test := beta/(se)]
       
       # calculate p values 
-      out_dt[, p_value := 2*(1- pt(t_test, n_row))]
+      out_dt[, p_value := 2*(1- pt((abs(t_test)), n_row))]
 
       # calculate confidence interval 
       out_dt[, CI_L := beta - (se) * qt(1-((1-CI_level)/2), n_row )]
       out_dt[, CI_U := beta + (se) * qt(1-((1-CI_level)/2), n_row )]
+      
+      # drop v_hat cause I dont need it 
+      out_dt[, V_hat := NULL]
       
       
       return(out_dt[])
@@ -104,10 +110,50 @@ cat("\f")
   # compare coefficients 
   coeff_diff <- reg_1[, beta] - reg_2[, beta]
     
-# run on 
+#============================#
+# ==== Question 2 part 5 ====
+#============================#
+  
+  #==========================#
+  # ==== matrix function ====
+  #==========================#
+
+
+    # load daata 
+    lalonde_dt <- fread("C:/Users/Nmath_000/Documents/MI_school/Second Year/675 Applied Econometrics/hw/hw1/LaLonde_1986.csv")
     
+    # grab y matrix 
+    y_la <- as.matrix(lalonde_dt[, earn78])
     
+    # create other vars for regression 
+    lalonde_dt[, educ_sq := educ^2]
+    lalonde_dt[, black_earn74 := black*earn74]
+    lalonde_dt[, const := 1]
+   
+     # grab x vars 
+    x_vars <- c("treat", "black", "age", "educ", 
+                "educ_sq", "earn74","black_earn74", 
+                "u74","u75")
+    x_la <- as.matrix(lalonde_dt[, c("const", x_vars), with = FALSE])
     
+    # run function on this data 
+    lalonde_reg_dt <- mat_reg(x = x_la, y = y_la)
     
+  #===================#
+  # ==== using lm ====
+  #===================#
     
+    # get regression formula 
+    reg_form <- as.formula(paste("earn78~", paste(x_vars, collapse="+")))
+    
+    # run regression 
+    lalonde_lm <- lm(reg_form, lalonde_dt)
+    
+    # get summary, NOTE: these are NOT robust standard errors 
+    lalong_lm_dt <- summary(lalonde_lm)$coefficients
+      
+    # get robust standard errors. I use HCO to match my math above 
+    # any differnces are floating point errors 
+    coeftest(lalonde_lm, vcov = vcovHC(lalonde_lm, type="HC0"))
+   
     
