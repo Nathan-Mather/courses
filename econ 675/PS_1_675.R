@@ -17,9 +17,9 @@ cat("\f")
 # ==== Question 2  part 4 ====
 #=============================#
 
-  #=========================#
-  # ==== geneerate data ====
-  #=========================#
+  #================================#
+  # ==== geneerate random data ====
+  #================================#
 
     # set n_col and n_row 
     n_col <- 10
@@ -37,7 +37,7 @@ cat("\f")
     # commented out, but usefull for line by line debug 
     # x = x_data
     # y = y_data
-    # 
+    # function
     mat_reg <- function(x = NULL, y = NULL, opt_chol = FALSE, CI_level = .95){
       
       # get matrix size parameters 
@@ -72,11 +72,11 @@ cat("\f")
       if(!opt_chol){
      
         # calculate asymptotic variance 
-        V <- solve(crossprod(x, x)) %*% (t(x) %*% diag(as.numeric(my_resid^2), nrow = n_row, ncol = n_row) %*% x) %*% solve(crossprod(x, x)) 
+        V <- solve(crossprod(x, x)) %*% (t(x) %*% diag(as.numeric(my_resid^2*(n_row/(n_row-n_col))), nrow = n_row, ncol = n_row) %*% x) %*% solve(crossprod(x, x)) 
       
       }else{
         
-        A_inv <-   chol2inv(chol_m) %*% (t(x) %*% diag(as.numeric(my_resid^2), nrow = n_row, ncol = n_row) %*% x) %*% chol2inv(chol_m)
+        A_inv <-   chol2inv(chol_m) %*% (t(x) %*% diag(as.numeric(my_resid^2*(n_row/(n_row-n_col))), nrow = n_row, ncol = n_row) %*% x) %*% chol2inv(chol_m)
         V <- A_inv 
         
         }
@@ -96,7 +96,7 @@ cat("\f")
       out_dt[, t_test := beta/(se)]
       
       # calculate p values 
-      out_dt[, p_value := 2*(1- pt((abs(t_test)), n_row))]
+      out_dt[, p_value := 2*(1- pt((abs(t_test)), n_row - n_col))]
 
       # calculate confidence interval 
       out_dt[, CI_L := beta - (se) * qt(1-((1-CI_level)/2), n_row )]
@@ -154,6 +154,8 @@ cat("\f")
     x_vars <- c("treat", "black", "age", "educ", 
                 "educ_sq", "earn74","black_earn74", 
                 "u74","u75")
+    
+    # make matrix 
     x_la <- as.matrix(lalonde_dt[, c("const", x_vars), with = FALSE])
     
     # run function on this data 
@@ -172,9 +174,9 @@ cat("\f")
     # get summary, NOTE: these are NOT robust standard errors 
     lalong_lm_dt <- summary(lalonde_lm)$coefficients
       
-    # get robust standard errors. I use HCO to match my math above 
+    # get robust standard errors. I use HC2 to match my math above 
     # any differnces are floating point errors 
-    lm_robust <- coeftest(lalonde_lm, vcov = vcovHC(lalonde_lm, type="HC0"))
+    lm_robust <- coeftest(lalonde_lm, vcov = vcovHC(lalonde_lm, type="HC1"))
     
     lm_robust_dt <- data.table(tidy(lm_robust))
 
