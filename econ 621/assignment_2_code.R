@@ -18,6 +18,9 @@ library(lmtest)
 library(sandwich)
 library(broom)
 library(foreign)
+library(AER)
+library(ivpack)
+library(Matrix)
 
 #======================#
 # ==== data set up ====
@@ -64,12 +67,131 @@ base_lm <- lm(hours ~ lwage + nwifeinc + kidslt6 + kidsge6  + age + educ , dt)
 # get robust standard errors. 
 lm_robust <- coeftest(base_lm, vcov = vcovHC(base_lm, type="HC0"))
 
-lm_robust <- data.table(tidy(lm_robust))
+Part_b_result <- data.table(tidy(lm_robust))
 
-lm_robust
 
 #========================#
 # ==== C IV estimate ====
 #========================#
+
+iv_reg <- ivreg(hours ~ nwifeinc + kidslt6 + kidsge6 + age + educ + lwage | 
+                  nwifeinc + kidslt6 + kidsge6 + age + educ +
+                  age_sq + age_cu + educ_sq + educ_cu + 
+                  age_educ + age_sq_educ + age_educ_sq + 
+                  unem + city + motheduc + fatheduc , data = dt)
+
+# robust the se
+iv_reg <- robust.se(iv_reg)
+
+part_C_result <- data.table(tidy(iv_reg, conf.int = TRUE))
+
+#====================#
+# ==== D repwage ====
+#====================#
+
+# run regression 
+base_lm <- lm(hours ~ lwage + nwifeinc + kidslt6 + kidsge6  + age + educ , dt[repwage >0,])
+
+# get robust standard errors. 
+lm_robust <- coeftest(base_lm, vcov = vcovHC(base_lm, type="HC0"))
+
+Part_D_result <- data.table(tidy(lm_robust))
+
+#=======================#
+# ==== E repwage IV ====
+#=======================#
+
+iv_reg <- ivreg(hours ~  lwage + nwifeinc + kidslt6 + kidsge6 + age + educ  | 
+                  nwifeinc + kidslt6 + kidsge6 + age + educ + repwage , data = dt[repwage >0,])
+
+# robust the se
+iv_reg <- robust.se(iv_reg)
+
+part_E_result <- data.table(tidy(iv_reg, conf.int = TRUE))
+
+#===================#
+# ==== F probit ====
+#===================#
+
+# create variable for working 
+dt[hours > 0, working := 1]
+dt[hours <= 0, working := 0]
+
+# estimate a probit model
+myprobit <- glm(working ~nwifeinc + kidslt6 + kidsge6 + age + educ +
+                  age_sq + age_cu + educ_sq + educ_cu + 
+                  age_educ + age_sq_educ + age_educ_sq + 
+                  unem + city + motheduc + fatheduc, 
+                family = binomial(link = "probit"), 
+                data = dt)
+
+part_f_result <- data.table(tidy(myprobit))
+
+#======================#
+# ==== G H heckman ====
+#======================#
+
+
+dt[, IMR := dnorm(myprobit$linear.predictors)/pnorm(myprobit$linear.predictors)]
+
+# run regression 
+samp_sel <- lm( lwage ~ age + educ +
+                 age_sq + age_cu + educ_sq + educ_cu + 
+                 age_educ + age_sq_educ + age_educ_sq + 
+                 unem + city + motheduc + fatheduc + IMR , dt)
+
+vars <- c("age", "educ", "age_sq", "age_cu",  "educ_sq", "educ_cu", "age_educ", "age_sq_educ", "age_educ_sq", "unem",  "city", "motheduc", "fatheduc", "IMR")
+
+dt[,  lapply(.SD,  function(y) sum(length(which(is.na(y))))), .SDcols = vars]
+
+# NOTE: the standard errors are wrong since IMR is an estimate. See the worksheet for explination 
+
+
+part_h_result <- data.table(tidy(samp_sel))
+
+
+#======================#
+# ==== I est hours ====
+#======================#
+
+# get fitted values of lwage for full sample (including non workers ) without the IMR term 
+B <- as.matrix(part_h_result[term != "IMR", estimate])
+
+X <- dt[, setdiff(part_h_result[, term] ,c("(Intercept)", "IMR")), with = FALSE]
+X[,  intercept := 1]
+setcolorder(X, c("intercept", setdiff(colnames(X), "intercept")))
+X <- as.matrix(X)
+
+fitted <- X%*%B
+
+# add it to data 
+dt[, lwage_hat := fitted]
+
+
+# estimate hours worked 
+hrs_reg <- lm( hours ~ lwage_hat + nwifeinc + age + educ + kidslt6 + kidsge6 + IMR , dt)
+
+part_i_result <- data.table(tidy(hrs_reg))
+
+#=====================================#
+# ==== J IV and sample correction ====
+#=====================================#
+
+iv_reg <- ivreg(hours ~ nwifeinc + kidslt6 + kidsge6 + age + educ + IMR +lwage | 
+                  nwifeinc + kidslt6 + kidsge6 + age + educ + IMR +
+                  age_sq + age_cu + educ_sq + educ_cu + 
+                  age_educ + age_sq_educ + age_educ_sq + 
+                  unem + city + motheduc + fatheduc , data = dt)
+
+# robust the se
+iv_reg <- robust.se(iv_reg)
+
+part_J_result <- data.table(tidy(iv_reg, conf.int = TRUE))
+
+
+
+
+
+
 
 

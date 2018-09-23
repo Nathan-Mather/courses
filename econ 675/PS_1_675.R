@@ -180,4 +180,38 @@ cat("\f")
     
     lm_robust_dt <- data.table(tidy(lm_robust))
 
+#=====================#
+# ==== Question 3 ====
+#=====================#
+
+
+  #=================#
+  # ==== neyman ====
+  #=================#
+
+    # 3.1.a calculate ATE 
+    TDM <- lalonde_dt[treat == 1, mean(earn78)] - lalonde_dt[treat == 0, mean(earn78)] 
+    
+    # get sd for treatment and no treatnment 
+    s1_sq <- lalonde_dt[treat == 1, var(earn78)]
+    s0_sq <- lalonde_dt[treat == 0, var(earn78)]
+    
+    # get V_tdm
+    V_tdm <- s1_sq/lalonde_dt[treat == 1, .N] + s0_sq/lalonde_dt[treat == 0, .N]
+    se_tdm <- sqrt(V_tdm)
+    
+    # constuct 95% convidence interval 
+     tdm_CI_L <- TDM - se_tdm * qnorm(.975)
+     tdm_CI_U <- TDM + se_tdm * qnorm(.975)
+     
+     # ut together resuts 
+     results <- data.table("TDM est" = TDM, "Conservative SE" = se_tdm, "CI Lower" = tdm_CI_L, "CI Upper" =  tdm_CI_U)
+     
+  #=================#
+  # ==== fisher ====
+  #=================#
+
+     
+
+    
     

@@ -68,15 +68,16 @@ The authors assume that the health of babies just above and just below the 1500g
 The assumption has less support. Babies at 1499g and 1501g will likely have similar outcomes on average. However, as the difference increases, for example, to 1000g and 2000g it is less clear that these babies are not significantly different. 
 
 \subsection{}
-Birthweight and VLBW status
+hospital charges and Length of Stay
+
 \subsection{}
-Mortality??????
+Infant Mortality
 
 \subsection{}
 National Center for Health Statistics (NCHS) birth cohort linked infant death files 
 
 \subsection{}
-They link them by birth information for hospitalized births
+They link them by birth information for hospitalized births???????????
 
 \section{Understanding the Model}
 
@@ -85,8 +86,8 @@ They link them by birth information for hospitalized births
  
  \subsection{}
  VLBW is an indicator for birth weight below 1500g. \\
- so $VLBW_i = 1 $ if $g_i < 1500$ \\
- and  $VLBW_i = 0 $ if $g_i \geq 1500$
+ so $VLBW_i = 1 $ if $g_i \leq 1500$ \\
+ and  $VLBW_i = 0 $ if $g_i > 1500$
  
  \subsection{}
  
@@ -175,7 +176,7 @@ The cost I found above is significantly less than \$2.7 million. Additionally th
 \begin{enumerate}
 	\item Gestational age is increasing with birth-weight
 	\item There does not appear to be any significant jump 
-	\item if there was a jump in gestational age at 1500g than it would call into question the randomness or exogeneity of the 1500g cutoff????????????????????
+	\item if there was a jump in gestational age at 1500g than it would call into question the randomness or exogeneity of the 1500g cutoff. The smooth trend confirms there is nothing biologically different for babies across the cutoff. 
 \end{enumerate}
 
 \section{Concluding Questions}
@@ -183,6 +184,8 @@ The cost I found above is significantly less than \$2.7 million. Additionally th
 What is novel is the set up for regression discontinuity. The authors have a continuous ovsevable variable of birthweight in grams. They also have a practice of diagnosing VLBW with the fairly hard cutoff of 1500g. The fact that this cutoff is convention rather than biological is on major factor. Another important factor is that this diagnosis actually impacts the level of care these babies receive. Additionally, mothers and doctors are not able to affect birth-weight via birth timing with enough precision to change their VLBW status for babies clost to the cutoff. All of this combines to give a natural experiment setting where babies that are close to the 1500g cutoff can be thought of as being "essentially randomly" assigned to one of the two groups. Babies in the VLBW group receive more treatment and babies out of it receive less.
 
 \subsection{}
+
+One limitation of the study is that it only provides a clear estimate of the marginal cost of medical care for babies on the margins of the conventional medical cutoffs (ELB, VLBW LBW). From the results we can say that increasing medical treatment for babies just above the VLBW cutoff is "worth it", but it is not clear how much we can increase care before it is no longer worth it. It is also unclear at which weight the treatment no longer becomes "worth it". 
 
 \subsection{}
 It tells us that the cost of neonatal is probably worth the benefit even if we are only considering the gains in terms of fewer deaths. It also suggests that doctors should review the 1500g cutoff for VLBW or at least procedures for VLBW babies as it seems babies just above the margin could benefit from the care being recieved by babies just below the cutoff. 
