@@ -1,3 +1,17 @@
+---
+title: "pset 2 Labor"
+output: pdf_document
+theme: journal
+self_contained: TRUE
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r , echo=TRUE, include=TRUE, warning = FALSE, message = FALSE }
+
 #==============================#
 # ==== Labor Problem set 2 ====
 #==============================#
@@ -21,6 +35,8 @@
   library(AER)
   library(ivpack)
   library(Matrix)
+  library(knitr)
+  library(kableExtra)
 
 #======================#
 # ==== data set up ====
@@ -141,8 +157,6 @@
                    unem + city + motheduc + fatheduc + IMR , dt)
   
   vars <- c("age", "educ", "age_sq", "age_cu",  "educ_sq", "educ_cu", "age_educ", "age_sq_educ", "age_educ_sq", "unem",  "city", "motheduc", "fatheduc", "IMR")
-  
-  dt[,  lapply(.SD,  function(y) sum(length(which(is.na(y))))), .SDcols = vars]
 
   # NOTE: the standard errors are wrong since IMR is an estimate. See the worksheet for explination 
   
@@ -188,15 +202,21 @@ iv_reg <- robust.se(iv_reg)
 
 part_J_result <- data.table(tidy(iv_reg, conf.int = TRUE))
 
-options(knitr.table.format = "latex")
+
+
+```
+
+```{r , echo=TRUE, include=FALSE}
 
 
 #======================#
 # ==== save tables ====
 #======================#
 
-part_j_k <- kable(part_J_result ,"latex", booktabs = T)
+kable(part_J_result ,"latex", booktabs = T)
 
 
 
+
+```
 
