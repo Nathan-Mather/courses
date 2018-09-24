@@ -21,6 +21,8 @@
   library(AER)
   library(ivpack)
   library(Matrix)
+  library(knitr)
+  library(kableExtra)
 
 #======================#
 # ==== data set up ====
