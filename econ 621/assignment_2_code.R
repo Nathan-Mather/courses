@@ -23,7 +23,7 @@
   library(Matrix)
   library(knitr)
   library(kableExtra)
-
+  library(xtable)
 #======================#
 # ==== data set up ====
 #======================#
@@ -42,6 +42,8 @@
   dt[, nonlab_i := (faminc - wage*hours - huswage*hushrs)/1000]
   
 
+  # create a list to store main results 
+  r_l <- list()
 
 #===============================#
 # ==== a  replicate table 3 ====
@@ -52,12 +54,12 @@
   var_l <- c("age", "educ", "kidslt6", "kidsge6", "husage", "huseduc", "wage", "huswage", "nonlab_i", "hours", "hushrs"  )
   
   tb1 <- melt.data.table(round(dt[,lapply(.SD,mean), .SDcols =var_l],2), value.name = "Full Sample Mean")
-  tb2 <- melt.data.table(round(dt[,lapply(.SD,sd), .SDcols =var_l],2), value.name = "Full Sample Standard Deviation")
+  tb2 <- melt.data.table(round(dt[,lapply(.SD,sd), .SDcols =var_l],2), value.name = "Full Sample SD")
   tb3 <- melt.data.table(round(dt[inlf == 1,lapply(.SD,mean), .SDcols =var_l],2), value.name = "Working Women Mean")
-  tb4 <- melt.data.table(round(dt[inlf == 1,lapply(.SD,sd), .SDcols =var_l],2), value.name = "Working Women Standard Deviation")
+  tb4 <- melt.data.table(round(dt[inlf == 1,lapply(.SD,sd), .SDcols =var_l],2), value.name = "Working Women SD")
   
   # merge them all 
-  tb_f <- Reduce(function(x, y) merge(x, y, by = "variable", all = T), list(tb1, tb2, tb3, tb4))
+  r_l[["a"]] <- Reduce(function(x, y) merge(x, y, by = "variable", all = T), list(tb1, tb2, tb3, tb4))
 
 #=========================#
 # ==== b baseline ols ====
@@ -69,14 +71,14 @@
   # get robust standard errors. 
   lm_robust <- coeftest(base_lm, vcov = vcovHC(base_lm, type="HC0"))
   
-  Part_b_result <- data.table(tidy(lm_robust))
+  r_l[["b"]] <- data.table(tidy(lm_robust))
 
 
 #========================#
 # ==== C IV estimate ====
 #========================#
   
-  iv_reg <- ivreg(hours ~ nwifeinc + kidslt6 + kidsge6 + age + educ + lwage | 
+  iv_reg <- ivreg(hours ~ lwage + nwifeinc + kidslt6 + kidsge6 + age + educ | 
                     nwifeinc + kidslt6 + kidsge6 + age + educ +
                     age_sq + age_cu + educ_sq + educ_cu + 
                     age_educ + age_sq_educ + age_educ_sq + 
@@ -85,7 +87,7 @@
   # robust the se
   iv_reg <- robust.se(iv_reg)
   
-  part_C_result <- data.table(tidy(iv_reg, conf.int = TRUE))
+  r_l[["c"]] <- data.table(tidy(iv_reg, conf.int = TRUE))
 
 #====================#
 # ==== D repwage ====
@@ -97,7 +99,7 @@
   # get robust standard errors. 
   lm_robust <- coeftest(base_lm, vcov = vcovHC(base_lm, type="HC0"))
   
-  Part_D_result <- data.table(tidy(lm_robust))
+  r_l[["d"]] <- data.table(tidy(lm_robust))
 
 #=======================#
 # ==== E repwage IV ====
@@ -109,7 +111,7 @@
   # robust the se
   iv_reg <- robust.se(iv_reg)
   
-  part_E_result <- data.table(tidy(iv_reg, conf.int = TRUE))
+  r_l[["e"]] <- data.table(tidy(iv_reg, conf.int = TRUE))
 
 #===================#
 # ==== F probit ====
@@ -127,7 +129,7 @@
                   family = binomial(link = "probit"), 
                   data = dt)
   
-  part_f_result <- data.table(tidy(myprobit))
+  r_l[["f"]] <- data.table(tidy(myprobit))
 
 #======================#
 # ==== G H heckman ====
@@ -149,7 +151,7 @@
   # NOTE: the standard errors are wrong since IMR is an estimate. See the worksheet for explination 
   
   
-  part_h_result <- data.table(tidy(samp_sel))
+  r_l[["h"]] <- data.table(tidy(samp_sel))
   
 
 #======================#
@@ -157,9 +159,9 @@
 #======================#
   
   # get fitted values of lwage for full sample (including non workers ) without the IMR term 
-  B <- as.matrix(part_h_result[term != "IMR", estimate])
+  B <- as.matrix(r_l[["h"]][term != "IMR", estimate])
   
-  X <- dt[, setdiff(part_h_result[, term] ,c("(Intercept)", "IMR")), with = FALSE]
+  X <- dt[, setdiff(r_l[["h"]][, term] ,c("(Intercept)", "IMR")), with = FALSE]
   X[,  intercept := 1]
   setcolorder(X, c("intercept", setdiff(colnames(X), "intercept")))
   X <- as.matrix(X)
@@ -173,13 +175,13 @@
 # estimate hours worked 
 hrs_reg <- lm( hours ~ lwage_hat + nwifeinc + age + educ + kidslt6 + kidsge6 + IMR , dt)
 
-part_i_result <- data.table(tidy(hrs_reg))
+r_l[["i"]] <- data.table(tidy(hrs_reg))
 
 #=====================================#
 # ==== J IV and sample correction ====
 #=====================================#
 
-iv_reg <- ivreg(hours ~ nwifeinc + kidslt6 + kidsge6 + age + educ + IMR +lwage | 
+iv_reg <- ivreg(hours ~  lwage + nwifeinc + kidslt6 + kidsge6 + age + educ + IMR | 
                   nwifeinc + kidslt6 + kidsge6 + age + educ + IMR +
                   age_sq + age_cu + educ_sq + educ_cu + 
                   age_educ + age_sq_educ + age_educ_sq + 
@@ -188,17 +190,34 @@ iv_reg <- ivreg(hours ~ nwifeinc + kidslt6 + kidsge6 + age + educ + IMR +lwage |
 # robust the se
 iv_reg <- robust.se(iv_reg)
 
-part_J_result <- data.table(tidy(iv_reg, conf.int = TRUE))
-
-options(knitr.table.format = "latex")
+r_l[["j"]] <- data.table(tidy(iv_reg, conf.int = TRUE))
 
 
 #======================#
 # ==== save tables ====
 #======================#
 
-part_j_k <- kable(part_J_result ,"latex", booktabs = T)
+names(r_l)
 
+save_tex_tables <- function(letter = NULL){
+  
+  table <- r_l[[letter]]
+  
+  print(xtable(table, type = "latex"), 
+        file = paste0("C:/Users/Nmath_000/Documents/Code/courses/econ 621/assignment_2_tex/t_", letter, ".tex"),
+        include.rownames = FALSE,
+        floating = FALSE)
 
+}
+
+lapply(names(r_l), save_tex_tables)
+
+#=====================================#
+# ==== run markdown to print code ====
+#=====================================#
+
+rmarkdown::render(input =  "C:/Users/Nmath_000/Documents/Code/courses/econ 621/asiignment_2_markdown.Rmd",
+                  output_format = "pdf_document",
+                  output_file = paste0("C:/Users/Nmath_000/Documents/Code/courses/econ 621/assignment_2_print.pdf")) 
 
 

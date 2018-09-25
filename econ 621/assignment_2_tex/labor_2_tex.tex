@@ -1,0 +1,200 @@
+%-----------------------------------------------------------------------------------
+%	PACKAGES AND OTHER DOCUMENT CONFIGURATIONS
+%----------------------------------------------------------------------------------
+
+
+
+\documentclass[11pt]{article}
+
+\usepackage[left=2.54cm, right= 2.54cm, top=2.54cm]{geometry}
+
+\usepackage{graphicx}
+\usepackage{float}
+
+\setlength{\parindent}{0in}
+
+\newcommand{\Var}{\mathrm{Var}}
+
+\newcommand{\Cov}{\mathrm{Cov}}
+
+\newcommand{\plim}{\rightarrow_{p}}
+
+\usepackage{amsmath, amsfonts}
+
+\usepackage{bm}
+
+% Expectation symbol
+\newcommand{\E}{\mathrm{E}}
+
+
+%----------------------------------------------------------------------------------
+%	TITLE AND AUTHOR(S)
+%----------------------------------------------------------------------------------
+
+\title{Econ 621 Assignment 2} % The article title
+
+
+\author{Nathan Mather} % The article author(s) 
+
+\date{\today} % An optional date to appear under the author(s)
+
+
+%----------------------------------------------------------------------------------
+% begin do
+% ---------------------------------------------------------------------------------
+
+\begin{document}
+
+%------------------------------------------------------------------------------
+%	TABLE OF CONTENTS & LISTS OF FIGURES AND TABLES
+%------------------------------------------------------------------------------
+\maketitle % Print the title/author/date block
+
+\setcounter{tocdepth}{2} % Set the depth of the table of contents to show sections and subsections only
+
+%--------------------------------
+%      question a
+%--------------------------------
+
+\section*{Part a}
+
+Replication of Table III
+
+\begin{center}
+	\input{t_a.tex}
+\end{center}
+
+%--------------------------------
+%      question b
+%--------------------------------
+\section*{Part b}
+
+The full sample is not used in this regression because wage is only observed for 
+people who are working. \\
+
+The Problem with this is that selection into the workforce is not random. In fact, being in the workforce is positively correlated with the error term in the regression. If we consider a latent variable model for desired hours with 
+
+$$ latent \_ hours= lwage + nwifeinc + kidslt6 + kidsge6  + age + educ + \epsilon $$
+
+
+
+\[
+hours = 
+ \begin{cases} 
+latent \_ hours & latent \_ hours > 0 \\
+0 & latent \_ hours \leq 0 \\
+\end{cases}
+\]
+
+The sample excludes observations with zero hours and so observations where $latent \_ hour$ is negative. This is of course more likely if $\epsilon$ is negative. So, our sample around zero house consists of observations that are more likely to have positive $\epsilon$. \\
+
+Another reason would be if an unobservable trait like work ethic, is correlated both with the decision to work and the error term. 
+
+\begin{center}
+	\input{t_b.tex}
+\end{center}
+
+
+%--------------------------------
+%      question c
+%--------------------------------
+
+\section*{Part C}
+
+The coefficient on wage is positive under this specification rather than negative like in part b. Division bias may have been an issue in part B, since wage is income/hours worked, which would bias the result towards -1. So it is not surprising the estimate using IV is higher. 
+
+
+\begin{center}
+	\input{t_c.tex}
+\end{center}
+
+
+%--------------------------------
+%      question d
+%--------------------------------
+
+\section*{Part d}
+
+This estimate is not significantly different than the one in part B. 
+
+\begin{center}
+	\centering
+	\input{t_d.tex}
+\end{center}
+
+
+%--------------------------------
+%      question e
+%--------------------------------
+\section*{Part e}
+This estimate is much larger and statistically significant. This is not surprising. 
+using reported wages corrects the division bias and so corrects for the thing biasing the estimate in part b towards negative one. However, using reported wages as an instrument probably does not solve the endogeneity  issue. If effort is correlated with higher wages and higher work effort than this estimate will continue to be biased upwards. 
+
+
+\begin{center}
+	\input{t_e.tex}
+\end{center}
+
+
+%--------------------------------
+%      question f
+%--------------------------------
+\section*{Part f}
+
+This is my estimate:
+\begin{center}
+	\input{t_f.tex}
+\end{center}
+
+
+%--------------------------------
+%      question g
+%--------------------------------
+\section*{Part g}
+
+I calculated the IMR as directed.
+
+
+%--------------------------------
+%      question h
+%--------------------------------
+\section*{Part h}
+
+The coefficient on IMR is not statistically significant. This suggests sampel selection is not important. 
+
+\begin{center}
+	\input{t_h.tex}
+\end{center}
+
+
+%--------------------------------
+%      question i
+%--------------------------------
+\section*{Part i}
+My result is significantly different. 
+\begin{center}
+	\input{t_i.tex}
+\end{center}
+
+
+%--------------------------------
+%      question j
+%--------------------------------
+\section*{Part j}
+
+These results are exactly the same
+
+\begin{center}
+	\input{t_j.tex}
+\end{center}
+
+
+
+
+
+
+
+%------------------------------------------------
+% end doc
+%------------------------------------------------
+\end{document}
