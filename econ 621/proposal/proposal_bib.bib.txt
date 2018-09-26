@@ -1,0 +1,13 @@
+@techreport{NBERw24219,
+ title = "Children and Gender Inequality: Evidence from Denmark",
+ author = "Kleven, Henrik and Landais, Camille and Søgaard, Jakob Egholt",
+ institution = "National Bureau of Economic Research",
+ type = "Working Paper",
+ series = "Working Paper Series",
+ number = "24219",
+ year = "2018",
+ month = "January",
+ doi = {10.3386/w24219},
+ URL = "http://www.nber.org/papers/w24219",
+ abstract = {Despite considerable gender convergence over time, substantial gender inequality persists in all countries. Using Danish administrative data from 1980-2013 and an event study approach, we show that most of the remaining gender inequality in earnings is due to children. The arrival of children creates a gender gap in earnings of around 20% in the long run, driven in roughly equal proportions by labor force participation, hours of work, and wage rates. Underlying these “child penalties”, we find clear dynamic impacts on occupation, promotion to manager, sector, and the family friendliness of the firm for women relative to men. Based on a dynamic decomposition framework, we show that the fraction of gender inequality caused by child penalties has increased dramatically over time, from about 40% in 1980 to about 80% in 2013. As a possible explanation for the persistence of child penalties, we show that they are transmitted through generations, from parents to daughters (but not sons), consistent with an influence of childhood environment in the formation of women’s preferences over family and career.},
+}

@@ -42,8 +42,7 @@ knitr::opts_chunk$set(echo = TRUE)
 #======================#
 
   # laod data 
-  dt <- data.table(
-    read.dta("c://users/Nmath_000/Documents/MI_school/Second Year/621 Labor/Assignments/Assignment_2/MROZ.DTA"))
+  dt <- data.table(read.dta("c://users/Nmath_000/Documents/MI_school/Second Year/621 Labor/Assignments/Assignment_2/MROZ.DTA"))
   
   # create neede vars 
   dt[, age_sq := age^2]
@@ -65,21 +64,12 @@ knitr::opts_chunk$set(echo = TRUE)
 
   
   # get vars to mean ans sd 
-  var_l <- c("age", "educ", "kidslt6", "kidsge6",
-             "husage", "huseduc", "wage", "huswage",
-             "nonlab_i", "hours", "hushrs"  )
+  var_l <- c("age", "educ", "kidslt6", "kidsge6", "husage", "huseduc", "wage", "huswage", "nonlab_i", "hours", "hushrs"  )
   
-  tb1 <- melt.data.table(round(dt[,lapply(.SD,mean), .SDcols =var_l],2), 
-                         value.name = "Full Sample Mean")
-  
-  tb2 <- melt.data.table(round(dt[,lapply(.SD,sd), .SDcols =var_l],2), 
-                         value.name = "Full Sample Standard Deviation")
-  
-  tb3 <- melt.data.table(round(dt[inlf == 1,lapply(.SD,mean), .SDcols =var_l],2),
-                         value.name = "Working Women Mean")
-  
-  tb4 <- melt.data.table(round(dt[inlf == 1,lapply(.SD,sd), .SDcols =var_l],2),
-                         value.name = "Working Women Standard Deviation")
+  tb1 <- melt.data.table(round(dt[,lapply(.SD,mean), .SDcols =var_l],2), value.name = "Full Sample Mean")
+  tb2 <- melt.data.table(round(dt[,lapply(.SD,sd), .SDcols =var_l],2), value.name = "Full Sample SD")
+  tb3 <- melt.data.table(round(dt[inlf == 1,lapply(.SD,mean), .SDcols =var_l],2), value.name = "Working Women Mean")
+  tb4 <- melt.data.table(round(dt[inlf == 1,lapply(.SD,sd), .SDcols =var_l],2), value.name = "Working Women SD")
   
   # merge them all 
   r_l[["a"]] <- Reduce(function(x, y) merge(x, y, by = "variable", all = T), list(tb1, tb2, tb3, tb4))
@@ -101,7 +91,7 @@ knitr::opts_chunk$set(echo = TRUE)
 # ==== C IV estimate ====
 #========================#
   
-  iv_reg <- ivreg(hours ~ nwifeinc + kidslt6 + kidsge6 + age + educ + lwage | 
+  iv_reg <- ivreg(hours ~ lwage + nwifeinc + kidslt6 + kidsge6 + age + educ | 
                     nwifeinc + kidslt6 + kidsge6 + age + educ +
                     age_sq + age_cu + educ_sq + educ_cu + 
                     age_educ + age_sq_educ + age_educ_sq + 
@@ -167,10 +157,7 @@ knitr::opts_chunk$set(echo = TRUE)
                    age_educ + age_sq_educ + age_educ_sq + 
                    unem + city + motheduc + fatheduc + IMR , dt)
   
-  vars <- c("age", "educ", "age_sq", "age_cu", 
-            "educ_sq", "educ_cu", "age_educ", "age_sq_educ", 
-            "age_educ_sq", "unem",  "city", "motheduc", 
-            "fatheduc", "IMR")
+  vars <- c("age", "educ", "age_sq", "age_cu",  "educ_sq", "educ_cu", "age_educ", "age_sq_educ", "age_educ_sq", "unem",  "city", "motheduc", "fatheduc", "IMR")
   
   dt[,  lapply(.SD,  function(y) sum(length(which(is.na(y))))), .SDcols = vars]
 
@@ -185,9 +172,9 @@ knitr::opts_chunk$set(echo = TRUE)
 #======================#
   
   # get fitted values of lwage for full sample (including non workers ) without the IMR term 
-  B <- as.matrix(part_h_result[term != "IMR", estimate])
+  B <- as.matrix(r_l[["h"]][term != "IMR", estimate])
   
-  X <- dt[, setdiff(part_h_result[, term] ,c("(Intercept)", "IMR")), with = FALSE]
+  X <- dt[, setdiff(r_l[["h"]][, term] ,c("(Intercept)", "IMR")), with = FALSE]
   X[,  intercept := 1]
   setcolorder(X, c("intercept", setdiff(colnames(X), "intercept")))
   X <- as.matrix(X)
@@ -197,6 +184,8 @@ knitr::opts_chunk$set(echo = TRUE)
   # add it to data 
   dt[, lwage_hat := fitted]
 
+  # actually I only want estimates for people included in the original regression 
+  dt[is.na(lwage), lwage_hat := NA ]
 
 # estimate hours worked 
 hrs_reg <- lm( hours ~ lwage_hat + nwifeinc + age + educ + kidslt6 + kidsge6 + IMR , dt)
@@ -207,7 +196,7 @@ r_l[["i"]] <- data.table(tidy(hrs_reg))
 # ==== J IV and sample correction ====
 #=====================================#
 
-iv_reg <- ivreg(hours ~ nwifeinc + kidslt6 + kidsge6 + age + educ + IMR +lwage | 
+iv_reg <- ivreg(hours ~  lwage + nwifeinc + kidslt6 + kidsge6 + age + educ + IMR | 
                   nwifeinc + kidslt6 + kidsge6 + age + educ + IMR +
                   age_sq + age_cu + educ_sq + educ_cu + 
                   age_educ + age_sq_educ + age_educ_sq + 
@@ -230,13 +219,15 @@ save_tex_tables <- function(letter = NULL){
   table <- r_l[[letter]]
   
   print(xtable(table, type = "latex"), 
-        file = paste0("C:/Users/Nmath_000/Documents/Code/courses/econ 621/assignment_2_tex/t_",
-                      letter, ".tex"),
-        include.rownames = FALSE)
+        file = paste0("C:/Users/Nmath_000/Documents/Code/courses/econ 621/assignment_2_tex/t_", letter, ".tex"),
+        include.rownames = FALSE,
+        floating = FALSE)
 
 }
 
 lapply(names(r_l), save_tex_tables)
+
+
 
 
 ```

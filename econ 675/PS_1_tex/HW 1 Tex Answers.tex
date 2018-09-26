@@ -7,6 +7,8 @@
 
 \documentclass[11pt]{article}
 
+\usepackage[top=2cm, bottom=3cm, left=2cm, right=2cm]{geometry}
+
 \setlength{\parindent}{0in}
 
 \newcommand{\Var}{\mathrm{Var}}
@@ -129,12 +131,24 @@ $$\sqrt{n}(\hat{\beta}_{IV}-\beta) = (\check{x}'x)^{-1}\check{x}'\epsilon = \sqr
 Now using the CLT we get 
 $$\sqrt{n}\left(\frac{\check{x}'\epsilon}{n}\right) \xrightarrow{d} N(0,\E[\check{x}'\epsilon'\epsilon\check{x}])$$
 Now all together we get 
-$$\sqrt{n}(\hat{\beta}_{IV}-\beta) \xrightarrow{d} N(0,\E[\check{x}'x]\E[\check{x}'\epsilon'\epsilon\check{x}]E[x\check{x}'])$$
+$$\sqrt{n}(\hat{\beta}_{IV}-\beta) \xrightarrow{d} N(0,\E[\check{x}'x]^{-1}\E[\check{x}'\epsilon'\epsilon\check{x}]E[x\check{x}']^{-1})$$
 
 \subsection{Second measurement, Inference}
 To create a confidence interval robust to Standard errors we want to use the following, unsimplified, version of the asymptotic variance estimator. 
 
-$$Avar(\hat{\beta}_{IV}) = (\check{x}'x)^{-1}\left( \sum_{i=1}^{n}\epsilon_{i}^2 \check{x}_i' \check{x}_i \right) (\check{x}'x)^{-1}$$
+$$\hat{V}_{IV} = Avar(\hat{\beta}_{IV}) = (\check{x}'x)^{-1}\left( \sum_{i=1}^{n}\epsilon_{i}^2 \check{x}_i' \check{x}_i \right) (\check{x}'x)^{-1}$$
+
+We also showed above that 
+$$
+\sqrt{n}(\frac{\hat{\beta}_{IV}}{\sqrt{\hat{V}_{IV} }}) \to_d \mathcal{N}(\beta,1)
+$$
+
+
+Inverting the standard normal distribution and the following confidence interval 
+
+$$ \left[ \hat{\beta}_{IV} - \Phi^{-1} \left( 1 -\frac{(1-\alpha)}{2} \right) \left( \sqrt{\frac{\hat{V}_{IV} }{n}} \right),  \hat{\beta}_{IV} + \Phi^{-1} \left( 1 -\frac{(1-\alpha)}{2} \right) \left( \sqrt{\frac{\hat{V}_{IV} }{n}} \right) \right] $$
+
+where $\alpha = 0.95$ in this case 
 
 \subsection{Validation sample, Consistency}
 
@@ -142,9 +156,45 @@ First note that $(\frac{1}{n}\tilde{x}'\tilde{x}) \plim \sigma_x^2 + \sigma_u^2$
 
 Now we define $\hat{\beta}_{VS} = \hat{\beta}_{ls}\left(\frac{1}{n}\frac{\tilde{x}'\tilde{x}}{\check{\sigma}_x^2} \right)$ \\
 
-and by the CMT we get that $\hat{\beta}_{VS} \plim \beta$
+and by Slutsky's theorem we get that $\hat{\beta}_{VS} \plim \beta$
+
+\subsection{Validation sample, Distribution}
+
+We know from section 1.7 that  $\hat{\beta}_{VS} = \hat{\beta}_{ls}\left(\frac{1}{n}\frac{\tilde{x}'\tilde{x}}{\check{\sigma}_x^2} \right)$ \\
+
+We can break this into three pieces and define $\hat{\beta}_{VS}$ in the following way 
+
+$$\hat{\beta}_{VS} = g(a,b,c) = \frac{ab}{c} $$
+$$ a = \hat{\beta}_{ls} $$
+$$ b = \frac{1}{n}\tilde{x}'\tilde{x} $$
+$$ c = \check{\sigma}_x^2 $$
+
+g is a continuous function so we can apply the delta method. 
+
+$$ \sqrt{n} \left( g \left( \hat{\beta}_{ls}, \frac{1}{n}\tilde{x}'\tilde{x}, \check{\sigma}_x^2 \right) - g \left( \lambda \beta, \sigma_x^2 + \sigma_{\mu}^2, \sigma_x^2 \right) \right) \to_d 
+\mathcal{N} \left( \nabla g \left( \lambda \beta, \sigma_x^2 + \sigma_{\mu}^2, \sigma_x^2 \right)' 
+\bm{\Sigma} 
+\nabla g \left( \lambda \beta, \sigma_x^2 + \sigma_{\mu}^2, \sigma_x^2 \right) \right) $$
+
+$$ V_{vs} =  \nabla g \left( \lambda \beta, \sigma_x^2 + \sigma_{\mu}^2, \sigma_x^2 \right)' 
+\bm{\Sigma} 
+\nabla g \left( \lambda \beta, \sigma_x^2 + \sigma_{\mu}^2, \sigma_x^2 \right) $$
+
+\subsection{Validation sample, Inference}
+
+Similar to problem 1.6 we have that 
+$$
+\sqrt{n} \left( \frac{\hat{\beta}_{VS}}{\sqrt{\hat{V}_{VS} }} \right) \to_d \mathcal{N}(\beta,1)
+$$
 
 
+Inverting the standard normal distribution and the following confidence interval 
+
+$$ \left[ \hat{\beta}_{VS} - \Phi^{-1} \left( 1 -\frac{(1-\alpha)}{2} \right) \left( \sqrt{\frac{\hat{V}_{VS} }{n}} \right),  \hat{\beta}_{VS} + \Phi^{-1} \left( 1 -\frac{(1-\alpha)}{2} \right) \left( \sqrt{\frac{\hat{V}_{VS} }{n}} \right) \right] $$
+
+where $\alpha = 0.95$ in this case 
+
+\subsection{FE estimator, Consistency}
 
 
 
@@ -184,6 +234,27 @@ $$\hat{B} = \frac{1}{n}(x'\hat{W} \hat{\epsilon}' \hat{\epsilon} \hat{W}x)$$
  so that gives us 
  
  $$ \hat{V}(W) = \frac{1}{n} (x'\hat{W}x)^{-1} (x'\hat{W} \hat{\epsilon}' \hat{\epsilon} \hat{W}x) (x'\hat{W}x)^{-1} $$
+ 
+ \section{Question 3: Analysis of Experiments}
+ 
+ \subsection{title}
+ 
+ $$\E[T_{DM}] = \E[\bar{Y}_1] - \E[\bar{Y}_0] = \E \left[ \frac{1}{N_1} \sum_{i=1}^{n} D_i(1) Y_i  \right]  
+ -  \E \left[ \frac{1}{n-N_1} \sum_{i=1}^{n} D_i(0) Y_i  \right]  $$
+ 
+ $$ =  \frac{1}{N_1} \sum_{i=1}^{n} \left(  D_i(1) \E[Y_i] \right) - \frac{1}{n-N_1} \sum_{i=1}^{n} \left(  D_i(0) \E[Y_i] \right) $$
+ $$=  \frac{1}{N_1} \sum_{i=1}^{n} \left( D_i(1) \right) \E[Y_i(T_i)|T_i = 1]  - \frac{1}{n-N_1} \sum_{i=1}^{n} \left( D_i(0) \right) \E[Y_i(T_i)|T_i =0] $$
+ 
+ Now note that since $T_i$ is random: 
+ $$ \E[Y_i(T_i)|T_i = 1] = \E[Y_i(1)] $$
+ $$ \E[Y_i(T_i)|T_i = 0] = \E[Y_i(0)] $$
+ 
+ Together this gives us: 
+  $$\E[T_{DM}] = \E[Y_i(1)] - \E[Y_i(0)] $$
+  
+ or
+ 
+ $$\tau_{ATE} = \frac{1}{n} \sum_{i=1}^{n} Y_i(1) - \frac{1}{n} \sum_{i=1}^{n} Y_i(0) $$
 %------------------------------------------------
 % end doc
 %------------------------------------------------

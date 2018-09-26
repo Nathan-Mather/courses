@@ -171,6 +171,8 @@
   # add it to data 
   dt[, lwage_hat := fitted]
 
+  # actually I only want estimates for people included in the original regression 
+  dt[is.na(lwage), lwage_hat := NA ]
 
 # estimate hours worked 
 hrs_reg <- lm( hours ~ lwage_hat + nwifeinc + age + educ + kidslt6 + kidsge6 + IMR , dt)
