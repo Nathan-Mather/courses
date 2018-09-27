@@ -7,6 +7,7 @@ library(Matrix)
 library(lmtest)
 library(sandwich)
 library(broom)
+library(ggplot2)
 
 # clear objects and script 
 rm(list = ls(pos = ".GlobalEnv"), pos = ".GlobalEnv")
@@ -212,6 +213,23 @@ cat("\f")
   #=================#
 
      
+    power_plot <- ggplot(data = data.frame(x = 0), mapping = aes(x = x))
+     
+     se_1 <- 5
+     alpha_1 <- 2
+     
+     power_function <- function(x = NULL, se = NULL , alpha = NULL){
+       
+      
+       out <- x*se*alpha
+    return(out)
+       
+     }
 
+     power_plot <- power_plot + stat_function(fun = power_function, args = list(se=se_1, alpha = alpha_1), color = "blue") 
+     power_plot <- power_plot + xlim(-1,1)
     
+     
+     power_plot
+     
     

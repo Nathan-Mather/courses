@@ -195,8 +195,37 @@ $$ \left[ \hat{\beta}_{VS} - \Phi^{-1} \left( 1 -\frac{(1-\alpha)}{2} \right) \l
 where $\alpha = 0.95$ in this case 
 
 \subsection{FE estimator, Consistency}
+First note that because we have $T=2$, the FE estimator is equivalent to the first-difference (FD) estimator. That is 
 
 
+$$\hat{\beta}_{FE} = \hat{\beta}_{FD} $$
+$$ \left( \frac{1}{n} \sum_{i-1}^{n}(\tilde{x}_{i2} - \tilde{x}_{i1} )^2 \right)^{-1} 
+ \left( \frac{1}{n} \sum_{i-1}^{n}(\tilde{x}_{i2} - \tilde{x}_{i1} )(y_{i2}-y_{i1}) \right)$$
+ 
+ Not by using the WLLN:
+ 
+ $$ \frac{1}{n} \sum_{i-1}^{n}(\tilde{x}_{i2} - \tilde{x}_{i1} )^2 \plim \E[(\tilde{x}_{i2} - \tilde{x}_{i1} )^2]
+  = \E[(x_{i2} - x_{i1} + u_{i2} - u_{i1})^2]$$
+  $$ =  \E[(x_{i2} - x_{i1})^2] +\E[(u_{i2} - u_{i1})^2] +2\E[(x_{i2} - x_{i1})(u_{i2}-u_{i1})] = \sigma_{\Delta x}^2 + \sigma_{\Delta u}^2
+  $$
+  
+  since $\E[x_{it}u_{it}] = 0$ $\forall$ $t,s \in \{1,2\}$ Next 
+  
+  $$\frac{1}{n} \sum_{i-1}^{n}(\tilde{x}_{i2} - \tilde{x}_{i1} )(y_{i2} - y_{i1}) \plim \E[(\tilde{x}_{i2} - \tilde{x}_{i1} )(y_{i2} - y_{i1})]$$
+  
+  $$ = \E[(x_{i2} - x_{i1} + u_{i2} -u_{i1})(x_{i2}\beta - x_{i1}\beta + e_{i2} - e_{i1})]$$
+  
+  $$ = \E[(x_{i2}-x_{i1})^2]\beta + \E[(x_{i2}-x_{i1})(e_{i2}-e_{i1})] + \E[(x_{i2}-x_{i1})( u_{i2} -u_{i1})]\beta + \E[(u_{i2} - u_{i1}(e_{i2} - e_{i1}))]
+$$
+$$ = \E[(x_{i2} - x_{i1})^2]\beta = \sigma_{\Delta x}\beta $$
+
+since $\E[x_{it}u_{it}] = \E[x_{it}e_{it}] =  \E[u_{it}e_{it}] $ $\forall t,s \in \{1,2\}$. Finally we can put these together by the CMT to get. 
+$$ \hat{\beta}_{FE} \plim \frac{\sigma_{\Delta x}^2}{\sigma_{\Delta x}^2 + \sigma_{\Delta u}^2} \beta
+$$
+
+Thus we can see that $\hat{\beta}_{FE}$ is biased downwards.
+
+\subsection{FE estimator, time dependence}
 
 \section{Question 2: Implementing Least-Squares Estimators}
 
