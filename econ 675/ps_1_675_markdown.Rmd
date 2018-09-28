@@ -1,3 +1,16 @@
+---
+title: "pset 2 Labor"
+output: pdf_document
+theme: journal
+self_contained: TRUE
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r , eval=FALSE, echo=TRUE, warning = FALSE, message = FALSE }
 #=======================================#
 # ==== Load packages and clear data ====
 #=======================================#
@@ -191,7 +204,7 @@ cat("\f")
     # get summary, NOTE: these are NOT robust standard errors 
     lalong_lm_dt <- summary(lalonde_lm)$coefficients
       
-    # get robust standard errors. I use HC2 to match my math above 
+    # get robust standard errors. I use HC1 to match my math above 
     # any differnces are floating point errors 
     lm_robust <- coeftest(lalonde_lm, vcov = vcovHC(lalonde_lm, type="HC1"))
     
@@ -459,3 +472,10 @@ cat("\f")
 
    
   
+   
+
+   
+  
+
+```
+

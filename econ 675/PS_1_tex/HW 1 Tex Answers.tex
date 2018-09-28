@@ -18,7 +18,8 @@
 \newcommand{\plim}{\rightarrow_{p}}
 
 \usepackage{amsmath, amsfonts}
-
+\usepackage{graphicx}
+\usepackage{pdfpages}
 \usepackage{bm}
 
 % Expectation symbol
@@ -286,9 +287,30 @@ $$\hat{B} = \frac{1}{n}(x'\hat{W} \hat{\epsilon}' \hat{\epsilon} \hat{W}x)$$
  
  $$ \hat{V}(W) = \frac{1}{n} (x'\hat{W}x)^{-1} (x'\hat{W} \hat{\epsilon}' \hat{\epsilon} \hat{W}x) (x'\hat{W}x)^{-1} $$
  
+ \subsection{Part 4}
+ 
+ See code in the appendix. The results do not change between the regular and Cholesky inverse. 
+ 
+  \subsection{Part 5}
+  
+ 	\subsubsection{a}
+ 	\begin{center}
+ 		\input{results_2_5_a.tex}
+ 	\end{center}
+ 
+ 	\subsubsection{b}
+ 	They coincide because I made sure to weight the variance matrix properly and used HC1 in the sandwich package in R
+ 		\begin{center}
+ 		\input{results_2_5_b.tex}
+ 	\end{center}
+ 	
+ 
  \section{Question 3: Analysis of Experiments}
  
- \subsection{title}
+ 
+ \subsection{Neyman's approach}
+ 
+ \subsubsection{a}
  
  $$\E[T_{DM}] = \E[\bar{Y}_1] - \E[\bar{Y}_0] = \E \left[ \frac{1}{N_1} \sum_{i=1}^{n} D_i(1) Y_i  \right]  
  -  \E \left[ \frac{1}{n-N_1} \sum_{i=1}^{n} D_i(0) Y_i  \right]  $$
@@ -306,6 +328,53 @@ $$\hat{B} = \frac{1}{n}(x'\hat{W} \hat{\epsilon}' \hat{\epsilon} \hat{W}x)$$
  or
  
  $$\tau_{ATE} = \frac{1}{n} \sum_{i=1}^{n} Y_i(1) - \frac{1}{n} \sum_{i=1}^{n} Y_i(0) $$
+ 
+ The estimate from the data is 1794.34 and can be seen in the table in part 2
+ 
+  \subsubsection{b}
+ 
+ \begin{center}
+ 	\input{results_3_1_b.tex}
+ \end{center}
+ 
+ \subsection{Fisher's approach}
+ \subsubsection{a}
+ 
+  \begin{center}
+ 	\input{results_3_2_a_DM.tex}
+ \end{center}
+  \begin{center}
+	\input{results_3_2_a_KS.tex}
+  \end{center}
+ \subsubsection{b}
+ To find the confidence interval I calculate fisher's exact P value for a range of Null hypotheses. The table for this calculation is below. We can then look the table and look for p values closest to our .05 cutoff. This gives us a confidence interval of 500 to 3000. Using a more detailed set of points I can find that the confidence interval is more precisely 540 to 3055.
+ \begin{center}
+ 	\input{results_3_2_b.tex}
+ \end{center}
+ 
+ \subsection{Power calculations}
+ \subsubsection{a}
+ 
+\begin{minipage}{\linewidth}
+	\begin{center}
+		\includegraphics[width=.6\linewidth]{power_func_r.png}
+	\end{center}
+\end{minipage}
+
+
+
+
+ \subsubsection{b}
+ The math can be seen in my code. The number required is 1437
+ 
+ \section{Appendix}
+ \subsection{R Code}
+ \includepdf[page=-]{assignment_1_r_code_pdf.pdf}
+ 
+ \subsection{Stata Code}
+  \includepdf[page=-]{assignment_1_stata_code_pdf.pdf}
+ 
+ 
 %------------------------------------------------
 % end doc
 %------------------------------------------------
