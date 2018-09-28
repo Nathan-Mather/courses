@@ -23,7 +23,7 @@
 
 % Expectation symbol
 \newcommand{\E}{\mathrm{E}}
-
+\newcommand{\V}{\mathrm{V}}
 
 %----------------------------------------------------------------------------------
 %	TITLE AND AUTHOR(S)
@@ -226,6 +226,28 @@ $$
 Thus we can see that $\hat{\beta}_{FE}$ is biased downwards.
 
 \subsection{FE estimator, time dependence}
+Covariance stationarity implies that $\sigma_{xt}^2 = \sigma_x^2$ and $\sigma_{ut}^2 = \sigma_u^2$ for $t \in \{1,2\}$
+
+this means that 
+$$\sigma_{\Delta x}^2 =  \V[x_{i2} - x_{i1}] = \V[x_{i2}] + \V[x_i1] - 2Cov[x_{i2},x_{i1}] = 2\sigma_x^2 - 2Cov[x_{i2}, x_{i1}] $$
+
+Thus we get 
+$$\gamma = \frac{2(\sigma_x^2 - \Cov[x_{i2}, x_{i1}])}{2(\sigma_x^2 - \Cov[x_{i2}, x_{i1}] + \sigma_u^2 - \Cov[u_{i2}, u_{i1}])}$$
+
+$$
+= \frac{\sigma_x^2 - \rho_x \sigma_x^2 }{\sigma_x^2 - \rho_x \sigma_x^2 + \sigma_u^2 - \rho_u \sigma_u^2} = \frac{\sigma_x^2(1-\rho)x}{\sigma_x^2(1-\rho_x) + \sigma_u^2(1-\rho_u)} = \frac{\sigma_x^2}{\sigma_x^2 + \sigma_u^2 \frac{1-\rho_u}{1-\rho_x}}
+$$
+
+\subsection{FE estimator, time dependence}
+
+let $\rho_u = 0$ given this we can calculate
+
+$$ lim_{n\to\infty} \gamma = 0$$
+
+This implies that under the given conditions $\hat{\beta}_{FE}$ will be biased to zero. Thus the FE estimator will tend to give you zero for coefficients regardless of the true $\beta$.
+The idea is that if x is almost perfectly correlated over time, but the measurement error is completely random, then the only variation in our observations over time is because of random measurement error. So, our ability to observe actual variation in the variable of interest x is going to zero and the level of noise in our observations is high. 
+
+
 
 \section{Question 2: Implementing Least-Squares Estimators}
 

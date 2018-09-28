@@ -8,7 +8,7 @@ library(lmtest)
 library(sandwich)
 library(broom)
 library(ggplot2)
-
+library(stats)
 # clear objects and script 
 rm(list = ls(pos = ".GlobalEnv"), pos = ".GlobalEnv")
 options(scipen = 999)
@@ -205,31 +205,158 @@ cat("\f")
      tdm_CI_L <- TDM - se_tdm * qnorm(.975)
      tdm_CI_U <- TDM + se_tdm * qnorm(.975)
      
-     # ut together resuts 
+     # put together resuts 
      results <- data.table("TDM est" = TDM, "Conservative SE" = se_tdm, "CI Lower" = tdm_CI_L, "CI Upper" =  tdm_CI_U)
      
   #=================#
   # ==== fisher ====
   #=================#
-
      
-    power_plot <- ggplot(data = data.frame(x = 0), mapping = aes(x = x))
-     
-     se_1 <- 5
-     alpha_1 <- 2
-     
-     power_function <- function(x = NULL, se = NULL , alpha = NULL){
-       
+     # definitions for line by line debug 
+     # in_data= lalonde_dt
+     # y_var = "earn78"
+     # treat_var = "treat"
+     # opt_test_stat= "DM"
+     # n_iter = 10
+     # null_hyp = 5000
+     # 
+    
+    # write function for fisher p value 
+    fisher_p <- function(in_data= NULL, y_var = NULL, treat_var = NULL, null_hyp = 0, opt_test_stat= "DM", n_iter = 1999){
       
-       out <- x*se*alpha
-    return(out)
+      # check that a test has ben speciies 
+      if(!opt_test_stat %chin% c("DM", "KS")){
+        stop("Specify either DM ot KS test")
+      }
+      
+      # check for non-zero null under the KS test 
+      if(opt_test_stat == "KS" & null_hyp != 0){
+        stop("The KS test is not compatibe with a non-zero null at the moment")
+      }
+      
+      # copy data so I can create y(0) and y(1) cols without altering input 
+      data_c <- copy(in_data)
+      
+      # create colums for sharp null treated and untreated y variables 
+      data_c[get(treat_var) == 1, y_1 := get(y_var) ]
+      data_c[get(treat_var) == 0, y_1 := get(y_var) + null_hyp ]
+      data_c[get(treat_var) == 0, y_0 := get(y_var) ]
+      data_c[get(treat_var) == 1, y_0 := get(y_var) - null_hyp ]
+    
+      
+      
+      # create a data.table for the results of bootstrap
+      sim_data <- data.table(iteration = c(1:(n_iter+1)))
+      
+      # get the number of treated vars 
+      n_treat <- nrow(data_c[get(treat_var) == 1, ])
+      n_row <- nrow(data_c)
+      
+      # do actual test 
+      if(opt_test_stat == "DM"){
+        
+        test_1 <- data_c[get(treat_var) == 1, mean(get(y_var))] - data_c[get(treat_var) == 0, mean(get(y_var))] - null_hyp
+        
+      }
+      if(opt_test_stat == "KS"){
+        ksout <- suppressWarnings(ks.test(data_c[get(treat_var) == 1, get(y_var)], data_c[get(treat_var) == 0, get(y_var)] ))
+        test_1 <- ksout$statistic
+      }
+   
+      sim_data[iteration == 1, test := test_1]
+      
+      # for each iteration
+      for(i in 2:(n_iter + 1)){
+        
+        # create a permutation 
+        sample_i_1 <- sample.int(n = n_row, size = n_treat)
+        sample_i_0 <- setdiff(c(1: n_row), sample_i_1)
+        
+        # calculate the averate treatment effect for this given sample 
+        if(opt_test_stat == "DM"){
+          
+          test_i <- data_c[sample_i_1, mean(y_1)] - data_c[sample_i_0, mean(y_0)] - null_hyp
+        }
+        if(opt_test_stat == "KS"){
+          ksout <- suppressWarnings(ks.test(data_c[sample_i_1, y_1], data_c[sample_i_0, y_0] ))
+          test_i <- ksout$statistic
+        }
+        
+        
+        # store this value in the data table 
+        sim_data[ i, test := test_i]
+      }
+      
+      # calculate P value 
+      sim_data[, abs_test := abs(test)]
+      sim_data[, test_rank := frank(abs_test)]
+      
+      # get p value 
+      p_value <- (nrow(sim_data) - sim_data[iteration == 1, test_rank] + 1)/nrow(sim_data)
+      
+      return(p_value)
+      
+      
+    }
+ 
+    # run function on data 
+    fish_p_DM <- fisher_p(in_data= lalonde_dt, y_var = "earn78", treat_var = "treat", null_hyp = 0, opt_test_stat= "DM", n_iter = 999)
+    fish_p_ks <- fisher_p(in_data= lalonde_dt, y_var = "earn78", treat_var = "treat", null_hyp = 0, opt_test_stat= "KS", n_iter = 999)
        
-     }
+    #============================================#
+    # ==== construct 95% confidence interval ====
+    #============================================#
 
-     power_plot <- power_plot + stat_function(fun = power_function, args = list(se=se_1, alpha = alpha_1), color = "blue") 
-     power_plot <- power_plot + xlim(-1,1)
+      # run fcuntions on a range of data 
+      grid <- seq(5000,-1500,-250)
+      dm_p_list <- lapply(grid, fisher_p, in_data= lalonde_dt, y_var = "earn78", treat_var = "treat", opt_test_stat= "DM", n_iter = 999)
+      p_val_grid <- data.table(hyp_treat = grid, p_value = dm_p_list)
+      
+      
+      
+  #=============================#
+  # ==== Power calculations ====
+  #=============================#
     
-     
-     power_plot
-     
+    # plot attributes from EA 
+    plot_attributes <- theme( plot.background = element_rect(fill = "lightgrey"),
+                              panel.grid.major.x = element_line(color = "gray90"), 
+                              panel.grid.minor  = element_blank(),
+                              panel.background = element_rect(fill = "white", colour = "black") , 
+                              panel.grid.major.y = element_line(color = "gray90"),
+                              text = element_text(size= 20),
+                              plot.title = element_text(vjust=0, colour = "#0B6357",face = "bold", size = 20))
     
+    
+    # write power function 
+    power_function <- function(x, se= NULL) {
+      1 - pnorm(qnorm(0.975)-x/se.conserv) + pnorm(-qnorm(0.975)-x/se.conserv)
+    }
+      
+    # plot function
+    power_plot <- ggplot(data = data.frame(x = 0), mapping = aes(x = x))
+   power_plot <- power_plot + stat_function(fun = power_function, args = list(se=results$`Conservative SE`), color = "blue") 
+   power_plot <- power_plot + xlim(-5000,5000) + xlab("tau") + ylab("Power") 
+   power_plot
+
+  #========================#
+  # ==== find needed n ====
+  #========================#
+
+   # Parameterize the equation
+   p     = 2/3
+   tau   = 1000
+   
+   # Write down the power function, which implicitly defines N
+   Fun <- function(N, s.0 = s0_sq, s.1 = s1_sq){
+     -0.8 + 1 - pnorm(qnorm(0.975)-tau/sqrt(1/N*s.1*(1/p)+1/N*s.0*(1/(1-p)))) +
+       pnorm(-qnorm(0.975)-tau/sqrt(1/N*s.1*(1/p)+1/N*s.0*(1/(1-p)))) 
+   }
+   
+   # Solve for N
+   N.sol <- uniroot(Fun,c(0,100000000))$root
+   
+   
+   
+   
+  
