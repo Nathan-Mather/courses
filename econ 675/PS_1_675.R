@@ -38,6 +38,7 @@ cat("\f")
     # commented out, but usefull for line by line debug 
     # x = x_data
     # y = y_data
+
     # function
     mat_reg <- function(x = NULL, y = NULL, opt_chol = FALSE, CI_level = .95){
       
@@ -156,12 +157,15 @@ cat("\f")
                 "educ_sq", "earn74","black_earn74", 
                 "u74","u75")
     
-    # make matrix 
+    # make x matrix 
     x_la <- as.matrix(lalonde_dt[, c("const", x_vars), with = FALSE])
     
     # run function on this data 
     lalonde_reg <- mat_reg(x = x_la, y = y_la)
-    lalonde_reg_dt <- lalonde_reg[["results"]]
+    
+    # grab the results 
+    results_2_5_a <- lalonde_reg[["results"]]
+    
   #===================#
   # ==== using lm ====
   #===================#
@@ -179,7 +183,7 @@ cat("\f")
     # any differnces are floating point errors 
     lm_robust <- coeftest(lalonde_lm, vcov = vcovHC(lalonde_lm, type="HC1"))
     
-    lm_robust_dt <- data.table(tidy(lm_robust))
+    results_2_5_b <- data.table(tidy(lm_robust))
 
 #=====================#
 # ==== Question 3 ====
@@ -193,12 +197,14 @@ cat("\f")
     # 3.1.a calculate ATE 
     TDM <- lalonde_dt[treat == 1, mean(earn78)] - lalonde_dt[treat == 0, mean(earn78)] 
     
-    # get sd for treatment and no treatnment 
+    # get variance for treatment and no treatnment 
     s1_sq <- lalonde_dt[treat == 1, var(earn78)]
     s0_sq <- lalonde_dt[treat == 0, var(earn78)]
     
     # get V_tdm
     V_tdm <- s1_sq/lalonde_dt[treat == 1, .N] + s0_sq/lalonde_dt[treat == 0, .N]
+    
+    # get standard error 
     se_tdm <- sqrt(V_tdm)
     
     # constuct 95% convidence interval 
@@ -206,7 +212,7 @@ cat("\f")
      tdm_CI_U <- TDM + se_tdm * qnorm(.975)
      
      # put together resuts 
-     results <- data.table("TDM est" = TDM, "Conservative SE" = se_tdm, "CI Lower" = tdm_CI_L, "CI Upper" =  tdm_CI_U)
+     results_3_1_b <- data.table("TDM est" = TDM, "Conservative SE" = se_tdm, "CI Lower" = tdm_CI_L, "CI Upper" =  tdm_CI_U)
      
   #=================#
   # ==== fisher ====
@@ -219,8 +225,8 @@ cat("\f")
      # opt_test_stat= "DM"
      # n_iter = 10
      # null_hyp = 5000
-     # 
-    
+
+
     # write function for fisher p value 
     fisher_p <- function(in_data= NULL, y_var = NULL, treat_var = NULL, null_hyp = 0, opt_test_stat= "DM", n_iter = 1999){
       
@@ -229,12 +235,12 @@ cat("\f")
         stop("Specify either DM ot KS test")
       }
       
-      # check for non-zero null under the KS test 
+      # check for non-zero null under the KS test (function doesn't do that)
       if(opt_test_stat == "KS" & null_hyp != 0){
         stop("The KS test is not compatibe with a non-zero null at the moment")
       }
       
-      # copy data so I can create y(0) and y(1) cols without altering input 
+      # copy data so I can create y(0) and y(1) cols without altering input data set
       data_c <- copy(in_data)
       
       # create colums for sharp null treated and untreated y variables 
@@ -242,8 +248,6 @@ cat("\f")
       data_c[get(treat_var) == 0, y_1 := get(y_var) + null_hyp ]
       data_c[get(treat_var) == 0, y_0 := get(y_var) ]
       data_c[get(treat_var) == 1, y_0 := get(y_var) - null_hyp ]
-    
-      
       
       # create a data.table for the results of bootstrap
       sim_data <- data.table(iteration = c(1:(n_iter+1)))
@@ -263,6 +267,7 @@ cat("\f")
         test_1 <- ksout$statistic
       }
    
+      # put results of actual data in table 
       sim_data[iteration == 1, test := test_1]
       
       # for each iteration
@@ -287,7 +292,7 @@ cat("\f")
         sim_data[ i, test := test_i]
       }
       
-      # calculate P value 
+      # get absolute value and rank of the tests  
       sim_data[, abs_test := abs(test)]
       sim_data[, test_rank := frank(abs_test)]
       
@@ -300,9 +305,12 @@ cat("\f")
     }
  
     # run function on data 
-    fish_p_DM <- fisher_p(in_data= lalonde_dt, y_var = "earn78", treat_var = "treat", null_hyp = 0, opt_test_stat= "DM", n_iter = 999)
-    fish_p_ks <- fisher_p(in_data= lalonde_dt, y_var = "earn78", treat_var = "treat", null_hyp = 0, opt_test_stat= "KS", n_iter = 999)
-       
+    results_3_2_a_DM <- fisher_p(in_data= lalonde_dt, y_var = "earn78", treat_var = "treat", null_hyp = 0, opt_test_stat= "DM", n_iter = 999)
+    results_3_2_a_KS <- fisher_p(in_data= lalonde_dt, y_var = "earn78", treat_var = "treat", null_hyp = 0, opt_test_stat= "KS", n_iter = 999)
+     
+    # make it fancy for output 
+    results_3_2_a_DM <- data.table("DM P value" =   results_3_2_a_DM )
+    results_3_2_a_KS <- data.table("KS P value" =   results_3_2_a_KS )
     #============================================#
     # ==== construct 95% confidence interval ====
     #============================================#
@@ -310,7 +318,7 @@ cat("\f")
       # run fcuntions on a range of data 
       grid <- seq(5000,-1500,-250)
       dm_p_list <- lapply(grid, fisher_p, in_data= lalonde_dt, y_var = "earn78", treat_var = "treat", opt_test_stat= "DM", n_iter = 999)
-      p_val_grid <- data.table(hyp_treat = grid, p_value = dm_p_list)
+      results_3_2_b <- data.table(hyp_treat = grid, p_value = dm_p_list)
       
       
       
@@ -330,12 +338,12 @@ cat("\f")
     
     # write power function 
     power_function <- function(x, se= NULL) {
-      1 - pnorm(qnorm(0.975)-x/se.conserv) + pnorm(-qnorm(0.975)-x/se.conserv)
+      1 - pnorm(qnorm(0.975)-x/se) + pnorm(-qnorm(0.975)-x/se)
     }
       
     # plot function
     power_plot <- ggplot(data = data.frame(x = 0), mapping = aes(x = x))
-   power_plot <- power_plot + stat_function(fun = power_function, args = list(se=results$`Conservative SE`), color = "blue") 
+   power_plot <- power_plot + stat_function(fun = power_function, args = list(se=results_3_1_b$`Conservative SE`), color = "blue") 
    power_plot <- power_plot + xlim(-5000,5000) + xlab("tau") + ylab("Power") 
    power_plot
 
@@ -357,6 +365,32 @@ cat("\f")
    N.sol <- uniroot(Fun,c(0,100000000))$root
    
    
+ #=====================#
+ # ==== save stuff ====
+ #=====================#
    
+   # save plot 
+   png( "C:/Users/Nmath_000/Documents/Code/courses/econ 675/PS_1_tex/power_func_r.png", height = 800, width = 800, type = "cairo")
+   print(power_plot)
+   dev.off()
+   
+   # save results #badcode so lazy
+   res_objects <- ls()[grepl("results", ls())]
+   
+   save_tex_tables <- function(obj_name = NULL){
+     
+     table <- get(obj_name)
+     
+     print(xtable(table, type = "latex"), 
+           file = paste0("C:/Users/Nmath_000/Documents/Code/courses/econ 675/PS_1_tex/", obj_name, ".tex"),
+           include.rownames = FALSE,
+           floating = FALSE)
+     
+   }
+   
+   lapply(res_objects, save_tex_tables)
+   
+   
+
    
   
