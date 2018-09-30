@@ -9,6 +9,7 @@ library(sandwich)
 library(broom)
 library(ggplot2)
 library(stats)
+library(xtable)
 # clear objects and script 
 rm(list = ls(pos = ".GlobalEnv"), pos = ".GlobalEnv")
 options(scipen = 999)
@@ -337,14 +338,14 @@ cat("\f")
                                  treat_var     = "treat", 
                                  null_hyp      = 0, 
                                  opt_test_stat = "DM", 
-                                 n_iter        = 999)
+                                 n_iter        = 4999)
     
     results_3_2_a_KS <- fisher_p(in_data       = lalonde_dt,
                                  y_var         = "earn78", 
                                  treat_var     = "treat", 
                                  null_hyp      = 0, 
                                  opt_test_stat = "KS",
-                                 n_iter        = 999)
+                                 n_iter        = 4999)
      
     # make it fancy for output 
     results_3_2_a_DM <- data.table("DM P value" =   results_3_2_a_DM )
@@ -354,7 +355,7 @@ cat("\f")
     #============================================#
 
       # run fcuntions on a range of data 
-      grid <- seq(5000,-1500,-5)
+      grid <- seq(5000,-1500,-250)
     
       dm_p_list <- lapply(grid, 
                           fisher_p,
@@ -362,7 +363,7 @@ cat("\f")
                           y_var = "earn78",
                           treat_var = "treat", 
                           opt_test_stat= "DM", 
-                          n_iter = 999)
+                          n_iter = 1999)
       
       results_3_2_b <- data.table(hyp_treat = grid, p_value = dm_p_list)
       
@@ -436,7 +437,8 @@ cat("\f")
      
      table <- get(obj_name)
      
-     print(xtable(table, type = "latex"), 
+     print(xtable(table, type = "latex", 
+                  digits = 3), 
            file = paste0("C:/Users/Nmath_000/Documents/Code/courses/econ 675/PS_1_tex/", 
                          obj_name, ".tex"),
            include.rownames = FALSE,

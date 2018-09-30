@@ -57,13 +57,8 @@ all_data = b, se, tstat, p_value, CI_L, CI_U
 all_data
 end
 
-cd "C:\Users\Nmath_000\Documents\Code\courses\econ 675\PS_1_tex\"
-mmat2tex all_data using stata_2_5_a_raw.tex , replace
-
 // now run regression 
 reg earn78 treat black age educ educ_sq earn74 black_earn74 u74 u75, robust
-
-outreg2 using stata_2_5_b.tex
 
 // nice, they match
 
@@ -108,7 +103,6 @@ local CIupper = `tau' + invnormal(0.975)*`v'
 di "`CIlower'"
 di "`CIupper'"
 
-
 **********
 * fisher *
 **********
@@ -135,19 +129,7 @@ replace Y1_imputed = earn78 + `tau' if treat==0
 gen     Y0_imputed = earn78
 replace Y0_imputed = earn78 - `tau' if treat==1
 
-* Write program to put into bootstrap function
-program define meandiff, rclass
-	summarize   Y1_imputed if treat==1
-	local 		tau1 = r(mean)
-	sum 		Y0_imputed if treat==0
-	local 		tau0 = r(mean)
-	return      scalar meandiff = `tau1' - `tau0'
-end
-
-* Run bootstrap function using meandiff program
-eststo I: bootstrap diff = r(meandiff), reps(1999): meandiff
-
-esttab I using stata_3_2_2_b.tex, mtitle("I") replace
+bootstrap treat diffmean=(r(mu_2)-r(mu_1)), reps(1999) nowarn: ttest earn78, by(treat)
 
 *****************
 *power funciton *
