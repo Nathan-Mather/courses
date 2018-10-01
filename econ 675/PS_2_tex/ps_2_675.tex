@@ -1,0 +1,106 @@
+%-----------------------------------------------------------------------------------
+%	PACKAGES AND OTHER DOCUMENT CONFIGURATIONS
+%----------------------------------------------------------------------------------
+
+
+
+\documentclass[11pt]{article}
+
+\usepackage[top=2cm, bottom=3cm, left=2cm, right=2cm]{geometry}
+
+\setlength{\parindent}{0in}
+
+\newcommand{\Var}{\mathrm{Var}}
+
+\newcommand{\Cov}{\mathrm{Cov}}
+
+\newcommand{\plim}{\rightarrow_{p}}
+
+\usepackage{amsmath, amsfonts}
+\usepackage{graphicx}
+\usepackage{pdfpages}
+\usepackage{bm}
+\usepackage{listings}
+
+% Expectation symbol
+\newcommand{\E}{\mathrm{E}}
+\newcommand{\V}{\mathrm{V}}
+
+%----------------------------------------------------------------------------------
+%	TITLE AND AUTHOR(S)
+%----------------------------------------------------------------------------------
+
+\title{Econ 675 Assignment 1} % The article title
+
+
+\author{Nathan Mather} % The article author(s) 
+
+\date{\today} % An optional date to appear under the author(s)
+
+
+%----------------------------------------------------------------------------------
+\begin{document}
+	
+%------------------------------------------------------------------------------
+%	TABLE OF CONTENTS & LISTS OF FIGURES AND TABLES
+%------------------------------------------------------------------------------
+\maketitle % Print the title/author/date block
+
+\setcounter{tocdepth}{2} % Set the depth of the table of contents to show sections and subsections only
+
+\tableofcontents % Print the table of contents
+
+
+%-------------------------------------------------------------
+% Question 1 
+%-------------------------------------------------------------
+\section{Kernal Density Estimation}
+\subsection{Part 1}
+
+Start by noting that 
+
+$$ \hat{f}^{(r)}(x) = \frac{(-1)^s}{nh^{1+s}} \sum_{i=1}^{n}k^{(s)} \left( \frac{{x}_i - x}{h} \right) 
+$$
+
+Now taking the expectation of $\hat{f}^{(r)}(x)$ that we can apply the linearity of expectations to move the expectation inside the sum. Then we can use the i.i.d. assumption to show the sum is just n times the expectation. This leaves us with 
+
+$$  \E[\hat{f}^{(r)}(x)] = \E \left[ \frac{(-1)^s}{h^{1+s}} k^{(s)} \left( \frac{{x}_i - x}{h} \right)  \right]
+= \int_{-\infty}^{\infty} \frac{(-1)^s}{h^{1+s}} k^{(s)} \left( \frac{z - x}{h} \right)f(z)dz
+$$
+
+
+
+Where the second equality is just by the definition of the expectation. Next we use integration by parts. Note that 
+
+$$\int_{-\infty}^{\infty} \frac{(-1)^s}{h^{1+s}} k^{(s)} \left( \frac{z - x}{h} \right)f(z)dz = -\int_{-\infty}^{\infty} \frac{(-1)^s}{h^{s}} k^{(s-1)} \left( \frac{z - x}{h} \right)f^{(1)}(z)dz
+$$
+
+Iterating this s times gives us
+
+$$\int_{-\infty}^{\infty} \frac{(-1)^s}{h^{1+s}} k^{(s)} \left( \frac{z - x}{h} \right)f(z)dz
+=  (-1)^s \int_{-\infty}^{\infty} \frac{(-1)^s}{h} k \left( \frac{z - x}{h} \right)f^{(s)}(z)dz
+= \int_{-\infty}^{\infty} \frac{1}{h} k \left( \frac{z - x}{h} \right)f^{(s)}(z)dz
+$$
+
+Next we apply change of variables. let $u = \frac{z - x}{h}$ Note that $du=\frac{1}{h}dz$ so we get 
+
+$$ \int_{-\infty}^{\infty}  k(u)f^{(s)}(x+hu)du $$
+
+Next we Taylor expand $f^{(s)}(x+hu)$ to the $P^{th}$ order about $x$. Recall from properties of the kernal estimator that $ \int_{-\infty}^{\infty}k(u)du = 1$ and that $ \int_{-\infty}^{\infty}k(u)u^jdu = 0$ for all $j\neq p$ This gives us
+
+$$ f^{(r)}(x) +\frac{1}{P!}f^{(s+P)}(x)h^P\int_{-\infty}^{\infty}k(u)u^pdu +o(h^P)
+= f^{(r)}(x) +\frac{1}{P!}f^{(s+P)}(x)h^p \mu_P(k) +o(h^P)
+$$
+
+which is the desired result. 
+
+
+
+
+
+%------------------------------------------------
+% end doc
+%------------------------------------------------
+\end{document}
+
+
