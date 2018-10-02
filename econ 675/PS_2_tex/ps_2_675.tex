@@ -93,10 +93,17 @@ $$ f^{(r)}(x) +\frac{1}{P!}f^{(s+P)}(x)h^P\int_{-\infty}^{\infty}k(u)u^pdu +o(h^
 $$
 
 which is the desired result. 
+\\ \\ 
 
+Now for the variance recall again that 
 
+$$ \hat{f}^{(r)}(x) = \frac{(-1)^s}{nh^{1+s}} \sum_{i=1}^{n}k^{(s)} \left( \frac{{x}_i - x}{h} \right) 
+$$
 
+So by the i.i.d. assumption we can get that 
 
+$$ \V \left(\hat{f}^{(r)}(x) \right) = \frac{1}{nh^{2+2s}} \V \left( k^{(s)} \left( \frac{{x}_i - x}{h} \right)  \right)
+$$
 
 %------------------------------------------------
 % end doc
