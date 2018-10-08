@@ -43,11 +43,39 @@ testnl  _b[xm:mu3] /_b[xf:mu3] = _b[xm:sexrat] /_b[xf:sexrat] = _b[xm:divindex] 
  ******
  * 2e *
  ******
+ 
+local m1 = _b[xm: lnwh]
+local m3 = _b[xm: lnwfwh]
+local m4 = _b[xm: mu3]
+local f2 = _b[xf: lnwf]
+local f3 = _b[xf: lnwfwh]
+local f4 = _b[xf: mu3]
+local f5 = _b[xf:sexrat]
+local f6 = _b[xf:divindex]
+local delta = `f3'*`m4'-`f4'*`m3'
 
- 
- 
- 
- 
- 
+* get coeff for lnw1
+local sr1 = `m1'*`f4'/`delta'
+di `sr1'
+
+* get coeff for lnw2
+local sr2 = `m4'*`f2'/`delta'
+di `sr2'
+
+* get coeff for lnw1 X lnw2
+local sr3 = `m4'*`f4'/`delta'
+di `sr3'
+
+* get coeff for y 
+local sr4 = `m4'*`f3'/`delta'
+di `sr4'
+
+* get coeff for s1
+local sr5 = `m4'*`f5'/`delta'
+di `sr5'
+
+ * get coeff for s2
+local sr6 = `m4'*`f6'/`delta'
+di `sr56'
  
  
