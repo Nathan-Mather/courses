@@ -59,12 +59,12 @@
 
 Start by noting that 
 
-$$ \hat{f}^{(r)}(x) = \frac{(-1)^s}{nh^{1+s}} \sum_{i=1}^{n}k^{(s)} \left( \frac{{x}_i - x}{h} \right) 
+$$ \hat{f}^{(s)}(x) = \frac{(-1)^s}{nh^{1+s}} \sum_{i=1}^{n}k^{(s)} \left( \frac{{x}_i - x}{h} \right) 
 $$
 
-Now taking the expectation of $\hat{f}^{(r)}(x)$ that we can apply the linearity of expectations to move the expectation inside the sum. Then we can use the i.i.d. assumption to show the sum is just n times the expectation. This leaves us with 
+Now taking the expectation of $\hat{f}^{(s)}(x)$ that we can apply the linearity of expectations to move the expectation inside the sum. Then we can use the i.i.d. assumption to show the sum is just n times the expectation. This leaves us with 
 
-$$  \E[\hat{f}^{(r)}(x)] = \E \left[ \frac{(-1)^s}{h^{1+s}} k^{(s)} \left( \frac{{x}_i - x}{h} \right)  \right]
+$$  \E[\hat{f}^{(s)}(x)] = \E \left[ \frac{(-1)^s}{h^{1+s}} k^{(s)} \left( \frac{{x}_i - x}{h} \right)  \right]
 = \int_{-\infty}^{\infty} \frac{(-1)^s}{h^{1+s}} k^{(s)} \left( \frac{z - x}{h} \right)f(z)dz
 $$
 
@@ -88,8 +88,8 @@ $$ \int_{-\infty}^{\infty}  k(u)f^{(s)}(x+hu)du $$
 
 Next we Taylor expand $f^{(s)}(x+hu)$ to the $P^{th}$ order about $x$. Recall from properties of the kernal estimator that $ \int_{-\infty}^{\infty}k(u)du = 1$ and that $ \int_{-\infty}^{\infty}k(u)u^jdu = 0$ for all $j\neq p$ This gives us
 
-$$ f^{(r)}(x) +\frac{1}{P!}f^{(s+P)}(x)h^P\int_{-\infty}^{\infty}k(u)u^pdu +o(h^P)
-= f^{(r)}(x) +\frac{1}{P!}f^{(s+P)}(x)h^p \mu_P(k) +o(h^P)
+$$ f^{(s)}(x) +\frac{1}{P!}f^{(s+P)}(x)h^P\int_{-\infty}^{\infty}k(u)u^pdu +o(h^P)
+= f^{(s)}(x) +\frac{1}{P!}f^{(s+P)}(x)h^p \mu_P(k) +o(h^P)
 $$
 
 which is the desired result. 
@@ -97,13 +97,35 @@ which is the desired result.
 
 Now for the variance recall again that 
 
-$$ \hat{f}^{(r)}(x) = \frac{(-1)^s}{nh^{1+s}} \sum_{i=1}^{n}k^{(s)} \left( \frac{{x}_i - x}{h} \right) 
+$$ \hat{f}^{(s)}(x) = \frac{(-1)^s}{nh^{1+s}} \sum_{i=1}^{n}k^{(s)} \left( \frac{{x}_i - x}{h} \right) 
 $$
 
 So by the i.i.d. assumption we can get that 
 
-$$ \V \left(\hat{f}^{(r)}(x) \right) = \frac{1}{nh^{2+2s}} \V \left( k^{(s)} \left( \frac{{x}_i - x}{h} \right)  \right)
+$$ \V \left(\hat{f}^{(s)}(x) \right) = \frac{1}{nh^{2+2s}} \V \left( k^{(s)} \left( \frac{{x}_i - x}{h} \right)  \right)
 $$
+
+\begin{align}
+\V \left(\hat{f}^{(s)}(x) \right) &= \frac{1}{nh^{2+2s}} \V \left( k^{(s)} \left( \frac{{x}_i - x}{h} \right)  \right)\\
+ &= \frac{1}{n2h^{2+2s}} \E \left[\left( k^{(s)} \left( \frac{{x}_i - x}{h} \right)  \right)^2 \right] - \frac{1}{nh^{2+2s}} \E \left[\left( k^{(s)} \left( \frac{{x}_i - x}{h} \right)  \right)^2 \right]^2 \\
+  &= \frac{1}{nh^{2+2s}} \E \left[\left( k^{(s)} \left( \frac{{x}_i - x}{h} \right)  \right)^2 \right] - \frac{1}{n}\left( \frac{1}{h^{1+s}} \E \left[\left( k^{(s)} \left( \frac{{x}_i - x}{h} \right)  \right)^2 \right] \right)^2 \\
+  &=  \frac{1}{nh^{2+2s}} \int_{-\infty}^{\infty}k^{(s)} \left( \frac{{x}_i - x}{h} \right)^2 f(z)dz +   \frac{1}{nh^{2+2s}} f^{(n)}(X)^2 \\
+  &= \frac{1}{nh^{1+2s}} \int_{-\infty}^{\infty} k^{(s)}(u)^2f(x+hu)du + o\left(\frac{1}{nh^{2+2s}} \right)\\
+  &= \frac{1}{nh^{1+2s}} \cdot \vartheta_s(K) + o\left(\frac{1}{nh^{2+2s}} \right)
+\end{align}
+
+\subsection{part 2}
+
+STUFF
+.............\\
+.............\\
+.............\\
+.............\\
+.............\\
+
+Thus, we get the AIMSE-optimal bandwidth choice.
+$$
+h_{AIMSE_s} = \left[ \frac{(2s+1)(P!)^2}{2P} \frac{\vartheta_s(K)}{\vartheta_{s+P}(f) \cdot \mu_P(K)^2} \frac{1}{n} \right]$$
 
 %------------------------------------------------
 % end doc
