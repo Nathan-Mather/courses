@@ -202,6 +202,7 @@ h_opt <- (((3/5))/(v2k*(1/5)^2*1000))^(1/5)
   
   # make them pretty 
   part_b_res_pretty <- signif(part_b_res, 3)
+  part_b_res_pretty[, colnames(part_b_res_pretty)] <- lapply(part_b_res_pretty[,colnames(part_b_res_pretty), with = FALSE],  as.character)
   
   
 #====================#
@@ -209,6 +210,11 @@ h_opt <- (((3/5))/(v2k*(1/5)^2*1000))^(1/5)
 #====================#
 
   # save IMSE by h results 
+  print(xtable(part_b_res_pretty, type = "latex", 
+               digits = 3), 
+        file = "C:/Users/Nmath_000/Documents/Code/courses/econ 675/PS_2_tex/Q1_p3_b.tex",
+        include.rownames = FALSE,
+        floating = FALSE)
   
   
   

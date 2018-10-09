@@ -145,10 +145,10 @@ $$
 $$x_i \sim 0.5 \N(-1.5,-1.5) + 0.5\N(1,1)$$
 
 Filling in what we know so far we have : 
-$$h_{AIMSE_s} = \left[ \frac{2*\vartheta_0(K)}{\vartheta_{2}(f) \cdot \mu_2(K)^2} \frac{1}{1000} \right]^{\frac{1}{5}}$$
+$$h_{AIMSE_s} = \left[ \frac{\vartheta_0(K)}{\vartheta_{2}(f) \cdot \mu_2(K)^2} \frac{1}{1000} \right]^{\frac{1}{5}}$$
 
 So we need the second moment of K and the first moment of the second derivative of k squared. We can get two of these values from the table in Bruce Hanson's nonparametric notes. Giving us. 
-$$h_{AIMSE_s} = \left[ \frac{\frac{3}{5} \cdot 2}{\vartheta_{2}(f) \cdot \frac{1}{5}^2} \frac{1}{1000} \right]^{\frac{1}{5}}$$
+$$h_{AIMSE_s} = \left[ \frac{\frac{3}{5}}{\vartheta_{2}(f) \cdot \frac{1}{5}^2} \frac{1}{1000} \right]^{\frac{1}{5}}$$
 
 The second derivative of the normal density $\varphi$ with mean $\mu$ variance $\sigma^2$ is 
 
@@ -168,10 +168,14 @@ $$
 
 \subsubsection{b}
 
+Below Is the table of $\widehat{IMSE}^{lI}$ results and $\widehat{IMSE^{LO}}$ results by bandwidth $h$ 
+
 \begin{center}
 	\input{Q1_p3_b.tex}
 \end{center}
 
+\subsubsection{c}
+Intuitively the difference between the two estimators, LI and LO, is that the LI includes the extra zero term in the sum since we include $x_i - x_i$. As the size of the sample increases this contribution to the overal average will go to zero. Meaning that the LI IMSE will also converge to the correct estimate. s
 
 %------------------------------------------------
 % end doc
