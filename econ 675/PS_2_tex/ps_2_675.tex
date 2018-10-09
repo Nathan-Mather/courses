@@ -25,6 +25,7 @@
 % Expectation symbol
 \newcommand{\E}{\mathrm{E}}
 \newcommand{\V}{\mathrm{V}}
+\newcommand{\N}{\mathcal{N}}
 
 %----------------------------------------------------------------------------------
 %	TITLE AND AUTHOR(S)
@@ -116,16 +117,56 @@ $$
 
 \subsection{part 2}
 
-STUFF
-.............\\
-.............\\
-.............\\
-.............\\
-.............\\
+We start with the following AMISE
+$$ AIMSE[h] = \int \left[ \left( h_n^P \cdot \mu_P(K) \cdot \frac{f^{(P+s)}(x)}{P!}   \right)^2 + \frac{1}{nh_n^{1+2s}} \cdot \vartheta_s(K) \cdot f(x) \right]dx
+$$
+
+Using the $\vartheta$ notation so $\vartheta_{P+s}(f) = \int(f^{(P+s)}(x))^2$ and recalling that f(x) integrates to 1 we can rewrite this as 
+$$ =  h_n^{2P} \left( \frac{\mu_P(K)}{P!} \right)^2 \vartheta_{P+s}(f) + \frac{\vartheta_s(K)}{nh_n^{1+2s}}
+$$
+Now taking first order conditions and solving for h 
+$$ \frac{d}{dh}AIMSE[h] =  2Ph_n^{2p-1} \left( \frac{\mu_P(K)}{P!} \right)^2 \vartheta_{P+s}(f) -(1+2s) \frac{\vartheta_s(K)}{nh_n^{2+2s}} =0
+$$
+$$ \implies 2Ph^{1+2P+2s}\left( \frac{\mu_P(K)}{P!} \right)^2 \vartheta_{P+s}(f) = (1+2s) \frac{\vartheta_s(K)}{n}
+$$
 
 Thus, we get the AIMSE-optimal bandwidth choice.
+$$h_{AIMSE_s} = \left[ \frac{(2s+1)(P!)^2}{2P} \frac{\vartheta_s(K)}{\vartheta_{s+P}(f) \cdot \mu_P(K)^2} \frac{1}{n} \right]^{\frac{1}{1+2P+2s}}$$
+
+Least squares cross-validation is a fully automatic data-driven method of selecting the smoothing parameter h. THis is based on the principle of selecting bandwidth that minimizes the integrated squared error of the resulting estimate.The estimate used is 
+
+$$ \hat{h}_{CV} = \arg \min_{h} \frac{1}{n^2h} \sum_{i=1}^n \sum_{j=1}^n \bar{k} \left(\frac{X_i - X_j}{h}\right) - \frac{2}{n(n-1)h}\sum_{i=1}^n\sum_{j=1, i\neq j}^nk\left(\frac{X_i - X_j}{h}\right)
 $$
-h_{AIMSE_s} = \left[ \frac{(2s+1)(P!)^2}{2P} \frac{\vartheta_s(K)}{\vartheta_{s+P}(f) \cdot \mu_P(K)^2} \frac{1}{n} \right]$$
+
+
+\subsection{Monte Carlo experiment}
+
+\subsubsection{a} First, we want to compute the theoretically optimal bandwidth for $s=0$, $n=1000$, using the Epanechnikov kernel $(P=2)$, with the following Gaussian DGP:
+$$x_i \sim 0.5 \N(-1.5,-1.5) + 0.5\N(1,1)$$
+
+Filling in what we know so far we have : 
+$$h_{AIMSE_s} = \left[ \frac{2*\vartheta_0(K)}{\vartheta_{2}(f) \cdot \mu_2(K)^2} \frac{1}{1000} \right]^{\frac{1}{5}}$$
+
+So we need the second moment of K and the first moment of the second derivative of k squared. We can get two of these values from the table in Bruce Hanson's nonparametric notes. Giving us. 
+$$h_{AIMSE_s} = \left[ \frac{\frac{3}{5} \cdot 2}{\vartheta_{2}(f) \cdot \frac{1}{5}^2} \frac{1}{1000} \right]^{\frac{1}{5}}$$
+
+The second derivative of the normal density $\varphi$ with mean $\mu$ variance $\sigma^2$ is 
+
+$$\varphi''_{\mu, \sigma^2}(x) = \frac{1}{\sqrt{2 \pi \sigma^2 }}e^{\frac{-(x-\mu)^2}{2\sigma^2}} \left[ \left( \frac{(x - \mu)}{\sigma^2} \right)^2 - \frac{1}{\sigma^2} \right]
+$$
+
+now useing the linearity of integrals we can find $\vartheta_{2}(f)$
+$$ \vartheta_{2}(f) = \int_{-\infty}^{\infty} [0.5 \varphi''_{1,1}(x) + 0.5 \varphi''_{-1.5, 1.5}(x)]^2dx \approx 0.03883397
+$$
+
+Where the approximation comes from R 
+
+Finally, pluging this in gives the theoretically optimal bandwidth is: 
+
+$$h* = 0.8267532
+$$
+
+\subsubsection{b}
 
 %------------------------------------------------
 % end doc
