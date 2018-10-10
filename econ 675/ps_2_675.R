@@ -19,7 +19,7 @@ options(scipen = 999)
 cat("\f")
 
 # set options 
-opt_test_run <- TRUE
+opt_test_run <- FALSE
 
 #================================================#
 # ==== Question 1: Kernel Density Estimation ====
@@ -147,7 +147,7 @@ h_opt <- (15/(v2k*1000))^(1/5)
         
       output <- rbindlist(ouput_list)
   
-      return(output)
+      return(output[])
   
     }
     
@@ -202,12 +202,13 @@ h_opt <- (15/(v2k*1000))^(1/5)
     results_i[, d_h_hat := h_opt]
     
     # return the rsults for all of q2
-    return(results_i)
+    return(results_i[])
     
   }
   
 
-  
+  # make a vector of h's 
+  h_v <- seq(.5, 1.5,.1)
   # lets time this sucker
   start_t <- Sys.time()
   
@@ -217,13 +218,17 @@ h_opt <- (15/(v2k*1000))^(1/5)
   registerDoParallel(cl)
   
   # run simulations in parallel
-  output_list <- foreach(m = 1 : M,
+  output_list <- foreach(sim = 1 : M,
                          .inorder = FALSE,
                          .packages = "data.table",
-                         .options.multicore = list(preschedule = FALSE, cleanup = 9)) %dopar% sim_function(i = m, n = n, h_v = h_v, f_x = f_x, phi_2 = phi_2)
+                         .options.multicore = list(preschedule = FALSE, cleanup = 9)) %dopar% sim_function(i = sim, n = n, h_v = h_v, f_x = f_x, phi_2 = phi_2)
   
   # stop clusters 
   stopCluster(cl)
+  
+  
+  # AND TIME 
+  run_time <- Sys.time() - start_t
   
   # bind list
   output_dt <- rbindlist(output_list)
@@ -236,9 +241,7 @@ h_opt <- (15/(v2k*1000))^(1/5)
   
   h_list[[(h*10-4)]] <- imse_h
   
-  # AND TIME 
-  run_time <- Sys.time() - start_t
-  
+
   # bind results 
   part_b_res <- rbindlist(h_list)
   
@@ -264,6 +267,61 @@ h_opt <- (15/(v2k*1000))^(1/5)
   }
   
 
+  #=====================#
+  # ==== Question 2 ====
+  #=====================#
+
+  
+  #===========================#
+  # ==== A: generate data ====
+  #===========================#
+
+    gen_data_2.5.a <- function(){
+      
+      # start data.table with random x's. get a chi squared too cause i need that for the epsilon 
+      r_dt <- data.table(x = runif(n,-1,1), chi_sq = rchisq(n,5))
+      
+      # create a noise clumn epsilon,
+      r_dt[, eps := x^2*(chi_sq-5)]
+      
+      # now calcualte y 
+      r_dt[, y := exp(-0.1*(4*x-1)^2)*sin(5*x) + eps]
+      
+      # drop the chi_sq column
+      r_dt[, chi_sq := NULL]
+      
+      # return the random data 
+      return(r_dt[])
+      
+    }
+  
+ 
+  #==========================#
+  # ==== B do experiment ====
+  #==========================#
+  
+  # generate some random data 
+  r_dt <- gen_data_2.5.a()
+
+
+  # write a function to apply accross simulations 
+  power_s_fun <- function(r_dt = NULL){
+    
+    # make the 20 squared variables 
+    for(i in 1:20){
+      
+      r_dt[, temp := x^i]
+      setnames(r_dt, "temp", paste0("x_exp_", i))
+    
+    
+    # conver things to matrices to get the y hats 
+    x_mat <- r_dt[, grep("x_exp", colnames(r_dt), value = TRUE), with = FALSE]
+    y_mat <- 
+    # now get y hats 
+    
+    }
+  }
+  
   
   
   #===============================================================#
