@@ -1,0 +1,29 @@
+% latex table generated in R 3.3.2 by xtable 1.8-2 package
+% Wed Oct 10 12:13:29 2018
+\begin{tabular}{lr}
+  \hline
+variable & Full Sample Mean \\ 
+  \hline
+hf & 1.740 \\ 
+  lnwf & 2.040 \\ 
+  agef & 3.780 \\ 
+  eduf & 5.170 \\ 
+  whitef & 0.750 \\ 
+  blackf & 0.230 \\ 
+  hh & 2.240 \\ 
+  lnwh & 2.470 \\ 
+  ageh & 4.060 \\ 
+  eduh & 5.250 \\ 
+  whiteh & 0.750 \\ 
+  blackh & 0.230 \\ 
+  child6 & 0.330 \\ 
+  child17 & 0.970 \\ 
+  mu3 & 8.070 \\ 
+  sexrat & 0.490 \\ 
+  div1 & 0.960 \\ 
+  div2 & 0.220 \\ 
+  div3 & 0.750 \\ 
+  div4 & 0.540 \\ 
+  divindex & 2.480 \\ 
+   \hline
+\end{tabular}
