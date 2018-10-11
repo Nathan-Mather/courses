@@ -26,6 +26,7 @@
 \newcommand{\E}{\mathrm{E}}
 \newcommand{\V}{\mathrm{V}}
 \newcommand{\N}{\mathcal{N}}
+\newcommand{\R}{\mathbb{R}} 
 
 %----------------------------------------------------------------------------------
 %	TITLE AND AUTHOR(S)
@@ -174,9 +175,100 @@ Below Is the table of $\widehat{IMSE}^{lI}$ results and $\widehat{IMSE^{LO}}$ re
 	\input{Q1_p3_b.tex}
 \end{center}
 
+My graph is below. Both lines are there but that are very close to each other so it is hard to tell 
+
+\begin{center}
+		\includegraphics[width=.6\linewidth]{plot_1_3_b.png}
+
+\end{center}
+
+
 \subsubsection{c}
 Intuitively the difference between the two estimators, LI and LO, is that the LI includes the extra zero term in the sum since we include $x_i - x_i$. As the size of the sample increases this contribution to the overal average will go to zero. Meaning that the LI IMSE will also converge to the correct estimate. s
 
+
+\subsubsection{d}
+The "d\_h\_hat" column of the graph in part c is my calculation of this over the 1000 iterations. The value it came up with was 1.04. This is somewhat close but, as expected, not exactly correct. 
+
+\section{Question 2: Linear Smoothers, Cross-validation and Series}
+
+\subsection{Part 1}
+For local polynomial regression we want to estimate $e(x) = \E[y_i|x_i = x]$. The idea of a local polynomial regression is to estimate e(x) around the point x using a polynomial of degree p. We estimate this polynomial with weighted least squares. For a given x, we want to solve. 
+
+$$\hat{\bm{\beta}}_{LP}(x) = \arg \min_{\beta \in \R^{p+1}} \sum_{i=1}^{n}[y_i - \bm{r}_p(x_i - x)'\bm{\beta}]^2K(\frac{x_i-x}{h})
+$$
+
+where $ \bm{r}_p(x) = (1,x,x^2,...,x^p)'$ and $\hat{e}(x) = \hat{\beta}_0$
+
+from the lecture notes we can get that 
+$$\hat{\bm{\beta}}_{LP}(x) = (\bm{R'_pWR'_p})^{-1}\bm{R'_pWy}
+$$
+
+I think This simplifies to the following 
+$$\hat{e}(x)= e'_1 \left( \sum_{i=1}^{n} \bm{r}_p(x_i-x)\bm{r}_p(x_i-x)'w_i\right)^{-1} \left( \sum_{i=1}^{n} \bm{r}_p(x_i - x)w_iy_i \right)
+$$
+
+where $ wi = K(\frac{x_i - x}{h}) $
+
+Now for the series estimation. 
+$$  \bm{\hat{\beta}_{series}} = \arg \min_{\beta \in \R^{p+1}} \sum_{i=1}^{n}(y_i -\bm{r}_p(x_i)'\bm{\beta})^2
+	$$
+	
+where $ \bm{r}_p(x_i) = (1,x_x,x_i^2, ..., x_i^p)$ and 
+
+$$\hat{e}(x) = \bm{r}_p(x)'\hat{\bm{B}}_{series}$$
+
+Together we get 
+$$ \hat{\bm{B}}_{series} = (\bm{R}`_p \bm{R}_p)^{-1}\bm{R}_p\bm{y}
+$$
+
+so 
+$$\hat{e}(x) = \bm{r}_p(x)'(\bm{R}`_p \bm{R}_p)^{-1}\bm{R}_p\bm{y}$$
+
+Writing this in linear summation form I believe we get 
+$$\hat{e}(x) =  \bm{r}_p(x)' \left( \sum_{i=1}^{n}\bm{r}_p(x_i)\bm{r}_p(x_i)'\right)^{-1} \left( \sum_{i=1}^{n} \bm{r}_p(x_i)y_i \right)$$
+
+\subsection{Part 2}
+We want to choose the tuning parameter to minimize the mean squared leave one out error which is 
+
+$$\hat{c} = \arg \min_{c} \frac{1}{n} \sum_{i=1}^{n}(y_i - \hat{e}_(i)(x_i;c))^2$$
+
+where $\hat{e}_{(i)}(x_i)$ is the estimator of the regression function that leaves out $x_i$
+
+We can write the local polynomial series estimator as 
+$$ \hat{\bm{e}}(x) = \bm{Sy}$$
+
+Where S is the smoothing matrix. Note that the rows of S sum to one so $\bm{S1 = 1}$. For the leave one out estimator we want to use $\bm{S}$ but with the $i_{th}$ row and column removed. If we let the elements of $\bm{s}$ be denoted by $w_{ij}$ than deleting the $i_{th}$ column means that the $i_{th}$ row will now sum to $1-w_{ij}$. So, we divide by $1-w_{ij}$ to renormalize and get the the leave-one-out estimator is 
+$$\hat{e}_{(i)}(x_i) = \frac{1}{1-w_{ij}} \sum_{j=1 j\ne i}^{n} w_{ij} y_i$$
+
+The full sample estimator is 
+$$\hat{e}(x_i) = \sum_{j=1}^{n}w_{ij}y_i$$
+
+Together we can get that 
+$$\hat{e}_{(i)}(x_i)(1-w_{ij}) =  \sum_{j=1 j\ne i}^{n} w_{ij} y_i
+$$
+
+$$\implies \hat{e}_{(i)}(x_i)=  \sum_{j=1 j\ne i}^{n} w_{ij} y_i + w_{ij}\hat{e}_{(i)}(x_i) = \sum_{j=1}^{n} w_{ij} y_i + w_{ij}\hat{e}_{(i)}(x_i)-w_{ij}y_i = \hat{e}_{(i)}(x_i) + w_{ij}\hat{e}_{(i)}(x_i)-w_{ij}y_i$$
+
+$$ \implies y - \hat{e}_{(i)}(x_i) = y - \hat{e}_{(i)}(x_i) - w_{ij}\hat{e}_{(i)}(x_i)+w_{ij}y_i$$
+$$ = y- \hat{e}_{(i)}(x_i) + w_{ij}(y_{i} - \hat{e}_{(i)}))
+$$ 
+
+$$\implies y_i - \hat{e}_{(i)}(x_i) = \frac{1}{1-w_{ij}}(y_i - \hat{e}(x_i))
+$$
+
+Which is what we wanted 
+
+\subsection{part 3}
+Note that we have iid data and the $\sum_{i=1}^{n}w_{n,i}(x_i)=1$ first we want to find 
+
+$$ \E[\hat{e}(x)|\bm{x}] = \E\left[ \sum_{i=1}^{n} w_{n,i}(x_i)y_i|\bm{x} \right] = \sum_{i=1}^{n}\E\left[  w_{n,i}(x_i)y_i|\bm{x} \right]= \sum_{i=1}^{n}  w_{n,i}(x_i) \E\left[ y_i|\bm{x} \right] = \E[y_i|\bm{x}]
+$$
+
+Now as long as we have a bounded second moment we can use CLT to get asymptotic normality. Now to calculate the variance:
+
+$$ \V[\hat{e}(x)|\bm{x}] = \V \left[ \sum_{i=1}^{n} w_{n,i}(x_i)y_i |\bm{x}  \right] =  \sum_{i=1}^{n} \V \left[ w_{n,i}(x_i)y_i |\bm{x}  \right] = \sum_{i=1}^{n} w_{n,i}(x_i)^2 \V \left[y_i |\bm{x}  \right]
+$$
 %------------------------------------------------
 % end doc
 %------------------------------------------------

@@ -306,18 +306,21 @@ h_opt <- (15/(v2k*1000))^(1/5)
 
 
   # write a function to apply accross simulations 
-  power_s_fun <- function(r_dt = NULL){
+  power_s_fun <- function(sim = NULL){
     
+    r_dt <- gen_data_2.5.a()
     r_dt[, const :=1]
     
+    # store results in a list 
+    results <- vector("list", length = 20)
     # make the 20 squared variables 
     #note: im makeing an extra column. Ill fix this if I have time but this is easy for now
     for(i in 1:20){
       
-      r_dt[, temp := x^i]
-      setnames(r_dt, "temp", paste0("x_exp_", i))
-    
-    
+    r_dt[, temp := x^i]
+    setnames(r_dt, "temp", paste0("x_exp_", i))
+  
+  
     # conver things to matrices to get the y hats 
     x_mat <- as.matrix(r_dt[, c(grep("x_exp", colnames(r_dt), value = TRUE), "const"), with = FALSE])
     y_mat <- as.matrix(r_dt[, y])
@@ -328,12 +331,186 @@ h_opt <- (15/(v2k*1000))^(1/5)
     Y.hat <- XX %*% y_mat
     
     # now put this crap in a data.table to calculate cv 
+    res <- data.table(y_hat = Y.hat, w = diag(XX), y = r_dt[, y])
     
-
+    # now calculate cv 
+    res[, cv_n := ((y - y_hat.V1)/(1-w))^2]
+    
+    # now get the mean of cv_i to get cv 
+    res <-  data.table(cv = res[, mean(cv_n)], k = i)
+    setnames(res, "cv", paste0("cv_", sim))
+    results[[i]] <- res
+    
     }
+    
+    print(sim)
+    # bind results 
+  return(rbindlist(results))
+
   }
   
+  start_t <- Sys.time()
   
+  # parallel setup
+  cl <- makeCluster(4, type = "PSOCK")
+  registerDoParallel(cl)
+  
+  # run simulations in parallel
+  all_out <- foreach(sim_i = 1 : M,
+                         .inorder = FALSE,
+                         .packages = "data.table",
+                         .options.multicore = list(preschedule = FALSE, cleanup = 9)) %dopar% power_s_fun(sim = sim_i)
+  
+  
+  # now merge all results  
+  all_out_dt <-Reduce(function(x, y) merge(x, y, by = "k"), all_out)
+  
+  # stop clusters 
+  stopCluster(cl)
+  
+  # check time 
+  run_time <- Sys.time() - start_t
+  
+  #  run without parallel 
+  # # now lapply the funciton 
+  # all_out <- lapply(c(1:100), power_s_fun)
+  # 
+  # # now merge all results  
+  # all_out_dt <-Reduce(function(x, y) merge(x, y, by = "k"), all_out)
+  # 
+  # run_time <- Sys.time() - start_t
+  
+  # row sum my data to get the averaage cv for each k 
+  all_out_dt[, k := NULL]
+  mean_cv <- data.table( cv_means = rowMeans(all_out_dt), k = 1:20)
+  
+  # now plot that bad boy 
+  # set attributes for plot to default ea theme 
+  plot_attributes <- theme( plot.background = element_rect(fill = "lightgrey"),
+                            panel.grid.major.x = element_line(color = "gray90"), 
+                            panel.grid.minor  = element_blank(),
+                            panel.background = element_rect(fill = "white", colour = "black") , 
+                            panel.grid.major.y = element_line(color = "gray90"),
+                            text = element_text(size= 20),
+                            plot.title = element_text(vjust=0, colour = "#0B6357",face = "bold", size = 40))
+  
+  
+  # initialize base data mapping for plot
+  plot_1 <- ggplot(data = mean_cv, aes(x = k, y = cv_means))
+  
+  plot_1 <- plot_1 + geom_point(size = 1) + geom_line() + plot_attributes
+  plot_1
+  
+  #=================#
+  # ==== part c ====
+  #=================#
+  
+    
+      
+      # write a function to apply accross simulations 
+      B_fun <- function(sim = NULL){
+        
+        r_dt <- gen_data_2.5.a()
+        r_dt[, const :=1]
+        
+
+        # make the y vars 
+        for(i in 1:7){
+          
+          r_dt[, temp := x^i]
+          setnames(r_dt, "temp", paste0("x_exp_", i))
+        }
+          
+          # conver things to matrices to get the y hats 
+          x_mat <- as.matrix(r_dt[, c(grep("x_exp", colnames(r_dt), value = TRUE), "const"), with = FALSE])
+          y_mat <- as.matrix(r_dt[, y])
+          
+          # get betas 
+          B <- Matrix::solve(Matrix::crossprod(x_mat, x_mat))%*%(Matrix::crossprod(x_mat, y_mat))
+          
+          # get weights 
+          X.Q <- qr.Q(qr(x_mat))
+          XX <- tcrossprod(X.Q)
+          weights <- diag(XX)
+          Y.hat <- XX %*% y_mat
+          
+          # now square the weights 
+          weights_sq <- weights^2
+          
+          # now get se
+          se <- sqrt(sum(weights_sq) * var(y_mat - Y.hat))
+          
+     
+          
+          # put the stuff in a list 
+          output <- list()
+          output[["B"]] <- B 
+          output[["se"]] <- se
+        
+        # return the betas  
+        return(output)
+        
+      }
+
+      # okay now run this shit 1000 times 
+     bw_stuff <- lapply(c(1:M), B_fun)
+      
+     # now do some dumb stuff because its late 
+     b_list <- list()
+     se_list <- list()
+     for(i in 1:M){
+       
+       b_list[[i]] <- bw_stuff[[i]][["B"]]
+       se_list[[i]] <- bw_stuff[[i]][["se"]]
+     }
+   
+     b_mat <- do.call(cbind, b_list)
+     se_mat <- do.call(cbind, se_list)
+      
+     # sum the rows 
+      betas <- rowMeans(beta_mat)
+      se <-   rowMeans(se_mat)
+      
+      # now write a function to plot the u hat funciton 
+      u_hat_fun <- function(x){
+        
+        betas[[8]] + betas[[1]]*x + betas[[2]]*x^2 + betas[[3]]*x^3 + betas[[4]]*x^4 + betas[[5]]*x^5 + betas[[6]]*x^6 + betas[[7]]*x^7 
+      }
+      
+      
+      # write out true function 
+      true_fun <- function(x){
+        
+        exp(-0.1*(4*x-1)^2)*sin(5*x) 
+        
+      }
+      
+      # plot the true functin 
+      p_c_plot <- ggplot(data = data.frame(x = 0), mapping = aes(x = x))
+      p_c_plot <- p_c_plot + stat_function(fun = true_fun, 
+                                           color = "blue") 
+      p_c_plot <- p_c_plot + plot_attributes + xlim(-1,1) 
+      
+      p_c_plot
+      
+      # now plot that function 
+      # plot the true functin 
+      p_c_plot <- p_c_plot + stat_function(fun = u_hat_fun, 
+                                             color = "red") 
+      
+      p_c_plot
+      
+      # create some data to plot with the standard errors 
+      plot_data <- data.table(x = seq(-1,1,.2))
+      plot_data[, y_hat := u_hat_fun(x)]
+      plot_data[, se := se]
+      
+      p_c_plot <- p_c_plot + geom_point(data = plot_data, mapping = aes(x = x, y = y_hat), 
+                                           color = "red") 
+    
+      p_c_plot <- p_c_plot + geom_errorbar(data = plot_data, aes(ymin=y_hat-se, ymax=y_hat+se), width=.1) 
+      
+      p_c_plot
   
   #===============================================================#
   # ==== dont need this anymore caues I can do it in paralell ====
