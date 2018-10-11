@@ -12,6 +12,7 @@ library(data.table)
 library(doParallel)
 library(foreach)
 library(ggplot2)
+library(Matrix)
 
 # clear data and consol 
 rm(list = ls(pos = ".GlobalEnv"), pos = ".GlobalEnv")
@@ -307,7 +308,10 @@ h_opt <- (15/(v2k*1000))^(1/5)
   # write a function to apply accross simulations 
   power_s_fun <- function(r_dt = NULL){
     
+    r_dt[, const :=1]
+    
     # make the 20 squared variables 
+    #note: im makeing an extra column. Ill fix this if I have time but this is easy for now
     for(i in 1:20){
       
       r_dt[, temp := x^i]
@@ -315,10 +319,17 @@ h_opt <- (15/(v2k*1000))^(1/5)
     
     
     # conver things to matrices to get the y hats 
-    x_mat <- r_dt[, grep("x_exp", colnames(r_dt), value = TRUE), with = FALSE]
-    y_mat <- 
-    # now get y hats 
+    x_mat <- as.matrix(r_dt[, c(grep("x_exp", colnames(r_dt), value = TRUE), "const"), with = FALSE])
+    y_mat <- as.matrix(r_dt[, y])
     
+    # get the projection matrix 
+    X.Q <- qr.Q(qr(x_mat))
+    XX <- tcrossprod(X.Q)
+    Y.hat <- XX %*% y_mat
+    
+    # now put this crap in a data.table to calculate cv 
+    
+
     }
   }
   
