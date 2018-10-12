@@ -19,6 +19,8 @@ log using $pset2_stata_log.smcl, replace
 * 	local h = .5 // for line by line 
 * 	local i = 1 // for line by line 
 global n = 1000
+
+* I need to only do 10 simulations because of how slow this thing is 
 global m = 10
 set obs $n
 
@@ -59,7 +61,7 @@ foreach h in $hvalues {
 	preserve
 
 	* calculate kernal for pairs 
-	gen kern = .75 * ( 1- ( ( xi-x )/`h' )^2 )*(abs(((xi-x)/`h'))<=1)
+	gen kern = (.75 * ( 1- ( ( xi-x )/`h' )^2 )*(abs(((xi-x)/`h'))<=1))/`h'
 	
 	* collaps data to get means \* collapse data 
     collapse (mean) fhats = kern , by(x)
@@ -91,7 +93,7 @@ foreach h in $hvalues {
 	keep if x != xi
 	
 	*do kernal 
-	gen kern = .75 * ( 1- ( ( xi-x )/`h' )^2 )*(abs(((xi-x)/`h'))<=1)
+	gen kern = (.75 * ( 1- ( ( xi-x )/`h' )^2 )*(abs(((xi-x)/`h'))<=1))/`h'
 	
 	* collaps data to get means \* collapse data 
     collapse (mean) fhats = kern , by(x)
@@ -135,8 +137,14 @@ foreach h in $hvalues {
 }
 }
 
-/*
+* Now collapse data to get mean leave on in and out across iteratiosn by h 
+collapse (mean) imse_li = imse_li (mean) imse_lo = imse_lo , by(h)
 
+
+* graph this stuff 
+line imse_li imse_lo h
+
+graph export "$dir\stata_plot_1_3_b.png"
 
 
   # now do the imse calculations for each h in h_v
