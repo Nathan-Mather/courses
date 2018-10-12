@@ -22,6 +22,15 @@ cat("\f")
 # set options 
 opt_test_run <- FALSE
 
+# set attributes for plot to default ea theme 
+plot_attributes <- theme( plot.background = element_rect(fill = "lightgrey"),
+                          panel.grid.major.x = element_line(color = "gray90"), 
+                          panel.grid.minor  = element_blank(),
+                          panel.background = element_rect(fill = "white", colour = "black") , 
+                          panel.grid.major.y = element_line(color = "gray90"),
+                          text = element_text(size= 20),
+                          plot.title = element_text(vjust=0, colour = "#0B6357",face = "bold", size = 40))
+
 #================================================#
 # ==== Question 1: Kernel Density Estimation ====
 #================================================#
@@ -248,7 +257,7 @@ run_time <- Sys.time() - start_t
   plot_data <-  melt.data.table(part_b_res, id.vars = "h", variable.name = "Error Type")
   plot_1_3_b <- ggplot(data = plot_data, aes(x = h, y = value, color = `Error Type`, shape = `Error Type`, linetype = `Error Type`))
   
-  plot_1_3_b <- plot_1_3_b + geom_point() + geom_line() + plot_attributes + xlim(c(.5,1.3)) + ylim(c(.000125, .0002))
+  plot_1_3_b <- plot_1_3_b + geom_point() + geom_line() + plot_attributes 
   plot_1_3_b
   
 
@@ -540,13 +549,13 @@ run_time <- Sys.time() - start_t
     data_gen <- function(n) {
       X <- matrix(runif(n*d,-1,1), n, d)
       V <- rnorm(n)
-      x.norm = sapply(1:n,function(i) t(x[i,])%*%x[i,])
-      E      = 0.3637899*(1+x.norm)*v
+      x.norm = sapply(1:n,function(i) t(X[i,])%*%X[i,])
+      E      = 0.3637899*(1+x.norm)*V
       g0.x   =exp(x.norm)
       
       U <- rnorm(n)
-      tt <- as.numeric((sqrt(x.norm)+u)>1)
-      Y <- tt + g0.x + e
+      tt <- as.numeric((sqrt(x.norm)+U)>1)
+      Y <- tt + g0.x + E
       return(list(Y=Y, X=X, tt=tt))
     } 
     
@@ -683,9 +692,11 @@ run_time <- Sys.time() - start_t
     hist(se.hat2, freq=FALSE, xlab="s.e.", ylab="", main="")
     lines(c(mean(se.hat2), mean(se.hat2)), c(-1, 80), col="red", lwd=3)
     
+    
     par(mfrow=c(1,2))
     CI.l <- theta.hat2 - 1.96 * se.hat2
     CI.r <- theta.hat2 + 1.96 * se.hat2
+    
     # rejection rate
     mean(1 < CI.l | 1 > CI.r)
     plot(1:M, CI.l, type="l", ylim=c(0,2), xlab="simulations", ylab="CI")
