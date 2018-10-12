@@ -239,7 +239,7 @@ stopCluster(cl)
 
 
 # AND TIME 
-run_time <- Sys.time() - start_t
+run_time1 <- Sys.time() - start_t
 
   # bind list
   output_dt <- rbindlist(output_list)
@@ -386,7 +386,7 @@ run_time <- Sys.time() - start_t
   stopCluster(cl)
   
   # check time 
-  run_time <- Sys.time() - start_t
+  run_time2 <- Sys.time() - start_t
   
   # row sum my data to get the averaage cv for each k 
   all_out_dt[, k := NULL]
@@ -451,9 +451,14 @@ run_time <- Sys.time() - start_t
         
       }
 
+
+      start_t <- Sys.time()
+      
       # okay now run this shit 1000 times 
      bw_stuff <- lapply(c(1:M), B_fun)
-      
+     
+     run_time2 <- Sys.time() - start_t
+     
      # now do some dumb stuff because its late 
      b_list <- list()
      se_list <- list()
