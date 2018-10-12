@@ -457,7 +457,7 @@ run_time1 <- Sys.time() - start_t
       # okay now run this shit 1000 times 
      bw_stuff <- lapply(c(1:M), B_fun)
      
-     run_time2 <- Sys.time() - start_t
+     run_time3 <- Sys.time() - start_t
      
      # now do some dumb stuff because its late 
      b_list <- list()
