@@ -57,7 +57,7 @@
 % Question 1 
 %-------------------------------------------------------------
 \section{Kernal Density Estimation}
-\subsection{Part 1}
+\subsection{Q1 Part 1}
 
 Start by noting that 
 
@@ -116,7 +116,7 @@ $$
   &= \frac{1}{nh^{1+2s}} \cdot \vartheta_s(K) + o\left(\frac{1}{nh^{2+2s}} \right)
 \end{align}
 
-\subsection{part 2}
+\subsection{Q1 part 2}
 
 We start with the following AMISE
 $$ AIMSE[h] = \int \left[ \left( h_n^P \cdot \mu_P(K) \cdot \frac{f^{(P+s)}(x)}{P!}   \right)^2 + \frac{1}{nh_n^{1+2s}} \cdot \vartheta_s(K) \cdot f(x) \right]dx
@@ -142,7 +142,7 @@ $$
 
 \subsection{Monte Carlo experiment}
 
-\subsubsection{a} First, we want to compute the theoretically optimal bandwidth for $s=0$, $n=1000$, using the Epanechnikov kernel $(P=2)$, with the following Gaussian DGP:
+\subsubsection{Q1 Part 3 a} First, we want to compute the theoretically optimal bandwidth for $s=0$, $n=1000$, using the Epanechnikov kernel $(P=2)$, with the following Gaussian DGP:
 $$x_i \sim 0.5 \N(-1.5,-1.5) + 0.5\N(1,1)$$
 
 Filling in what we know so far we have : 
@@ -167,7 +167,7 @@ Finally, pluging this in gives the theoretically optimal bandwidth is:
 $$h* = 0.8267532
 $$
 
-\subsubsection{b}
+\subsubsection{Q1 Part 3 b}
 
 Below Is the table of $\widehat{IMSE}^{lI}$ results and $\widehat{IMSE^{LO}}$ results by bandwidth $h$. I only included the table from R. My stata code was significantly slower and so I only ran 10 repetitions. The results were as close as expected. 
 
@@ -187,16 +187,16 @@ My graphs from both programs are below
 \end{center}
 
 
-\subsubsection{c}
+\subsubsection{Q1 Part 3 c}
 Intuitively the difference between the two estimators, LI and LO, is that the LI includes the extra zero term in the sum since we include $x_i - x_i$. As the size of the sample increases this contribution to the overal average will go to zero. Meaning that the LI IMSE will also converge to the correct estimate. s
 
 
-\subsubsection{d}
+\subsubsection{Q1 Part 3 d}
 The "d\_h\_hat" column of the graph in part c is my calculation of this over the 1000 iterations. The value it came up with was 1.04. This is somewhat close but, as expected, not exactly correct. 
 
 \section{Question 2: Linear Smoothers, Cross-validation and Series}
 
-\subsection{Part 1}
+\subsection{Q2 Part 1}
 For local polynomial regression we want to estimate $e(x) = \E[y_i|x_i = x]$. The idea of a local polynomial regression is to estimate e(x) around the point x using a polynomial of degree p. We estimate this polynomial with weighted least squares. For a given x, we want to solve. 
 
 $$\hat{\bm{\beta}}_{LP}(x) = \arg \min_{\beta \in \R^{p+1}} \sum_{i=1}^{n}[y_i - \bm{r}_p(x_i - x)'\bm{\beta}]^2K(\frac{x_i-x}{h})
@@ -232,7 +232,7 @@ $$\hat{e}(x) = \bm{r}_p(x)'(\bm{R}`_p \bm{R}_p)^{-1}\bm{R}_p\bm{y}$$
 Writing this in linear summation form I believe we get 
 $$\hat{e}(x) =  \bm{r}_p(x)' \left( \sum_{i=1}^{n}\bm{r}_p(x_i)\bm{r}_p(x_i)'\right)^{-1} \left( \sum_{i=1}^{n} \bm{r}_p(x_i)y_i \right)$$
 
-\subsection{Part 2}
+\subsection{Q2 Part 2}
 We want to choose the tuning parameter to minimize the mean squared leave one out error which is 
 
 $$\hat{c} = \arg \min_{c} \frac{1}{n} \sum_{i=1}^{n}(y_i - \hat{e}_(i)(x_i;c))^2$$
@@ -263,7 +263,7 @@ $$
 
 Which is what we wanted 
 
-\subsection{part 3}
+\subsection{Q2 part 3}
 Note that we have iid data and the $\sum_{i=1}^{n}w_{n,i}(x_i)=1$ first we want to find 
 
 $$ \E[\hat{e}(x)|\bm{x}] = \E\left[ \sum_{i=1}^{n} w_{n,i}(x_i)y_i|\bm{x} \right] = \sum_{i=1}^{n}\E\left[  w_{n,i}(x_i)y_i|\bm{x} \right]= \sum_{i=1}^{n}  w_{n,i}(x_i) \E\left[ y_i|\bm{x} \right] = \E[y_i|\bm{x}]
@@ -282,32 +282,32 @@ $$\hat{\V}(x) = \hat{\sigma}^2 \sum_{i=1}^{n}w_{n,i}(x)^2$$
 Where 
 $\hat{\sigma}^2 = \frac{1}{n-1} \sum_{i=1}^{n} (y_i - \hat{e}(x_i))^2$
 
-\subsection{part 4}
+\subsection{Q2 part 4}
 
 The pointwise asymptotically valid $95\% $ convidence interval for $e(x)$ is 
 $$CI_{95}(x) = [\hat{e}(x) - 1.96 \sqrt{\hat{\V}(x)}, \hat{e}(x) + 1.96 \sqrt{\hat{\V}(x)}] $$
 
 This is just a confidence interval for a given point. applying this to a grid of points across the line and interpreting that as a band for the function is incorrect. For uniformly valid inference we need that the estimate is less that the cutoff for all values of x, not just one specific x. 
 
-\subsection{part 5}
-\subsubsection{a}
+\subsection{Q2 part 5}
+\subsubsection{Q2 part 5 a}
 See the code in appendix 
 
-\subsubsection{B} 
+\subsubsection{Q2 part 5 B} 
 The plot of the CV(K) simulations is below 
 \begin{center}
 	\includegraphics[width=.6\linewidth]{plot_2_5_b.png}
 	
 \end{center}
 
-\subsection{C}
+\subsection{ Q2 part 5 C}
 My plot is below. I used homoscedastic standard errors.  The dotted line is my estimate
 \begin{center}
 	\includegraphics[width=.6\linewidth]{plot_2_5_c.png}
 	
 \end{center}
 
-\subsection{Part D}
+\subsection{Q2 part 5 D}
 Calculating the derivative of $u(x)$ we get 
 $$ e^{(0.1\cdot(4x-1)^2)}[5 \cdot cos(5x) - 0.8 \cdot (4x-1)sin(5x)]
 $$
@@ -322,7 +322,7 @@ I plot the corresponding curves below. The dotted line is my estimate
 \end{center}
 
 \section{Question 3: Semiparametric Semi-Linear Model }
-\subsection{part 1}
+\subsection{Q3 part 1}
 first note that $\theta_0$ cannot contain a constant. since $\alpha + g(z) = [\alpha + c] + [g(z) - c] \equiv \alpha_{new} + g_{new}(z)$ the sum of the new g and intercept are observationally equivalent to the old ones so they cannot be identified. From Li and Racine page 223 we can see that the requirements for identifiability are that  $\E[(t_i - h_0(x_i))(t_i - h_0(x_i))']$ is positive definite. 3
 \\
 \\
@@ -343,14 +343,43 @@ $$
 
 The IV interpretation can be given as follows. Let $yi=t_i \theta_0 + g_0(x_i) + \epsilon_i = t_i \theta_0 + \mu_i$. Now $\mu_i$ is uncorrelated with $t_i$ so we can define and instrument $z_i = t_i - h_0(x_i) $ which has the property of $\E[z_i\mu_i] = 0$ and $\E[t_iz_i] \neq 0$ so it is a valid instrument. 
 
-\subsection{3.2}
+\subsection{Q3 part 2}
+\textbf{(a)} As the question asks we will consider the power series approximation. 
+$$\E[y_i|\bm{x}_i] \approx t_i \theta_0 + \bm{p}^K(\bm{x}_i)'\bm{\gamma}_k
+$$
 
-\subsection{3.3}
+Next, as the question instructs, we can use the partition regression formula and get the OLS estimator 
+$$\hat{\theta}(K) = (\bm{t'M_xt})^{-1}\bm{t'M_xY}
+$$
 
-\subsection{3.4}
-\subsubsection{Part a}
+Where here $\bm{t} = (t_1,..., t_n)'$ and 
+$\bm{M}_p = \bm{I - P_{r_p(x)}}$ \\ \\
+and $ \bm{P_{r_p(x)}} = \bm{R_p(R'_pR_p)^{(-1)}R'_p} $
+
+$$
+\bm{R}_p = 
+\begin{bmatrix}
+	1 & (\bm{x}_1) & (\bm{x}_1)^2 & \dots& (\bm{x}_1)^p \\
+	1 & (\bm{x}_2) & (\bm{x}_2)^2 & \dots& (\bm{x}_2)^p\\
+	\vdots & \vdots & \vdots & \ddots & \vdots \\
+	1 & (\bm{x}_n) & (\bm{x}_n)^2 & \dots& (\bm{x}_n)^p
+\end{bmatrix}
+$$
+
+\textbf{(b)}
+
+We used the moment condition when discussing the IV estimate interpretation in part 1 to find
+$$\theta_0= \frac{\E[(t_i - h_o(x_i)y_i )] }{\E[(t_i - h_o(x_i)t_i)]}$$
+
+So we can estimate this with 
+$$\left(\frac{1}{n} \sum_{i=1}^{n}t_i - h_o(x_i)t_i \right)^{-1}\left(\frac{1}{n} \sum_{i=1}^{n}t_i - h_o(x_i)y_i \right) $$
+
+\subsection{Q3 part 3}
+
+\subsection{Q3 part 4}
+\subsubsection{Q3 part 4 a}
 see code in appendix 
-\subsubsection{part b})
+\subsubsection{Q3 part 4 b}
 
 My results from R are in the table below 
 

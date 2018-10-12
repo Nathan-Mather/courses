@@ -403,8 +403,7 @@ run_time1 <- Sys.time() - start_t
   #=================#
   # ==== part c ====
   #=================#
-  
-    
+
       
       # write a function to apply accross simulations 
       B_fun <- function(sim = NULL){
