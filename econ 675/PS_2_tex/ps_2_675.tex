@@ -35,7 +35,7 @@
 \title{Econ 675 Assignment 1} % The article title
 
 
-\author{Nathan Mather} % The article author(s) 
+\author{Nathan Mather\thanks{Shouts out to Ani, Paul, Tyler, Erin, Caitlin and others for all the help with this } } % The article author(s) 
 
 \date{\today} % An optional date to appear under the author(s)
 
@@ -386,7 +386,7 @@ Now with iid data and conditional l heteroskedasticity, we can use the WLLN and 
 The asymptotically valid 95\% confidence interval is just the same as usual then
 
 $$ CI_{95} = [\hat{\theta}(K) - 1.96\sqrt{V_{HCO}},\hat{\theta}(K) + 1.96\sqrt{V_{HCO}} ]
- 
+$$ 
 
 \subsection{Q3 part 4}
 \subsubsection{Q3 part 4 a}
@@ -398,6 +398,17 @@ My results from R are in the table below
 \begin{center}
 	\input{Q3_4_b.tex}
 \end{center}
+
+\subsubsection{Q3 part 4 c}
+
+Using cross-validation, I get $\hat{K}_{cv} = 131$. We can see from Table 1, across the simulations,
+$\hat{K}_{cv}$ gives a  low rejection rate, but other estimators have lower bias and variance.
+
+\section{Appendix}
+\subsection{R Code}
+ \subsubsection{a}
+Here is the graph from R 
+ \includepdf[page=-]{ps_2_r_code_pdf.pdf}
 
 
 %------------------------------------------------

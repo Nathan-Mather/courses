@@ -26,7 +26,7 @@ set obs $n
 
 * replace with for loop eventually 
 forvalues i = 1/10{
-
+di `i'
 * start loop 
 clear 
 set obs $n
@@ -50,6 +50,7 @@ joinby const using `rand_i'
 * now loop over h values 
 foreach h in $hvalues {
 
+	di `h'
 	* make h for file names 
 	local h_n: subinstr local h "." "", all
 	
@@ -63,8 +64,12 @@ foreach h in $hvalues {
 	gen kern = (.75*(1-u^2)*(abs(u)<=1))/`h'
 
 	
-	* collaps data to get means \* collapse data 
-    collapse (mean) fhats = kern , by(x)
+	* get means 
+	bys x: egen fhats = mean(kern)
+	
+	egen tag = tag(x)
+	keep if tag == 1
+	drop xi const u kern
 	
 	* add in f_x
 	gen f_x = .5*normalden(x, -1.5, sqrt(1.5)) + .5*normalden(x, 1, 1)
@@ -72,9 +77,12 @@ foreach h in $hvalues {
 	* find sq error 
 	gen sq_er = (fhats-f_x)^2
 	
-	* now get  imse_li 
-	 collapse (mean) imse_li = sq_er 
+	* now get  imse_li
+	egen imse_li = mean(sq_er)
+	egen tag2 = tag(x)
+	keep if tag2 == 1
 	
+
 	* fill in sum info 
 	gen sim = `i'
 	gen h = `h'
