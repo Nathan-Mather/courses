@@ -375,6 +375,18 @@ So we can estimate this with
 $$\left(\frac{1}{n} \sum_{i=1}^{n}t_i - h_o(x_i)t_i \right)^{-1}\left(\frac{1}{n} \sum_{i=1}^{n}t_i - h_o(x_i)y_i \right) $$
 
 \subsection{Q3 part 3}
+\textbf{(a)}
+
+WE can just use the partialing out method above to get 
+$$\hat{\theta}(K) = (\bm{t'M_pt})^{-1}\bm{t'M_p}(\bm{t} \theta_0 + \bm{R_p \gamma_k} + \bm{e}) = \theta + (\bm{t'M_pt})^{-1} \bm{t'M_pe}$$
+Now with iid data and conditional l heteroskedasticity, we can use the WLLN and CLT as usual to get normality and the sandwich form variance matrix 
+
+\textbf{(b)}
+
+The asymptotically valid 95\% confidence interval is just the same as usual then
+
+$$ CI_{95} = [\hat{\theta}(K) - 1.96\sqrt{V_{HCO}},\hat{\theta}(K) + 1.96\sqrt{V_{HCO}} ]
+ 
 
 \subsection{Q3 part 4}
 \subsubsection{Q3 part 4 a}
