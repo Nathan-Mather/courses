@@ -16,8 +16,8 @@ log using $pset2_stata_log.smcl, replace
 
  global hvalues .5 .6 .7 .8 0.8199 .9 1 1.1 1.2 1.3 1.4 1.5
 * global hvalues .5 
-* 	local h = .5 // for line by line 
-* 	local i = 1 // for line by line 
+ 	local h = .5 
+ 	local i = 1 
 global n = 1000
 
 * I need to only do 10 simulations because of how slow this thing is 
@@ -32,8 +32,8 @@ clear
 set obs $n
 * generate random data 
 gen z_o = uniform() 
-gen xi = 1.5*runiform()-1.5 if z_o < .5
-replace xi = 1+runiform() if z_o >= .5
+gen xi = rnormal(-1.5, sqrt(1.5)) if z_o < .5
+replace xi = rnormal(1,1) if z_o >= .5
 
 * drop zero one var
 drop z_o
@@ -41,10 +41,6 @@ drop z_o
 * gen constaant for merge 
 gen const = 1
 
-* save as temp file for merge 
-tempfile rand_i
- save "`rand_i'"
- 
  * rename variable 
  rename xi x
  
@@ -60,14 +56,18 @@ foreach h in $hvalues {
 	*preserve data before I mess with is
 	preserve
 
+	* gnerate u 
+	gen u =  (xi-x )/`h'
+	
 	* calculate kernal for pairs 
-	gen kern = (.75 * ( 1- ( ( xi-x )/`h' )^2 )*(abs(((xi-x)/`h'))<=1))/`h'
+	gen kern = (.75*(1-u^2)*(abs(u)<=1))/`h'
+
 	
 	* collaps data to get means \* collapse data 
     collapse (mean) fhats = kern , by(x)
 	
 	* add in f_x
-	gen f_x = .5*normalden(x, -1.5, 1.5) + .5*normalden(x, 1, 1)
+	gen f_x = .5*normalden(x, -1.5, sqrt(1.5)) + .5*normalden(x, 1, 1)
 
 	* find sq error 
 	gen sq_er = (fhats-f_x)^2
@@ -91,15 +91,18 @@ foreach h in $hvalues {
 	* now do the leave on out, drop columns with the same x xi
 	* this is bad coding but STATA is terrible so this is what it deserves 
 	keep if x != xi
+
+	* gnerate u 
+	gen u =  (xi-x )/`h'
 	
-	*do kernal 
-	gen kern = (.75 * ( 1- ( ( xi-x )/`h' )^2 )*(abs(((xi-x)/`h'))<=1))/`h'
-	
+	* calculate kernal for pairs 
+	gen kern = (.75*(1-u^2)*(abs(u)<=1))/`h'
+
 	* collaps data to get means \* collapse data 
     collapse (mean) fhats = kern , by(x)
 	
 	* add in f_x
-	gen f_x = .5*normalden(x, -1.5, 1.5) + .5*normalden(x, 1, 1)
+	gen f_x = .5*normalden(x, -1.5, sqrt(1.5)) + .5*normalden(x, 1, 1)
 
 	* find sq error 
 	gen sq_er = (fhats-f_x)^2
@@ -144,38 +147,26 @@ collapse (mean) imse_li = imse_li (mean) imse_lo = imse_lo , by(h)
 * graph this stuff 
 line imse_li imse_lo h
 
-graph export "$dir\stata_plot_1_3_b.png"
+graph export "$dir\stata_plot_1_3_b.png", replace
 
 
-  # now do the imse calculations for each h in h_v
-  for(i in 1:length(h_v)){
 
-  
-    # now get the f_hats for the leave one out by deleating the observation where x= xi. This will be rows 
-    # 1, M+2, 2M+3, 3M+4 ... so eq(1, M*M, M+1) should take care of those 
-    paired_dt_lo <- paired_dt[-c(seq(1, n*n, n+1)), ]
-    
-    # now get the mean of the f_hats leacing out the x 
-    f_hats_lo <- paired_dt_lo[, list(f_hat_x = mean(k_x)/h), by = x_vx]
-    
-    # now add in f_x for each 
-    f_hats[, f_x := f_x(get(x_vx))]
-    f_hats_lo[, f_x := f_x(get(x_vx))]
-    
-    # now do squared error 
-    f_hats[, sq_er := (f_hat_x - f_x)^2]
-    f_hats_lo[, sq_er := (f_hat_x - f_x)^2]
-    
-    # now get imse 
-    imse_li <- f_hats[, mean(sq_er)]
-    imse_lo <- f_hats_lo[, mean(sq_er)]
-    
-    # now put into a data.table and put in list 
-    ouput_list[[i]] <- data.table(imse_li = imse_li, imse_lo= imse_lo, h = h)
-  }
-  
-  output <- rbindlist(ouput_list)
-  
-  return(output[])
-  
-}
+*********************************************************************
+******************* question 2 **************************************
+*********************************************************************
+* clear stuff and change any globals I need to change 
+clear
+
+* for loop over iterations 
+
+
+
+
+
+
+
+
+
+
+
+
