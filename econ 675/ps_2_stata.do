@@ -16,8 +16,8 @@ log using $pset2_stata_log.smcl, replace
 
  global hvalues .5 .6 .7 .8 0.8199 .9 1 1.1 1.2 1.3 1.4 1.5
 * global hvalues .5 
- 	local h = .5 
- 	local i = 1 
+local h = .5 
+local i = 1 
 global n = 1000
 
 * I need to only do 10 simulations because of how slow this thing is 
@@ -40,6 +40,11 @@ drop z_o
 
 * gen constaant for merge 
 gen const = 1
+
+* save as temp file for merge 
+tempfile rand_i
+ save "`rand_i'"
+ 
 
  * rename variable 
  rename xi x
@@ -69,7 +74,7 @@ foreach h in $hvalues {
 	bys x: egen fhats = mean(kern)
 	egen tag = tag(x)
 	keep if tag == 1
-	drop xi const u kern
+	drop xi const u kern tag
 	
 	* add in f_x
 	gen f_x = .5*normalden(x, -1.5, sqrt(1.5)) + .5*normalden(x, 1, 1)
@@ -79,9 +84,10 @@ foreach h in $hvalues {
 	
 	* now get  imse_li
 	egen imse_li = mean(sq_er)
-	egen tag2 = tag(x)
+	egen tag2 = tag(imse_li)
 	keep if tag2 == 1
 	
+	keep imse_li
 
 	* fill in sum info 
 	gen sim = `i'
@@ -90,7 +96,7 @@ foreach h in $hvalues {
 	
 	* save temp data 
 	tempfile imseli_`h_n'_`i'
-	 quietly save "imseli_`h_n'_`i'", replace
+	 save "imseli_`h_n'_`i'", replace
 	 
 	* restore data, preserve it for next thing 
 	restore
@@ -111,6 +117,7 @@ foreach h in $hvalues {
 	bys x: egen fhats = mean(kern)
 	egen tag = tag(x)
 	keep if tag == 1
+	drop xi const u kern tag
 	
 	* add in f_x
 	gen f_x = .5*normalden(x, -1.5, sqrt(1.5)) + .5*normalden(x, 1, 1)
@@ -118,8 +125,13 @@ foreach h in $hvalues {
 	* find sq error 
 	gen sq_er = (fhats-f_x)^2
 	
-	* now get  imse_li 
-	 collapse (mean) imse_lo = sq_er 
+	* now get  imse_li
+	egen imse_lo = mean(sq_er)
+	egen tag2 = tag(imse_lo)
+	keep if tag2 == 1
+	
+	keep imse_lo
+
 	
 	* fill in sum info 
 	gen sim = `i'
@@ -152,17 +164,20 @@ foreach h in $hvalues {
 }
 
 * Now collapse data to get mean leave on in and out across iteratiosn by h 
-	bys h: egen imse_li = mean(imse_li)
-	bys h: egen imse_lo = mean(imse_lo)
-	egen tag = tag(x)
+	bys h: egen m_imse_li = mean(imse_li)
+	bys h: egen m_imse_lo = mean(imse_lo)
+	egen tag = tag(h)
 	keep if tag == 1
-	
+	keep h m_imse_li m_imse_lo
 
 
 * graph this stuff 
-line imse_li imse_lo h
+line m_imse_li m_imse_lo h
 
 graph export "$dir\stata_plot_1_3_b.png", replace
+
+dataout, save($dir\stata_table_1_3_b.tex) tex replace
+
 
 **************
 **** Problem 2 
