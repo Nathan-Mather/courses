@@ -20,7 +20,7 @@ options(scipen = 999)
 cat("\f")
 
 # set options 
-opt_test_run <- FALSE
+opt_test_run <- TRUE
 
 # set attributes for plot to default ea theme 
 plot_attributes <- theme( plot.background = element_rect(fill = "lightgrey"),
@@ -80,7 +80,7 @@ K0 <- function(u){
 # define the true f(x) function 
 f_x <- function(x){
   
-  .5*dnorm(x, -1.5,1.5)+.5*dnorm(x,1,1)
+  .5*dnorm(x, -1.5,sqrt(1.5))+.5*dnorm(x,1,1)
 }
 
 
@@ -489,6 +489,12 @@ run_time1 <- Sys.time() - start_t
         
       }
       
+      
+     #======================#
+     # ==== part c plot ====
+     #======================#
+
+      
       # plot the true functin 
       plot_2_5_c <- ggplot(data = data.frame(x = 0), mapping = aes(x = x))
       plot_2_5_c <- plot_2_5_c + stat_function(fun = true_fun, 
@@ -516,6 +522,50 @@ run_time1 <- Sys.time() - start_t
       # print it out to see if it looks alright 
       plot_2_5_c
       
+    #=====================#
+    # ==== part d pot ====
+    #=====================#
+
+      # create derivative funciton
+      # write out true function 
+      true_fun_d <- function(x){
+        
+        exp(-0.1*(4*x-1)^2)*(5*cos(5*x) - 0.8*(4*x-1)*sin(5*x))
+        
+      }
+      
+      # write out estimated polynomial 
+      est_fun_d <- function(x){
+       betas[[1]] + 2*betas[[2]]*x + 3*betas[[3]]*x^2 + 4*betas[[4]]*x^3 + 5*betas[[5]]*x^4 + 6*betas[[6]]*x^5 + 7*betas[[7]]*x^6
+        
+      }
+      
+      # plot the true functin 
+      plot_2_5_d <- ggplot(data = data.frame(x = 0), mapping = aes(x = x))
+      plot_2_5_d <- plot_2_5_d + stat_function(fun = true_fun_d, 
+                                               color = "blue") 
+      plot_2_5_d <- plot_2_5_d + plot_attributes + xlim(-1,1) 
+      
+      
+      # now add u hat function
+      plot_2_5_d <- plot_2_5_d + stat_function(fun = est_fun_d, 
+                                               color = "red", linetype = 2) 
+      
+      plot_2_5_d <- plot_2_5_d + scale_colour_identity("Function", guide="legend", 
+                                                       labels = c("U hat", "True U"), 
+                                                       breaks = c("red", "blue")) + theme(axis.title.y=element_blank())
+      # create some data to plot with the standard errors 
+      plot_data <- data.table(x = seq(-1,1,.2))
+      plot_data[, y_hat := est_fun_d(x)]
+      plot_data[, se := se]
+      
+      plot_2_5_d <- plot_2_5_d + geom_point(data = plot_data, mapping = aes(x = x, y = y_hat), 
+                                            color = "red") 
+      
+      plot_2_5_d <- plot_2_5_d + geom_errorbar(data = plot_data, aes(ymin=y_hat-se, ymax=y_hat+se), width=.1) 
+      
+      # print it out to see if it looks alright 
+      plot_2_5_d
       
   #=====================#
   # ==== save plots ====
@@ -534,6 +584,12 @@ run_time1 <- Sys.time() - start_t
         print(plot_2_5_c)
         dev.off()
         
+        # save the plot 
+        png("c:/Users/Nmath_000/Documents/Code/courses/econ 675/PS_2_tex/plot_2_5_d.png", height = 800, width = 800, type = "cairo")
+        print(plot_2_5_d)
+        dev.off()
+        
+      
         
       }
 

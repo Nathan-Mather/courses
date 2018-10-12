@@ -169,7 +169,7 @@ $$
 
 \subsubsection{b}
 
-Below Is the table of $\widehat{IMSE}^{lI}$ results and $\widehat{IMSE^{LO}}$ results by bandwidth $h$ 
+Below Is the table of $\widehat{IMSE}^{lI}$ results and $\widehat{IMSE^{LO}}$ results by bandwidth $h$. I only included the table from R. My stata code was significantly slower and so I only ran 10 repetitions. The results were as close as expected. 
 
 \begin{center}
 	\input{Q1_p3_b.tex}
@@ -301,13 +301,25 @@ The plot of the CV(K) simulations is below
 \end{center}
 
 \subsection{C}
-My plot is below. I used homoscedastic standard errors 
+My plot is below. I used homoscedastic standard errors.  The dotted line is my estimate
 \begin{center}
 	\includegraphics[width=.6\linewidth]{plot_2_5_c.png}
 	
 \end{center}
 
-\subsection{c}
+\subsection{Part D}
+Calculating the derivative of $u(x)$ we get 
+$$ e^{(0.1\cdot(4x-1)^2)}[5 \cdot cos(5x) - 0.8 \cdot (4x-1)sin(5x)]
+$$
+
+Taking the derivative of the estimated euqation we get 
+$$\hat{u}'(x) = \beta_1 + 2\beta_2x + 3\beta_3x^2 + 4\\beta_4x^3 + 5\beta_5x^4 + 6\beta_6x^5 + 7\beta_7x^6$$
+
+I plot the corresponding curves below. The dotted line is my estimate 
+\begin{center}
+	\includegraphics[width=.6\linewidth]{plot_2_5_d.png}
+	
+\end{center}
 
 \section{Question 3: Semiparametric Semi-Linear Model }
 \subsection{part 1}
