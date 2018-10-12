@@ -20,7 +20,7 @@ options(scipen = 999)
 cat("\f")
 
 # set options 
-opt_test_run <- TRUE
+opt_test_run <- FALSE
 
 # set attributes for plot to default ea theme 
 plot_attributes <- theme( plot.background = element_rect(fill = "lightgrey"),
@@ -187,7 +187,7 @@ sim_function <- function(i, n, f_x, phi_2, h_v){
   r_dt <- data.table( r1 = sample(1:2,prob=c(.5,.5),size=n,replace=T) )
   
   # draw a random number from appropriate normal dist according to r1
-  r_dt[r1 == 1, rdraw := rnorm(.N,-1.5,1.5)]
+  r_dt[r1 == 1, rdraw := rnorm(.N,-1.5,sqrt(1.5))]
   r_dt[r1 == 2, rdraw := rnorm(.N,1,1)]
   r_dt[, r1 := NULL]
   
@@ -595,7 +595,6 @@ run_time1 <- Sys.time() - start_t
       }
 
       
-      
 #=====================#
 # ==== question 3 ====
 #=====================#
@@ -773,5 +772,14 @@ run_time1 <- Sys.time() - start_t
     abline(1, 0, col="red", lwd=2)    
     
     
-
+    #=====================================#
+    # ==== run markdown to print code ====
+    #=====================================#
+    
+    rmarkdown::render(input =  "C:/Users/Nmath_000/Documents/Code/courses/econ 675/ps_2_675_mark.Rmd",
+                      output_format = "pdf_document",
+                      output_file = paste0("C:/Users/Nmath_000/Documents/Code/courses/econ 675/PS_2_tex/ps_2_r_code_pdf.pdf")) 
+    
+    
+    
   

@@ -169,7 +169,7 @@ $$
 
 \subsubsection{Q1 Part 3 b}
 
-Below Is the table of $\widehat{IMSE}^{lI}$ results and $\widehat{IMSE^{LO}}$ results by bandwidth $h$. I only included the table from R. My stata code was significantly slower and so I only ran 10 repetitions. The results were as close as expected. 
+Below Is the table of $\widehat{IMSE}^{lI}$ results and $\widehat{IMSE^{LO}}$ results by bandwidth $h$. I only included the table from R. My stata code was significantly slower and so I only ran 10 repetitions. Even with that in mind my Results in stata are off. I think there is an issue with how I am calculating the mean across simulations but I can't seem to fix it. I included the graph of the results below.
 
 \begin{center}
 	\input{Q1_p3_b.tex}
@@ -300,12 +300,27 @@ The plot of the CV(K) simulations is below
 	
 \end{center}
 
+\begin{center}
+	\includegraphics[width=.6\linewidth]{stata_plot_2_5_b.png}
+	
+\end{center}
+
+
+
+
+
 \subsection{ Q2 part 5 C}
 My plot is below. I used homoscedastic standard errors.  The dotted line is my estimate
 \begin{center}
 	\includegraphics[width=.6\linewidth]{plot_2_5_c.png}
 	
 \end{center}
+\begin{center}
+	\includegraphics[width=.6\linewidth]{stata_plot_2_5_c.png}
+	
+\end{center}
+
+
 
 \subsection{Q2 part 5 D}
 Calculating the derivative of $u(x)$ we get 
@@ -320,6 +335,12 @@ I plot the corresponding curves below. The dotted line is my estimate
 	\includegraphics[width=.6\linewidth]{plot_2_5_d.png}
 	
 \end{center}
+
+\begin{center}
+	\includegraphics[width=.6\linewidth]{stata_plot_2_5_d.png}
+	
+\end{center}
+
 
 \section{Question 3: Semiparametric Semi-Linear Model }
 \subsection{Q3 part 1}
@@ -399,16 +420,22 @@ My results from R are in the table below
 	\input{Q3_4_b.tex}
 \end{center}
 
+\begin{center}
+	\input{stata_table_3_4_d_clean.tex}
+\end{center}
+
+
 \subsubsection{Q3 part 4 c}
 
-Using cross-validation, I get $\hat{K}_{cv} = 131$. We can see from Table 1, across the simulations,
+Using cross-validation, I get $\hat{K}_{cv} = 126$. We can see from Table 1, across the simulations,
 $\hat{K}_{cv}$ gives a  low rejection rate, but other estimators have lower bias and variance.
 
 \section{Appendix}
 \subsection{R Code}
- \subsubsection{a}
 Here is the graph from R 
  \includepdf[page=-]{ps_2_r_code_pdf.pdf}
+
+\subsection{STATA Code}
 
 
 %------------------------------------------------
