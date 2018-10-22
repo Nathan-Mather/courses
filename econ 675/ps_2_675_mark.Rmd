@@ -10,11 +10,10 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 
-```{r , eval=FALSE, echo=TRUE, warning = FALSE, message = FALSE }
-#=======================================#
 
+```{r , eval=FALSE, echo=TRUE, warning = FALSE, message = FALSE}
   
-   #===========================#
+#===========================#
 # ==== Metrics 675 ps 2 ====
 #===========================#
 
