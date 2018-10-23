@@ -1,7 +1,7 @@
 
 
 use "C:/Users/Nmath_000/Documents/MI_school/Second Year/621 Labor/Assignments/Assignment_5/macurdy_lee.dta", clear
-
+cd "C:\Users\Nmath_000\Documents\Code\courses\econ 621\assignment_5\"
 
 ***************
 * question 2 *
@@ -38,11 +38,84 @@ gen lnw = ln(wages)
 bysort respid (year) : gen ch_lnh = lnh - lnh[_n-1] 
 bysort respid (year) : gen ch_lnw = lnw - lnw[_n-1] 
 
-* use survey weights 
-svyset [pweight = wtvar]
+* PART a
+* use survey weights and cluster standard errors. 
+regress lnh lnw [pw = wtvar] , vce(cluster respid) 
 
-* now do regression with these weights 
-svy: regress lnh lnw, robust 
+* Part b
+* do iv with 14 variables 
+ivregress 2sls lnh (lnw = `iv14') [pw = wtvar] , vce(cluster respid) 
+
+* PART c
+* Do first stage regression 
+regress lnw `iv14' [pw = wtvar] , vce(cluster respid) 
+* test significance 
+test `iv14'
+
+
+* part D 
+* do liml estimate with 14 vars 
+ivregress liml lnh (lnw = `iv14') [pw = wtvar] , vce(cluster respid) 
+
+*Part E 
+* do 2sls with correct CI
+ivregress 2sls lnh (lnw = `iv14') [pw = wtvar] , vce(cluster respid) 
+rivtest, ci usegrid grid(-2.5(0.01)2.5)
+
+
+* PART g
+* Do first stage regression 
+regress lnw `iv5' [pw = wtvar] , vce(cluster respid) 
+* test significance 
+test `iv5'
+
+
+* Part h
+* do iv with 14 variables 
+ivregress 2sls lnh (lnw = `iv5') [pw = wtvar] , vce(cluster respid) 
+
+* Part i
+* do iv with 14 variables 
+ivregress liml lnh (lnw = `iv5') [pw = wtvar] , vce(cluster respid) 
+
+* Part j
+rivtest, ci usegrid grid(-2.5(0.01)2.5)
+
+
+***************************
+* K-P use entire data set *
+***************************
+
+use "C:/Users/Nmath_000/Documents/MI_school/Second Year/621 Labor/Assignments/Assignment_5/macurdy_lee.dta", clear
+
+* part k
+* use survey weights and cluster standard errors. 
+regress lnh lnw [pw = wtvar] , vce(cluster respid) 
+
+* part l 
+* Do first stage regression 
+regress lnw `iv14' [pw = wtvar] , vce(cluster respid) 
+* test significance 
+test `iv14'
+
+* part m, n
+* do iv with 14 variables 
+ivregress 2sls lnh (lnw = `iv14') [pw = wtvar] , vce(cluster respid) 
+rivtest, ci usegrid grid(-2.5(0.01)2.5)
+
+* do liml estimate with 14 vars 
+ivregress liml lnh (lnw = `iv14') [pw = wtvar] , vce(cluster respid) 
+
+
+*part o, p
+* do iv with 14 variables 
+ivregress 2sls lnh (lnw = `iv5') [pw = wtvar] , vce(cluster respid) 
+rivtest, ci usegrid grid(-2.5(0.01)2.5)
+
+* do iv with 14 variables 
+ivregress liml lnh (lnw = `iv5') [pw = wtvar] , vce(cluster respid) 
+
+
 
 
 
