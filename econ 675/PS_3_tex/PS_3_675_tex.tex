@@ -21,6 +21,29 @@
 \usepackage{pdfpages}
 \usepackage{bm}
 \usepackage{listings}
+\usepackage{multirow,array}
+\usepackage{enumerate}
+
+
+\usepackage[latin1]{inputenc}
+
+\usepackage{amssymb}
+
+\usepackage{mathrsfs}
+\usepackage{float}
+\usepackage{booktabs}
+\usepackage{color}
+\usepackage{rotating}
+\usepackage{amsthm}
+\usepackage{multirow,array}
+\usepackage{caption}
+\usepackage{url}
+
+
+\DeclareMathOperator*{\argmax}{arg\,max}
+\DeclareMathOperator*{\argmin}{arg\,min}
+
+
 
 % Expectation symbol
 \newcommand{\E}{\mathrm{E}}
@@ -141,10 +164,18 @@ $$
 
 where $\hat{\bm{m}} = \bm{m_{\beta}(z_i, \hat{\beta})} $  and $ hat{e} = y_i -\bm{m(z_i, \hat{\beta})} $
 
-The confidence interval is 
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+ Now by the delta method and letting $g(\bm{\beta}) = \lVert \bm{\beta} \rVert = \sum_{k=1}^{d} \bm{\beta}_k^2
+$ we get 
 
-% do the conf interval  do the conf interval do the conf interval do the conf interval do the conf interval do the conf interval do the conf interval do the conf interval do the conf interval 
+$$ \sqrt{n}(g(\hat{\bm{\beta_n}}) - g(\bm{\beta}_0)) \to_d \N (0, \dot{g}(\bm{\beta}_0) \bm{V}_0 \dot{g}(\bm{\beta}_0)')
+$$
+
+where $\dot{g}(\bm{\beta}_0) = \frac{d}{d\bm{\beta}'}g(\bm{\beta}) = 2 \bm{\beta}' $ Hence the confidence interval is given by 
+
+
+$$ CI_{0.95} = \left[ \lVert \hat{\bm{\beta}}_n \rVert ^2 - 1.96 \sqrt{\frac{4\hat{\bm{\beta_n}}'\hat{\bm{V}} \hat{\bm{\beta_n}} }{n}},  \lVert \hat{\bm{\beta}}_n \rVert ^2 + 1.96 \sqrt{\frac{4\hat{\bm{\beta_n}}'\hat{\bm{V}} \hat{\bm{\beta_n}} }{n}} \right] 
+$$
+
 
 \subsection{Q1 Part 4}
 
@@ -195,7 +226,101 @@ $$
 These conditions are equivalent to those found above. 
 
 \subsection{Q1 Part 6}
+If the link funciton is unknown, $\bm{\beta}_0$ is not identified. To see this, consider two pairs of parameters $(\mu(\cdot), \bm{\beta}_0)$ and $(\tilde{\mu}(\cdot), \tilde{\bm{\beta}}_0)$ where $\tilde{\mu}(z) = \mu(z/k)$ and $\tilde{\bm{\beta}}_0 = k\bm{\beta}_0$ for some $ k \ne 0$. Then the parameters are clearly different, but $(\mu(\cdot), \bm{\beta}_0) = (\tilde{\mu}(\cdot), \tilde{\bm{\beta}}_0)$. A common normalization is $\lVert \bm{\beta}_0 \rVert = 1$, but more conditions are needed to regain identification.
 
+\subsection{Q1 Part 7}
+
+
+
+\section{Q2}
+\subsection{Q2 part 1}
+
+Start with the moment condition we are given
+$$
+0 = \mathbb{E}[m(y_i^*, t_i, x_i; \beta_0)|t_i,x_i] $$
+
+Now by law of iterated expectations we can multiply by a function g and still get zero
+$$ 0 = \mathbb{E}[g(t_i, x_i)\mathbb{E}[m(y_i^*, t_i, x_i; \beta_0)|t_i, x_i]] \text{ for any } g(t_i, x_i) $$
+
+Next we can put g inside the first expectation
+$$ 0 = \mathbb{E}[\mathbb{E}[g(t_i, x_i)m(y_i^*, t_i, x_i; \beta_0)|t_i, x_i]] $$
+
+now removing the outside expectation 
+$$ 0 = \mathbb{E}[g(t_i, x_i)m(y_i^*, t_i, x_i; \beta_0)]$$
+
+We want to find $g_0$, the optimal $g$ that minimizes AsyVar($\hat{\beta}$). Let $z_i=(t_i,x_i)$, $w_i = (y_i^*,t_i,x_i)$, and $\theta=\beta$.
+\\ \\ 
+The first thing we need to do is determine the asymptotic variance V associated with 
+
+
+$$\hat{\theta} = \argmin (\frac{1}{n}\sum_i g(z_i)m(w_i,\theta))'W(\frac{1}{n}\sum_i g(z_i)m(w_i,\theta))$$
+
+Taking first order conditions and setting equal to zero we get 
+
+$$\text{FOC: } 0 = [\frac{1}{n}\sum_i \frac{\partial}{\partial\theta}g(z_i)m(w_i,\theta)]'W[\frac{1}{n}\sum_i \frac{\partial}{\partial\theta}g(z_i)m(w_i,\theta)]$$
+
+or 
+$$ 0 = [\frac{1}{n}\sum_i \frac{\partial}{\partial\theta}g(z_i)m(w_i,\hat{\theta})]'W[\frac{1}{n}\sum_i \frac{\partial}{\partial \theta}g(z_i)m(w_i,\hat{\theta})]$$
+
+Since it is euqual to zero we can add another of the same term and multiply by $(\hat{\theta}-\theta_0)$ giving 
+
+$$0 = [\frac{1}{n}\sum_i \frac{\partial}{\partial\theta}g(z_i)m(w_i,\theta_0)]'W[\frac{1}{n}\sum_i \frac{\partial}{\partial \theta}g(z_i)m(w_i,\theta_0)] + [\frac{1}{n}\sum_i \frac{\partial}{\partial\theta}g(z_i)m(w_i,\hat{\theta})]'W[\frac{1}{n}\sum_i \frac{\partial}{\partial \theta}g(z_i)m(w_i,\hat{\theta})](\hat{\theta}-\theta_0)$$
+
+Which can be rearanged to give 
+
+$$\sqrt n(\hat{\theta}-\theta_0) = (\Omega_0'W_0\Omega_0)^{-1}\Omega_0W_0\frac{1}{\sqrt n}\sum_i g(z_i)m(w_i,\theta) + o_p(1)$$
+
+And then  By the CLT, $\sqrt n(\hat{\theta}-\theta_0) \rightarrow_d N(0,V_0)$ \\ \\
+where $ V_0 = (\Omega_0'W_0\Omega_0)^{-1}\Omega_0'W_0\Sigma_0W_0\Omega_0(\Omega_0'W_0\Omega_0)^{-1}$\\ \\ 
+
+and where $ \Sigma_0 = \mathbb{V}[g(z_i)m(w_i,\theta)]$
+
+
+ setting values Optimally to minimize V gives us the following conditions. 
+ 
+ $$ W_0^* = \Sigma_0^{-1} \text{ and } V_0^* = \Omega_0'\Sigma_0\Omega_0$$
+
+$$g^*(z_i) = \frac{\partial m_i}{\partial \theta} \mathbb{V}[m(w_i,\theta_0)|z_i]^{-1} $$
+
+
+Now applying this specifically to a probit model gives 
+$$ \mathbb{V}[m(y_i^*,t_i,x_i,\beta_0)|t_i,x_i]=F(t_i \cdot \theta_0+x_i\gamma_0)(1-F(t_i \cdot \theta_0 + x_i'\gamma_0))$$
+
+$$\mathbb{E}[\frac{\partial}{\partial \beta}m(y_i^*,t_i,x_i,\beta_0)|t_i,x_i] = \mathbb{E}[f(t_i \cdot \theta_0+x_i\gamma_0)(t_i,x_i)|t_i,x_i]
+= f(t_i \cdot \theta_0+x_i\gamma_0)[t_i,x_i']'$$
+
+$$\text{Therefore, } g_0(t_i,x_i) = \frac{f(t_i \cdot \theta_0+x_i\gamma_0)}{F(t_i \cdot \theta_0+x_i\gamma_0)(1-F(t_i \cdot \theta_0 + x_i'\gamma_0))}[t_i,x_i']'$$
+
+
+If $F$ is the logistic cdf we instead get 
+\begin{align*}
+F(x) = \frac{1}{1+e^{-x}}\\
+f(x) = \frac{\partial}{\partial x}F(x) = \frac{-e^{-x}}{(1+e^{-x})^2} =-e^{-x}F(x)^2\\
+\frac{f(x)}{F(x)(1-F(x))} = \frac{-e^{-x}F(x)^2}{F(x)(1-F(x))} = \frac{-e^{-x}F(x)}{1-F(x)} = 1 \\
+g_0(t_i,x_i) = [t_i,x_i']'
+\end{align*}
+
+\subsection{}
+\begin{enumerate}[(a)]
+	\item The optimal unconditional moment condition is:
+	\begin{align*}
+	0 = \mathbb{E}[g(t_i, x_i)m(y_i^*, t_i, x_i; \beta_0)]
+	\end{align*}
+	In part 2.1 we showed that, setting $g=g_0$ this is equivalent to:
+	\begin{align*}
+	0 = \mathbb{E}[m(y_i^*, t_i, x_i; \beta_0)|t_i,x_i]
+	\end{align*}
+	Since $s_i  \perp (y_i^*,t_i,x_i)$:
+	\begin{align*}
+	0 = \mathbb{E}[m(y_i^*, t_i, x_i; \beta_0)|t_i,x_i]\\
+	0 = \mathbb{E}[g_0(t_i, x_i)m(y_i^*, t_i, x_i; \beta_0)]\\
+	0 = \mathbb{E}[g_0(t_i, x_i)m(y_i^*, t_i, x_i; \beta_0) | s_i=1]
+	\end{align*}
+	Thus, $\hat{\beta}_{MCAR}$ solving $0 \approx \hat{\mathbb{E}}[g_0(t_i,x_i)m(y_i, t_i, x_i; \hat{\beta}_{MCAR})|s_i=1]$ is consistent for $\beta_0$\\
+	$\hat{\beta}_{MCAR,feasible}$ solves $0 \approx \hat{\mathbb{E}}[\hat{g}(t_i,x_i)m(y_i, t_i, x_i; \hat{\beta}_{MCAR})|s_i=1]$
+	\item
+\end{enumerate}
+\section{Question 3: When Bootstrap Fails}
 %------------------------------------------------
 % end doc
 %------------------------------------------------
