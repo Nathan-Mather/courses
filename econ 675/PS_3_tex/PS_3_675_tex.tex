@@ -245,7 +245,7 @@ $$ 0 = \mathbb{E}[g(t_i, x_i)\mathbb{E}[m(y_i^*, t_i, x_i; \beta_0)|t_i, x_i]] \
 Next we can put g inside the first expectation
 $$ 0 = \mathbb{E}[\mathbb{E}[g(t_i, x_i)m(y_i^*, t_i, x_i; \beta_0)|t_i, x_i]] $$
 
-now removing the outside expectation 
+now removing the inside expectation 
 $$ 0 = \mathbb{E}[g(t_i, x_i)m(y_i^*, t_i, x_i; \beta_0)]$$
 
 We want to find $g_0$, the optimal $g$ that minimizes AsyVar($\hat{\beta}$). Let $z_i=(t_i,x_i)$, $w_i = (y_i^*,t_i,x_i)$, and $\theta=\beta$.
