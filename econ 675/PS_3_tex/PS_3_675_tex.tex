@@ -233,6 +233,16 @@ If the link funciton is unknown, $\bm{\beta}_0$ is not identified. To see this, 
 The link function is 
 $$\mu(\bm{x}'_i \bm{\beta}_0) = \E[y_i|\bm{x}_i] = \E[\mathbbm{1}(\bm{x}'_i \bm{\beta}_0 \geq \epsilon_i)|\bm{x}_i] =Pr[\bm{x}'_i \bm{\beta}_0 \geq \epsilon_i|\bm{x}_i] = F(\bm{x}'_i \bm{\beta}_0) = \frac{1}{1+exp(-\bm{x}'_i \bm{\beta}_0)}
 $$
+
+The conditional variance of $y_i$ is 
+$$\sigma^2(\bm{x}_i) \V[y_i|\bm{x}_i]$$
+
+Now, note that $y_i|\bm{x}_i$, is a Bernoulli random variable with $Pr[y_i = 1|\bm{x}_i] = F(\bm{x}'_i \bm{\beta}_0). $ then this implies 
+
+$$ \sigma^2(\bm{x}_i) = F(\bm{x}'_i\bm{\beta}_0)(1-F(\bm{x}'_i\bm{\beta}_0))= \mu(\bm{x}'_i\bm{\beta}_0)(1-\mu(\bm{x}'_i\bm{\beta}_0))
+$$
+
+Now to derie the asymptotic variance we note that for the logistic CDF: $\dot{\mu}(u)=(1-\mu(u))\mu(u)$
 \subsection{Q1 Part 8}
 
 
