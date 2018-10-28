@@ -125,6 +125,20 @@ table_q1_9_b <- merge(reg_c_r[, c("term", "estimate", "std.error")], quant_dt,  
 table_q1_9_b[,CI_L := estimate + t_q.025*std.error]
 table_q1_9_b[,CI_H := estimate + t_q.975*std.error]
 
+# calculate p_values 
+p_value_fun <- function(vector, theta){
+  
+  mean(abs(vector) > abs(theta))
+}
+
+# write p value function 
+P_value_fun <- function(vector, theta){
+  
+  2 * max( mean(vector-theta>=abs(theta)), mean(vector-theta<=-1*abs(theta)))
+}
+
+
+table_q1_9_b[, pvalue := mapply(FUN = P_value_fun, vector = as.list(data.table(boot_results$t)), as.list(boot_results$t0))]
 
 #======================#
 # ==== Q1 Part 9 c ====
@@ -207,21 +221,76 @@ table_q2_2_b[, CI_H := mapply(FUN = CI_fun, vector = as.list(data.table(temp$t))
 
 
 
-
-
-
-
 #=====================#
 # ==== Question 3 ====
 #=====================#
 
 
+#=================#
+# ==== Part 1 ====
+#=================#
+
+n <- 1000
+set.seed(123)
+
+# generate random data 
+r_dt <- runif(n, 0,1)
+
+# get max of data 
+r_max <- max(r_dt)
+
+# write functin for bootstrap 
+b_fun <- function(in_data, sample){
+  
+  n*(r_max-max(in_data[sample]))
+  
+}
+
+# run bootsrtap
+u_b <- boot(data=r_dt, R=499, statistic = b_fun, stype = "i" )
+
+# get distribution of statistic 
+u_b_d <- data.table(u_b$t)
 
 
+# plot data 
+plot_q3_1 <- ggplot(u_b_d) +
+  geom_density(aes(x = V1, linetype = "Boot_density") ) +  
+  stat_function(fun = function(x) dexp(x), size = 1, aes(linetype = 'Exponential')) +
+  plot_attributes + 
+  scale_linetype_manual(name = 'Legend',
+                     values = c(Boot_density=1,
+                                Exponential=2))
+  
+
+plot_q3_1
+
+#=================#
+# ==== part 2 ====
+#=================#
+
+# take random data and do parametric bootstrap 
+# just write loop for bootstrap 
+stat_list <- vector("list", length = 599)
+for(iter in 1:599){
+  
+  # generate random uniform data 
+  r_data_i <- runif(n, 0,r_max)
+  stat_list[[iter]] <- n*(r_max-max(r_data_i))
+}
+param_b <- data.table(unlist(stat_list))
+
+# plot data 
+plot_q3_2 <- ggplot(param_b) +
+  geom_density(aes(x = V1, linetype = "Boot_density") ) +  
+  stat_function(fun = function(x) dexp(x), size = 1, aes(linetype = 'Exponential')) +
+  plot_attributes + 
+  scale_linetype_manual(name = 'Legend',
+                        values = c(Boot_density=1,
+                                   Exponential=2))
 
 
-
-
+plot_q3_2
 
 
 #======================#
@@ -244,10 +313,12 @@ for(tab_i in tab_list){
 
 # save plot 
 
-# save the plot 
-png("c:/Users/Nmath_000/Documents/Code/courses/econ 675/PS_3_tex/plot_q1_9_c.png", height = 800, width = 800, type = "cairo")
-print(plot_q1_9_c)
+# save plots
+plot_list <- grep("plot_q", ls(), value = TRUE)
+for(plot_i in plot_list){
+png(paste0("c:/Users/Nmath_000/Documents/Code/courses/econ 675/PS_3_tex/", plot_i, ".png"), height = 800, width = 800, type = "cairo")
+print(get(plot_i))
 dev.off()
-
+}
 
 
