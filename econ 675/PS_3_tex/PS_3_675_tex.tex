@@ -23,6 +23,7 @@
 \usepackage{listings}
 \usepackage{multirow,array}
 \usepackage{enumerate}
+\usepackage{bbm}
 
 
 \usepackage[latin1]{inputenc}
@@ -229,6 +230,10 @@ These conditions are equivalent to those found above.
 If the link funciton is unknown, $\bm{\beta}_0$ is not identified. To see this, consider two pairs of parameters $(\mu(\cdot), \bm{\beta}_0)$ and $(\tilde{\mu}(\cdot), \tilde{\bm{\beta}}_0)$ where $\tilde{\mu}(z) = \mu(z/k)$ and $\tilde{\bm{\beta}}_0 = k\bm{\beta}_0$ for some $ k \ne 0$. Then the parameters are clearly different, but $(\mu(\cdot), \bm{\beta}_0) = (\tilde{\mu}(\cdot), \tilde{\bm{\beta}}_0)$. A common normalization is $\lVert \bm{\beta}_0 \rVert = 1$, but more conditions are needed to regain identification.
 
 \subsection{Q1 Part 7}
+The link function is 
+$$\mu(\bm{x}'_i \bm{\beta}_0) = \E[y_i|\bm{x}_i] = \E[\mathbbm{1}(\bm{x}'_i \bm{\beta}_0 \geq \epsilon_i)|\bm{x}_i] =Pr[\bm{x}'_i \bm{\beta}_0 \geq \epsilon_i|\bm{x}_i] = F(\bm{x}'_i \bm{\beta}_0) = \frac{1}{1+exp(-\bm{x}'_i \bm{\beta}_0)}
+$$
+\subsection{Q1 Part 8}
 
 
 
@@ -378,7 +383,8 @@ g_0(t_i,x_i) = [t_i,x_i']'
 	\includegraphics[width=.8\linewidth]{plot_q3_2.png}	
 \end{center}
 
-
+\subsection{Q3 part 3}
+In the nonparametric case, the bootstrap statistic has a mass point at zero. However, the parametric bootstrap corrects for this since $Pr[max\{x_i\} = max\{x_i^*\}] = 0$, since $x_i^* \sim_{iid} Uniform[0,maz\{x_i\}]$
 %------------------------------------------------
 % end doc
 %------------------------------------------------
