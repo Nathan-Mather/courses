@@ -232,7 +232,39 @@ If the link funciton is unknown, $\bm{\beta}_0$ is not identified. To see this, 
 
 
 
-\section{Q2}
+\subsection{Q1 Part 9 }
+(a)\\
+
+\centerline{R table }
+
+\begin{center}
+	\input{table_q1_9_a.tex}
+\end{center}
+
+
+
+(b)
+
+\centerline{R table }
+
+\begin{center}
+	\input{table_q1_9_b.tex}
+\end{center}
+
+
+(c)
+\centerline{R Graph }
+\begin{center}
+	\includegraphics[width=.8\linewidth]{plot_q1_9_c.png}
+	
+\end{center}
+
+
+% -----------------------------------------------------
+% QUESTION 2
+%------------------------------------------------------
+
+\section{Question 2: Semiparametric GMM with Missing Data}
 \subsection{Q2 part 1}
 
 Start with the moment condition we are given
@@ -300,7 +332,7 @@ f(x) = \frac{\partial}{\partial x}F(x) = \frac{-e^{-x}}{(1+e^{-x})^2} =-e^{-x}F(
 g_0(t_i,x_i) = [t_i,x_i']'
 \end{align*}
 
-\subsection{}
+\subsection{Q2 part 2}
 \begin{enumerate}[(a)]
 	\item The optimal unconditional moment condition is:
 	\begin{align*}
@@ -318,9 +350,35 @@ g_0(t_i,x_i) = [t_i,x_i']'
 	\end{align*}
 	Thus, $\hat{\beta}_{MCAR}$ solving $0 \approx \hat{\mathbb{E}}[g_0(t_i,x_i)m(y_i, t_i, x_i; \hat{\beta}_{MCAR})|s_i=1]$ is consistent for $\beta_0$\\
 	$\hat{\beta}_{MCAR,feasible}$ solves $0 \approx \hat{\mathbb{E}}[\hat{g}(t_i,x_i)m(y_i, t_i, x_i; \hat{\beta}_{MCAR})|s_i=1]$
-	\item
+	
+	\item The tables for this section are below \\
+	
+	\centerline{R table }
+	\begin{center}
+		\input{table_q2_2_b.tex}
+	\end{center}
+	
 \end{enumerate}
+
+%--------------------------------------------------------
+% Question 3 
+%--------------------------------------------------------
+
 \section{Question 3: When Bootstrap Fails}
+\subsection{Q3 part 1}
+\centerline{R Graph }
+\begin{center}
+	\includegraphics[width=.8\linewidth]{plot_q3_1.png}	
+\end{center}
+
+
+\subsection{Q3 part 2}
+\centerline{R Graph }
+\begin{center}
+	\includegraphics[width=.8\linewidth]{plot_q3_2.png}	
+\end{center}
+
+
 %------------------------------------------------
 % end doc
 %------------------------------------------------
