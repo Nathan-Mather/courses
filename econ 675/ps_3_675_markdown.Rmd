@@ -1,3 +1,18 @@
+---
+title: "pset 2 Labor"
+output: pdf_document
+theme: journal
+self_contained: TRUE
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+
+```{r , eval=FALSE, echo=TRUE, warning = FALSE, message = FALSE}
+  
 #===========================#
 # ==== Metrics 675 ps 3 ====
 #===========================#
@@ -35,7 +50,11 @@ plot_attributes <- theme( plot.background = element_rect(fill = "lightgrey"),
                           panel.background = element_rect(fill = "white", colour = "black") , 
                           panel.grid.major.y = element_line(color = "gray90"),
                           text = element_text(size= 30),
-                          plot.title = element_text(vjust=0, hjust = 0.5, colour = "#0B6357",face = "bold", size = 40))
+                          plot.title = element_text(vjust=0, 
+                                                    hjust = 0.5, 
+                                                    colour = "#0B6357",
+                                                    face = "bold", 
+                                                    size = 40))
 
 
 #=====================#
@@ -138,7 +157,9 @@ P_value_fun <- function(vector, theta){
 }
 
 
-table_q1_9_b[, pvalue := mapply(FUN = P_value_fun, vector = as.list(data.table(boot_results$t)), as.list(boot_results$t0))]
+table_q1_9_b[, pvalue := mapply(FUN = P_value_fun, 
+                                vector = as.list(data.table(boot_results$t)), 
+                                as.list(boot_results$t0))]
 
 #======================#
 # ==== Q1 Part 9 c ====
@@ -174,10 +195,26 @@ theta = c(1,2,3,4)
 boot.T_logistic <- function(boot.data, ind) {
   require(data.table)
   g_logistic <- function(theta, data) {
-    a <- data[, (danemia -plogis(theta[1]*dpisofirme + theta[2]*S_age + theta[3]*S_HHpeople + theta[4]*log_inc))*dpisofirme]
-    b <- data[, (danemia -plogis(theta[1]*dpisofirme + theta[2]*S_age + theta[3]*S_HHpeople + theta[4]*log_inc))*S_age]
-    c <- data[, (danemia -plogis(theta[1]*dpisofirme + theta[2]*S_age + theta[3]*S_HHpeople + theta[4]*log_inc))*S_HHpeople]
-    d <- data[, (danemia -plogis(theta[1]*dpisofirme + theta[2]*S_age + theta[3]*S_HHpeople + theta[4]*log_inc))*log_inc]
+    a <- data[, (danemia -plogis(theta[1]*dpisofirme + 
+                                   theta[2]*S_age + 
+                                   theta[3]*S_HHpeople + 
+                                   theta[4]*log_inc))*dpisofirme]
+    
+    b <- data[, (danemia -plogis(theta[1]*dpisofirme + 
+                                   theta[2]*S_age + 
+                                   theta[3]*S_HHpeople + 
+                                   theta[4]*log_inc))*S_age]
+    
+    c <- data[, (danemia -plogis(theta[1]*dpisofirme + 
+                                   theta[2]*S_age + 
+                                   theta[3]*S_HHpeople + 
+                                   theta[4]*log_inc))*S_HHpeople]
+    
+    d <- data[, (danemia -plogis(theta[1]*dpisofirme + 
+                                   theta[2]*S_age + 
+                                   theta[3]*S_HHpeople + 
+                                   theta[4]*log_inc))*log_inc]
+    
     cbind(a, b, c, d)
   }
   
@@ -187,7 +224,12 @@ boot.T_logistic <- function(boot.data, ind) {
 # run bootsrtap in parallel
 ptm <- proc.time()
 set.seed(123)
-temp <- boot(data=p_dt[s==1, ], R=499, statistic = boot.T_logistic, stype = "i",parallel = "snow", ncpus=4 )
+temp <- boot(data=p_dt[s==1, ],
+             R=499, 
+             statistic = boot.T_logistic,
+             stype = "i",
+             parallel = "snow",
+             ncpus=4 )
 proc.time() - ptm
 
 # create data.table of results 
@@ -202,7 +244,9 @@ P_value_fun <- function(vector, theta){
 }
 
 # apply p value function to data 
-table_q2_2_b[, p_value := mapply(FUN = P_value_fun, vector = as.list(data.table(temp$t)), as.list(temp$t0))]
+table_q2_2_b[, p_value := mapply(FUN = P_value_fun,
+                                 vector = as.list(data.table(temp$t)),
+                                 as.list(temp$t0))]
 
 # create t stat 
 table_q2_2_b[, t := Estimate/sd]
@@ -215,8 +259,12 @@ CI_fun <- function(vector, theta, quant){
 }
 
 # get quantiles 
-table_q2_2_b[, CI_L := mapply(FUN = CI_fun, vector = as.list(data.table(temp$t)), theta = as.list(temp$t0), quant = .975)]
-table_q2_2_b[, CI_H := mapply(FUN = CI_fun, vector = as.list(data.table(temp$t)), theta = as.list(temp$t0), quant = 0.025)]
+table_q2_2_b[, CI_L := mapply(FUN = CI_fun,
+                              vector = as.list(data.table(temp$t)),
+                              theta = as.list(temp$t0), quant = .975)]
+table_q2_2_b[, CI_H := mapply(FUN = CI_fun,
+                              vector = as.list(data.table(temp$t)),
+                              theta = as.list(temp$t0), quant = 0.025)]
 
 
 #==============================#
@@ -226,14 +274,25 @@ table_q2_2_b[, CI_H := mapply(FUN = CI_fun, vector = as.list(data.table(temp$t))
 # GMM moment condition
 g_MAR <- function(theta, data) {
   data <- data[data$s==1, ]
-  a <- (data$danemia - plogis(theta[1]*data$dpisofirme + theta[2]*data$S_age + theta[3]*data$S_HHpeople + theta[4]*log(1+data$S_incomepc))) * 
-    data$dpisofirme * data$weights
-  b <- (data$danemia - plogis(theta[1]*data$dpisofirme + theta[2]*data$S_age + theta[3]*data$S_HHpeople + theta[4]*log(1+data$S_incomepc))) * 
-    data$S_age * data$weights
-  c <- (data$danemia - plogis(theta[1]*data$dpisofirme + theta[2]*data$S_age + theta[3]*data$S_HHpeople + theta[4]*log(1+data$S_incomepc))) * 
-    data$S_HHpeople * data$weights
-  d <- (data$danemia - plogis(theta[1]*data$dpisofirme + theta[2]*data$S_age + theta[3]*data$S_HHpeople + theta[4]*log(1+data$S_incomepc))) * 
-    log(1+data$S_incomepc) * data$weights
+  a <- (data$danemia - plogis(theta[1]*data$dpisofirme + 
+                                theta[2]*data$S_age +
+                                theta[3]*data$S_HHpeople + 
+                                theta[4]*log(1+data$S_incomepc)))*data$dpisofirme * data$weights
+  
+  b <- (data$danemia - plogis(theta[1]*data$dpisofirme + 
+                                theta[2]*data$S_age +
+                                theta[3]*data$S_HHpeople + 
+                                theta[4]*log(1+data$S_incomepc)))*data$S_age * data$weights
+  
+  c <- (data$danemia - plogis(theta[1]*data$dpisofirme +
+                                theta[2]*data$S_age + 
+                                theta[3]*data$S_HHpeople + 
+                                theta[4]*log(1+data$S_incomepc)))*data$S_HHpeople * data$weights
+  
+  d <- (data$danemia - plogis(theta[1]*data$dpisofirme + 
+                                theta[2]*data$S_age + 
+                                theta[3]*data$S_HHpeople + 
+                                theta[4]*log(1+data$S_incomepc)))*log(1+data$S_incomepc)*data$weights
   cbind(a, b, c, d)
 }
 
@@ -284,10 +343,26 @@ boot.trim <- function(boot.data, ind) {
   # GMM moment condition with trimming
   g_logistic <- function(theta, data) {
     data.temp <- data.temp[s==1 & weights<=1/0.1, ]
-    a <- data[, (danemia -plogis(theta[1]*dpisofirme + theta[2]*S_age + theta[3]*S_HHpeople + theta[4]*log_inc))*dpisofirme *weights]
-    b <- data[, (danemia -plogis(theta[1]*dpisofirme + theta[2]*S_age + theta[3]*S_HHpeople + theta[4]*log_inc))*S_age*weights]
-    c <- data[, (danemia -plogis(theta[1]*dpisofirme + theta[2]*S_age + theta[3]*S_HHpeople + theta[4]*log_inc))*S_HHpeople*weights]
-    d <- data[, (danemia -plogis(theta[1]*dpisofirme + theta[2]*S_age + theta[3]*S_HHpeople + theta[4]*log_inc))*log_inc*weights]
+    a <- data[, (danemia -plogis(theta[1]*dpisofirme + 
+                                   theta[2]*S_age + 
+                                   theta[3]*S_HHpeople + 
+                                   theta[4]*log_inc))*dpisofirme *weights]
+    
+    b <- data[, (danemia -plogis(theta[1]*dpisofirme + 
+                                   theta[2]*S_age + 
+                                   theta[3]*S_HHpeople + 
+                                   theta[4]*log_inc))*S_age*weights]
+    
+    c <- data[, (danemia -plogis(theta[1]*dpisofirme + 
+                                   theta[2]*S_age + 
+                                   theta[3]*S_HHpeople + 
+                                   theta[4]*log_inc))*S_HHpeople*weights]
+    
+    d <- data[, (danemia -plogis(theta[1]*dpisofirme + 
+                                   theta[2]*S_age + 
+                                   theta[3]*S_HHpeople + 
+                                   theta[4]*log_inc))*log_inc*weights]
+    
     cbind(a, b, c, d)
   }
   
@@ -314,7 +389,9 @@ for (i in 1:4) {
 
 
 table_q2_3_d <- data.table(cbind(table_q2_2_b$term, table6))
-setnames(table_q2_3_d, colnames(table_q2_3_d), c("Term","Estimate", "Std.Error", "t", "p-value", "CI_L", "CI_U"))
+setnames(table_q2_3_d, 
+         colnames(table_q2_3_d), 
+         c("Term","Estimate", "Std.Error", "t", "p-value", "CI_L", "CI_U"))
 
 # convert to numeric
 to_change <- c("Estimate", "Std.Error", "t", "p-value", "CI_L", "CI_U")
@@ -417,18 +494,14 @@ for(tab_i in tab_list){
 # save plots
 plot_list <- grep("plot_q", ls(), value = TRUE)
 for(plot_i in plot_list){
-png(paste0("c:/Users/Nmath_000/Documents/Code/courses/econ 675/PS_3_tex/", plot_i, ".png"), height = 800, width = 800, type = "cairo")
+png(paste0("c:/Users/Nmath_000/Documents/Code/courses/econ 675/PS_3_tex/", 
+           plot_i, ".png"), height = 800, width = 800, type = "cairo")
 print(get(plot_i))
 dev.off()
 }
 
-#=====================================#
-# ==== run markdown to print code ====
-#=====================================#
+   
+  
 
-rmarkdown::render(input =  "C:/Users/Nmath_000/Documents/Code/courses/econ 675/ps_3_675_markdown.Rmd",
-                  output_format = "pdf_document",
-                  output_file = paste0("C:/Users/Nmath_000/Documents/Code/courses/econ 675/PS_3_tex/assignment_3_r_code_pdf.pdf")) 
-
-
+```
 

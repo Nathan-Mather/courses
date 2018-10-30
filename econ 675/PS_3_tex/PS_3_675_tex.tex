@@ -242,9 +242,21 @@ Now, note that $y_i|\bm{x}_i$, is a Bernoulli random variable with $Pr[y_i = 1|\
 $$ \sigma^2(\bm{x}_i) = F(\bm{x}'_i\bm{\beta}_0)(1-F(\bm{x}'_i\bm{\beta}_0))= \mu(\bm{x}'_i\bm{\beta}_0)(1-\mu(\bm{x}'_i\bm{\beta}_0))
 $$
 
-Now to derie the asymptotic variance we note that for the logistic CDF: $\dot{\mu}(u)=(1-\mu(u))\mu(u)$
-\subsection{Q1 Part 8}
+Now to derie the asymptotic variance we note that for the logistic CDF: $\dot{\mu}(u)=(1-\mu(u))\mu(u)$.THis gives us and asymptotic variance of 
 
+$$\bm{V}_0 = H_0^{-1} \Sigma_0 H_0^{-1} $$
+
+Where 
+$$H_0 =\E[(1-\mu(\bm{x}'_i \bm{\beta}_0))^2\mu(\bm{x}'_i\bm{\beta}_0)^2 \bm{x_ix'_i}] $$
+
+and 
+
+$$ 
+\Sigma_0 = \E[(1-\mu(\bm{x}'_i \bm{\beta}_0))^3\mu(\bm{x}'_i\bm{\beta}_0)^3 \bm{x_ix'_i}] $$
+
+
+\subsection{Q1 Part 8}
+MLE gives the same point estimator as NLS but MLE is more efficient and so it has lower variance. 
 
 
 \subsection{Q1 Part 9 }
@@ -256,6 +268,11 @@ Now to derie the asymptotic variance we note that for the logistic CDF: $\dot{\m
 	\input{table_q1_9_a.tex}
 \end{center}
 
+\centerline{stata table }
+
+\begin{center}
+	\input{stata_tab_q1_9_a.tex}
+\end{center}
 
 
 (b)
@@ -267,6 +284,13 @@ Now to derie the asymptotic variance we note that for the logistic CDF: $\dot{\m
 \end{center}
 
 
+\centerline{Stata table }
+\begin{center}
+	\input{stata_table_q1_9_b.tex}
+\end{center}
+
+
+
 (c)
 \centerline{R Graph }
 \begin{center}
@@ -274,7 +298,11 @@ Now to derie the asymptotic variance we note that for the logistic CDF: $\dot{\m
 	
 \end{center}
 
-
+\centerline{Stata Graph }
+\begin{center}
+	\includegraphics[width=.8\linewidth]{stata_plot_q1_9_c.png}
+	
+\end{center}
 % -----------------------------------------------------
 % QUESTION 2
 %------------------------------------------------------
@@ -366,14 +394,61 @@ g_0(t_i,x_i) = [t_i,x_i']'
 	Thus, $\hat{\beta}_{MCAR}$ solving $0 \approx \hat{\mathbb{E}}[g_0(t_i,x_i)m(y_i, t_i, x_i; \hat{\beta}_{MCAR})|s_i=1]$ is consistent for $\beta_0$\\
 	$\hat{\beta}_{MCAR,feasible}$ solves $0 \approx \hat{\mathbb{E}}[\hat{g}(t_i,x_i)m(y_i, t_i, x_i; \hat{\beta}_{MCAR})|s_i=1]$
 	
-	\item The tables for this section are below \\
+	\item The tables for this section are below, they are different because the programs estimate logits differently  \\
 	
 	\centerline{R table }
 	\begin{center}
 		\input{table_q2_2_b.tex}
 	\end{center}
-	
+
+	\centerline{stata table }
+\begin{center}
+	\input{stata_table_q2_2_b.tex}
+\end{center}
+
+
 \end{enumerate}
+
+\subsection{Q2 part 3}
+(a) With the MAR assumption we get the same results. First by MAR we can split out the conditional moment restriction and then calculate the conditional variance restriction.
+
+$$ 
+\E[s_i \cdot m(y_i^*, t_i, x_i)|t_i, x_i] = \E[s_i|t_i,x_i] \cdot \E[m(y_i^*, t_i, x_i)|t_i, x_i] =0$$
+and the conditional variance follows
+
+$$
+\V[s_i \cdot m(y_i^*, t_i, x_i)|t_i. x_i] = \E[s_i^2 \cdot m(y_i^*, t_i, x_i)^2 |t_i, x_i]  = \E[s_i|t_i, x_i] \cdot F(t_i \cdot \theta_0 + x'_i \gamma_0)F(t_i \cdot \theta_0 + x'_i \gamma_0)
+$$
+
+This along with the FOC gives use the same result in part 1 
+
+
+(b) We can estimate $\tilde{\beta}_{MAR}$ by estimating $P_0$ and plugging it in. This will give us a consistent estimator. 
+
+(c)
+
+	\centerline{R table }
+\begin{center}
+	\input{table_q2_3_c.tex}
+\end{center}
+
+	\centerline{Stata table }
+\begin{center}
+	\input{stata_table_q2_3_c.tex}
+\end{center}
+
+
+(d)
+
+	\centerline{R table }
+\begin{center}
+	\input{table_q2_3_d.tex}
+\end{center}
+
+	\centerline{Stata table }
+\begin{center}
+	\input{stata_table_q2_3_d.tex}
+\end{center}
 
 %--------------------------------------------------------
 % Question 3 
@@ -386,6 +461,10 @@ g_0(t_i,x_i) = [t_i,x_i']'
 	\includegraphics[width=.8\linewidth]{plot_q3_1.png}	
 \end{center}
 
+\centerline{Stata Graph }
+\begin{center}
+	\includegraphics[width=.8\linewidth]{stata_plot_q3_1.png}	
+\end{center}
 
 \subsection{Q3 part 2}
 \centerline{R Graph }
@@ -393,8 +472,29 @@ g_0(t_i,x_i) = [t_i,x_i']'
 	\includegraphics[width=.8\linewidth]{plot_q3_2.png}	
 \end{center}
 
+\centerline{Stata Graph }
+\begin{center}
+	\includegraphics[width=.8\linewidth]{stata_plot_q3_2.png}	
+\end{center}
+
+
 \subsection{Q3 part 3}
 In the nonparametric case, the bootstrap statistic has a mass point at zero. However, the parametric bootstrap corrects for this since $Pr[max\{x_i\} = max\{x_i^*\}] = 0$, since $x_i^* \sim_{iid} Uniform[0,maz\{x_i\}]$
+
+
+
+%------------------------------------------------------------------------------------------------
+% APPENDIX 
+%------------------------------------------------------------------------------------------------
+
+\section{Appendix}
+\subsection{R Code}
+
+\includepdf[page=-]{assignment_3_r_code_pdf.pdf}
+
+\subsection{STATA Code}
+\includepdf[page=-]{assignment_3_stata_code_pdf.pdf}
+
 %------------------------------------------------
 % end doc
 %------------------------------------------------
