@@ -1,0 +1,195 @@
+%-----------------------------------------------------------------------------------
+%	PACKAGES AND OTHER DOCUMENT CONFIGURATIONS
+%----------------------------------------------------------------------------------
+
+\documentclass[11pt]{article}
+
+\usepackage[top=2cm, bottom=3cm, left=2cm, right=2cm]{geometry}
+
+\setlength{\parindent}{0in}
+
+\newcommand{\Var}{\mathrm{Var}}
+
+\newcommand{\Cov}{\mathrm{Cov}}
+
+\newcommand{\plim}{\rightarrow_{p}}
+
+\usepackage{amsmath, amsfonts}
+\usepackage{graphicx}
+\usepackage{pdfpages}
+\usepackage{bm}
+\usepackage{listings}
+\usepackage{multirow,array}
+\usepackage{enumerate}
+\usepackage{bbm}
+
+
+\usepackage[latin1]{inputenc}
+
+\usepackage{amssymb}
+
+\usepackage{mathrsfs}
+\usepackage{float}
+\usepackage{booktabs}
+\usepackage{color}
+\usepackage{rotating}
+\usepackage{amsthm}
+\usepackage{multirow,array}
+\usepackage{caption}
+\usepackage{url}
+
+
+\DeclareMathOperator*{\argmax}{arg\,max}
+\DeclareMathOperator*{\argmin}{arg\,min}
+
+
+
+% Expectation symbol
+\newcommand{\E}{\mathrm{E}}
+\newcommand{\V}{\mathrm{V}}
+\newcommand{\N}{\mathcal{N}}
+\newcommand{\R}{\mathbb{R}} 
+
+%----------------------------------------------------------------------------------
+%	TITLE AND AUTHOR(S)
+%----------------------------------------------------------------------------------
+\title{Econ 675 Assignment 3} % The article title
+
+
+\author{Nathan Mather\thanks{Shouts out to Ani  for the help with this } } % The article author(s) 
+
+\date{\today} % An optional date to appear under the author(s)
+
+
+%----------------------------------------------------------------------------------
+\begin{document}
+	
+%------------------------------------------------------------------------------
+%	TABLE OF CONTENTS & LISTS OF FIGURES AND TABLES
+%------------------------------------------------------------------------------
+\maketitle % Print the title/author/date block
+
+\setcounter{tocdepth}{2} % Set the depth of the table of contents to show sections and subsections only
+
+\tableofcontents % Print the table of contents
+
+
+%-------------------------------------------------------------
+% Question 1 
+%-------------------------------------------------------------
+\section{Question 1: Estimating Equations }
+
+\subsection{Q1 Part 1}
+
+To show that these are valid moment conditions we just need to show that they are all equal to zero. We start with the IPW condition 
+
+$$ \E \left[ \psi_{IPW}(\bm{Z}_i;\theta_t(g)) \right] = \E \left[ \frac{D_i(t) \cdot g(Y_i(t))}{p_t(\bm{X}_i)} - \theta(g)  \right] = \E \left[ \E \left[\frac{D_i(t) \cdot g(Y_i(t))}{p_t(\bm{X}_i)} | \bm{X}_i \right]  \right] - \theta(g) 
+$$
+
+$$ = \E \left[ \frac{1}{p_t(\bm{X}_i)} \E \left[  D_i(t) \cdot g(Y_i(t))| \bm{X}_i \right]  \right] - \theta(g) 
+$$
+
+Now notice that 
+$$ \E[ D_i(t) | \bm{X}_i] = Pr[D_i(t) = 1| \bm{X}_i ] = Pr[T_i = t| \bm{X}_i ] = p_t(\bm{X}_i)
+$$
+
+using this we get 
+$$ \E \left[ \psi_{IPW}(\bm{Z}_i;\theta_t(g)) \right] = \E \left[ \E \left[g(Y_i(t))| \bm{X}_i \right]  \right] - \theta(g) =  \E \left[g(Y_i(t)) \right] - \theta(g) = 0 $$
+
+Next we check $\psi_{RI1,t}$
+$$\E[\psi_{RI1,t}(\bm{Z}_i;\theta_t(g))] = \E[e_t(g;\bm{X}_i)] - \theta_t(g) = \E[\E[g(Y_i(t))|\bm{X}_i]] - \theta_t(g) = \E[g(Y_i(t))] - \theta_t(g) =0 
+$$
+
+Next check $\psi_{RI2,t}$
+$$ \E[\psi_{RI2,t}(\bm{Z}_i;\theta_t(g))] = \E \left[ \frac{D_i(t) \cdot e_t(g;\bm{X_i})}{p_t(\bm{X}_i)} \right] - \theta(g) = \E \left[ \E \left[ \frac{D_i(t) \cdot e_t(g;\bm{X_i})}{p_t(\bm{X}_i)} | \bm{X}_i \right] \right] - \theta(g) = \E[e_t(g;\bm{X}_i)] - \theta_t(g) = 0
+$$
+
+Finally we check $\psi_{DR,t}$
+
+$$ \E[\psi_{DR,t}(\bm{Z}_i;\theta_t(g))] = \E \left[ \frac{D_i(t) \cdot g(Y_i(t))}{p_t(\bm{X}_i)} - \theta(g)  \right] - \E \left[ \frac{e_t(g;\bm{X}_i)}{p_t(\bm{X}_i)}  (D_i(t) - p_t(\bm{X}_i)) \right]
+$$
+
+This first terms are identical to the IPW condition so we need only check the following. 
+
+$$  \E \left[ \frac{e_t(g;\bm{X}_i)}{p_t(\bm{X}_i)}  (D_i(t) - p_t(\bm{X}_i)) \right] =  \E \left[ \frac{e_t(g;\bm{X}_i)D_i(t)}{p_t(\bm{X}_i)}   - pe_t(g;\bm{X}_i) \right] =  \theta_t(g) -  \theta_t(g) =0 $$
+So all functions are valid moment conditions
+
+\subsection{Q1 Part 2}
+
+The plug-in IPW estimator is 
+$$
+\hat{\theta}_{\texttt{IPW},t}(g) = \frac{1}{n}\sum_{i=1}^n\frac{D_i(t)g(Y_i)}{\hat p_t(\bm{X}_i)}
+$$
+
+ $\hat p_t(\bm{X}_i)$ is the estimated propensity score. Because this has multiple treatment levels we can estimate the propensity score with any suitable discrete choice model. For example the multinomial logit model. \\ 
+ 
+
+The RD1 estimator is 
+\begin{align*}
+\hat{\theta}_{\texttt{RI1},t}(g) = \hat{\E}[e_t(g;\bm{X}_i)] =  \frac{1}{n}\sum_{i=1}^n \hat{\E}[g(Y_i(t))|\bm{X}_i] &=  \frac{1}{n}\sum_{i=1}^n \hat{\E}[g(Y_i(t))|\bm{X}_i, D_i(t)=1] \\
+&= \frac{1}{n}\sum_{i=1}^n \hat{\E}[g(Y_i)|\bm{X}_i, D_i(t)=1],
+\end{align*}
+where the second last equality uses the ignorability assumption. We just need to decide how to estimate this last term. We could probably use NLS or some nonparametric methid.
+
+
+The plug-in `hybrid' imputation estimator is 
+\begin{align*}
+\hat{\theta}_{\texttt{RI2},t}(g) &=  \frac{1}{n}\sum_{i=1}^n\frac{D_i(t)\widehat{\mu}_t(\bm{X}_i)}{\hat p_t(\bm{X}_i)}. 
+\end{align*}
+
+Finally, the plug-in doubly robust estimator is given by
+\begin{align*}
+\hat{\theta}_{\texttt{DR},t}(g) &= \frac{1}{n}\sum_{i=1}^n\frac{D_i(t)g(Y_i)}{\hat p_t(\bm{X}_i)}-\frac{1}{n}\sum_{i=1}^n\frac{\widehat{\mu}_t(\bm{X}_i)}{\hat p_t(\bm{X}_i)}(D_i(t) - \hat p_t(\bm{X}_i))\\
+&=\frac{1}{n}\sum_{i=1}^n \left(\frac{D_i(t)(g(Y_i) - \widehat{\mu}_t(\bm{X}_i))}{\hat p_t(\bm{X}_i)} + \widehat{\mu}_t(\bm{X}_i) \right).
+\end{align*}
+
+As discussed in Abadie and Catteneo (2018), the relative performance of the above estimators depends on the features of the data generating process. In finite samples, IPW estimators become unstable when the propensity score approaches zero or one and regression imputation estimators may suffer from extrapolation biases. Doubly robust estimators include safeguards against bias caused by misspecification but impose additional specification choices that may affect the resulting estimate.
+
+\subsection{Q1 Part 3}
+
+Note that 
+\begin{align*}
+\sigma_t^2 = \V[Y_i(t)] = \E\left[Y_i(t) - \E[Y_i(t)]\right]^2
+\end{align*}
+
+Thus, we can estimate $\sigma_t^2$ using any of the Methods from 1.2, with $g(Y_i(t)) = \E\left[Y_i(t) - \E[Y_i(t)]\right]^2$. This would be a two-step estimator, since we would need to estimate $\E[Y_i(t)]$. To conduct the hypothesis test of $H_0: \sigma_t^2 = \sigma^2 \text{ } \forall t \in \mathcal{T}$ we would need to use an appropriate joint hypothesis testing procedure. One way to proceed would be test  $H_0: \sigma_t^2 - \sigma^2 =0 \text{ } \forall t \in \mathcal{T}$  and construct the vector $\widehat{\bm{\theta}}= (\hat \sigma^2_1-\sigma^2,...,\hat\sigma^2_T-\sigma^2)'$, and then show $\sqrt{n}(\widehat{\bm{\theta}}-\bm{\theta}_0) \to \N(0,V)$. Then, the Delta method implies $\sqrt{n}(||\widehat{\bm{\theta}}||^2-||\bm{\theta}_0||^2) \to \N(0,4\bm{\theta}_0'V\bm{\theta}_0)$. Note that under the null $\bm{\theta}_0=0$, so we can now conduct the hypothesis test $H_0: \bm{\theta}_0=0$ in the usual way, using an estimator for the asymptotic variance.
+
+
+\subsection{Q1 Part 4}
+No Thanks 
+
+
+%------------------------------------------------------------------
+% Question 2
+%------------------------------------------------------------------
+
+\section{Question 2: Estimating Average Treatment Effects}
+
+A few things didn't run in R but it all went through in STATA. Results are below. I only did one table because making it is tedious but the code for both programs is in the appendix 
+
+\begin{center}
+	
+			\centering
+	
+	\textbf{ATE}\par\medskip
+	\scalebox{0.85}{
+	\input{q2table.tex}
+}
+\end{center}
+
+\newpage
+
+\begin{center}
+	
+	\centering
+	
+	\textbf{ATT}\par\medskip
+	\scalebox{0.85}{
+		\input{q2table_att.tex}
+	}
+\end{center}
+
+%------------------------------------------------
+% end doc
+%------------------------------------------------
+\end{document}

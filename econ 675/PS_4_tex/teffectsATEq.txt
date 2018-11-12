@@ -1,0 +1,41 @@
+%latex.default(round(ATE_table, 2), file = paste0("C://Users/Nmath_000/Documents/Code/courses/econ 675/PS_4_tex/teffectsATEq.txt"),     append = FALSE, table.env = FALSE, center = "none", title = "",     n.cgroup = c(4, 4), cgroup = c("Experimental Data", "PSID Control"),     colheads = c("$\\hat{\\tau}$", "s.e.", "C.I.", "", "$\\hat{\\tau}$",         "s.e.", "C.I.", ""), n.rgroup = c(1, rep(3, 6)), rgroup = c("Mean Diff.",         "OLS", "Reg. Impute", "IPW", "D. Robust", "N1 Match",         "p Match"), rowname = c("", rep(c("a", "b", "c"), 8)))%
+\begin{tabular}{lrrrrcrrrr}
+\hline\hline
+\multicolumn{1}{l}{\bfseries }&\multicolumn{4}{c}{\bfseries Experimental Data}&\multicolumn{1}{c}{\bfseries }&\multicolumn{4}{c}{\bfseries PSID Control}\tabularnewline
+\cline{2-5} \cline{7-10}
+\multicolumn{1}{l}{}&\multicolumn{1}{c}{$\hat{\tau}$}&\multicolumn{1}{c}{s.e.}&\multicolumn{1}{c}{C.I.}&\multicolumn{1}{c}{}&\multicolumn{1}{c}{}&\multicolumn{1}{c}{$\hat{\tau}$}&\multicolumn{1}{c}{s.e.}&\multicolumn{1}{c}{C.I.}&\multicolumn{1}{c}{}\tabularnewline
+\hline
+{\bfseries Mean Diff.}&&&&&&&&&\tabularnewline
+~~&$1794$&$670$&$479$&$3109$&&$-15204$&$  656$&$-16490$&$-13919$\tabularnewline
+\hline
+{\bfseries OLS}&&&&&&&&&\tabularnewline
+~~a&$1582$&$659$&$291$&$2873$&&$  6302$&$ 1209$&$  3932$&$  8673$\tabularnewline
+~~b&$1507$&$657$&$219$&$2795$&&$  4699$&$ 1027$&$  2686$&$  6712$\tabularnewline
+~~c&$1501$&$663$&$202$&$2800$&&$  4284$&$ 1031$&$  2263$&$  6306$\tabularnewline
+\hline
+{\bfseries Reg. Impute}&&&&&&&&&\tabularnewline
+~~a&$1462$&$630$&$228$&$2697$&&$-11195$&$ 1741$&$-14608$&$ -7782$\tabularnewline
+~~b&$1454$&$631$&$218$&$2690$&&$-10398$&$ 3549$&$-17355$&$ -3442$\tabularnewline
+~~c&$1428$&$642$&$170$&$2685$&&$-11920$&$ 3498$&$-18776$&$ -5065$\tabularnewline
+\hline
+{\bfseries IPW}&&&&&&&&&\tabularnewline
+~~a&$1537$&$630$&$303$&$2772$&&$-13507$&$ 2800$&$-18996$&$ -8019$\tabularnewline
+~~b&$1470$&$631$&$234$&$2706$&&$ -7246$&$ 3550$&$-14204$&$  -288$\tabularnewline
+~~c&$1468$&$642$&$210$&$2726$&&$ -7487$&$ 3499$&$-14344$&$  -629$\tabularnewline
+\hline
+{\bfseries D. Robust}&&&&&&&&&\tabularnewline
+~~a&$1473$&$630$&$239$&$2707$&&$-13507$&$ 2800$&$-18996$&$ -8019$\tabularnewline
+~~b&$1451$&$631$&$215$&$2687$&&$-11419$&$ 3549$&$-18376$&$ -4463$\tabularnewline
+~~c&$1423$&$642$&$166$&$2682$&&$-12504$&$ 3498$&$-19360$&$ -5649$\tabularnewline
+\hline
+{\bfseries N1 Match}&&&&&&&&&\tabularnewline
+~~a&$1829$&$780$&$302$&$3358$&&$-15619$&$ 1153$&$-17880$&$-13359$\tabularnewline
+~~b&$1876$&$735$&$435$&$3316$&&$ -9350$&$ 3975$&$-17140$&$ -1559$\tabularnewline
+~~c&$1672$&$726$&$248$&$3095$&&$ -9560$&$ 4034$&$-17467$&$ -1656$\tabularnewline
+\hline
+{\bfseries p Match}&&&&&&&&&\tabularnewline
+~~a&$1542$&$646$&$275$&$2808$&&$-15859$&$ 6750$&$-29089$&$ -2629$\tabularnewline
+~~b&$1489$&$765$&$-12$&$2989$&&$  8646$&$15056$&$-20863$&$ 38156$\tabularnewline
+~~c&$1257$&$677$&$-70$&$2584$&&$ -9562$&$ 4034$&$-17468$&$  1657$\tabularnewline
+\hline
+\end{tabular}
