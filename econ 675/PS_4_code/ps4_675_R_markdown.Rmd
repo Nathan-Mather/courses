@@ -1,3 +1,17 @@
+---
+title: "pset 4 675"
+output: pdf_document
+theme: journal
+self_contained: TRUE
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+
+```{r , eval=FALSE, echo=TRUE, warning = FALSE, message = FALSE}
 #===========================#
 # ==== Metrics 675 ps 4 ====
 #===========================#
@@ -624,15 +638,5 @@ print(xtable(cr.results, type = "latex"),
       floating = FALSE)
 
 
-
-#=====================================#
-# ==== run markdown to print code ====
-#=====================================#
-
-rmarkdown::render(input =  "C:/Users/Nmath_000/Documents/Code/courses/econ 675/PS_4_code/ps4_675_R_markdown.Rmd",
-                  output_format = "pdf_document",
-                  output_file = paste0("C:/Users/Nmath_000/Documents/Code/courses/econ 675/PS_4_tex/assignment_4_r_code_pdf.pdf")) 
-
-
-
+```
 
