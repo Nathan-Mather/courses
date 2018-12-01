@@ -1,3 +1,17 @@
+---
+title: "pset 5 675"
+output: pdf_document
+theme: journal
+self_contained: TRUE
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+
+```{r , eval=FALSE, echo=TRUE, warning = FALSE, message = FALSE}
 #====================#
 # ==== ps_5_675R ====
 #====================#
@@ -562,14 +576,6 @@ final_run <- TRUE
             include.rownames = FALSE,
             floating = FALSE)
       
-      #=====================================#
-      # ==== run markdown to print code ====
-      #=====================================#
-      
-      rmarkdown::render(input =  "C:/Users/Nmath_000/Documents/Code/courses/econ 675/PS_5_code/ps5_675_R_markdown.Rmd",
-                        output_format = "pdf_document",
-                        output_file = paste0("C:/Users/Nmath_000/Documents/Code/courses/econ 675/PS_5_tex/assignment_5_r_code_pdf.pdf")) 
-      
-      
-      
-      
+
+```
+
