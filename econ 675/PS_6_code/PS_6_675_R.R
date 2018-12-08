@@ -152,47 +152,133 @@ hs
     # make plot 
     t_plot <- ggplot() + geom_point(data = temp.rd_dt, aes(x = rdplot_mean_x, y = rdplot_mean_y, color = "Binned Values"))
     t_plot <- t_plot + geom_point(data = fitted_dt, aes(x = x, y = y, color = "Fitted Values"))
-    t_plot <- t_plot + xlab("60 - Poverty rate") + ylab("HS Related Mortality") + scale_color_manual(values = c("black", "blue"), name = "")
+    t_plot <- t_plot + xlab("60 - Poverty rate") + ylab("HS Related Mortality") + scale_color_manual(values = c("black", "blue")) + theme(legend.title=element_blank())
     t_plot <- t_plot + ggtitle(paste0("Fitted Values for Polynomial of degree ", poly_n)) + plot_attributes
     t_plot
     
     # save plot 
-    png(paste0(f_out, "plot_2.2.1_poly_", poly_n, ".png"), height = 800, width = 800, type = "cairo")
+    png(paste0(f_out, "plot_2.2.1_poly_", poly_n, ".png"), height = 800, width = 1600, type = "cairo")
     print(t_plot)
     dev.off()
     
   }
   
-  x <- hs[,povrate60]
-  Y <- hs[,mort_related_post]
-  treat <- hs[,treatment ]
-  X.pol = cbind(x,x^2,x^3,x^4,x^5,x^6)
+  #==================#
+  # ==== Q 2.2.2 ====
+  #==================#
   
-  # Run polynomial regressions
-  global.regs = lapply(0:3,function(i) lm(Y ~ treat + X.pol[,c(1:(3+i))]))
-  
-  # Get point estimates
-  global.betas = sapply(1:4,function(i) global.regs[[i]]$coefficients[2])
-  
-  # Get robust SEs
-  global.SEs   = sapply(1:4,function(i) sqrt(diag(vcovHC(global.regs[[i]],"HC2")))[2])
-  
-  # Put results together
-  global.results = rbind(global.betas, global.SEs)
-  colnames(global.results) = c(3,4,5,6)
-  xtable(global.results,digits=c(0,2,2,2,2))
-  
+    # Make interaction terms 
+    int_dt <- as.data.table(poly(hs$povrate60, 6))
+    colnames(int_dt) <- paste0("treat_poly_pov60_", colnames(int_dt))
+    int_dt[,treat_poly_pov60_1 := NULL ]
+    hs <- cbind(hs, int_dt)
+    cols <- grep("treat_poly", colnames(hs), value = TRUE)
+    hs[, (cols) := lapply(.SD, function(x) x*treatment), .SDcols = cols]
+    
+    # initialize data
+    table_2.2.2 <- data.table(value = c("Estimate", "Standard Error"))
+    
+    # write loop  to make everything we need for polynomial of order N 
+    poly_n <- 3
+    for(poly_n in 3:6){
+      
+      # get x variables we need, there is a better way to do this out this works fine 
+      x_vars <- c("povrate60", "treatment", grep(paste(as.character(c(1:poly_n)), collapse = "|"), colnames(hs), value = TRUE))
+      
+      # make formula 
+      reg_form <- as.formula(paste0("mort_related_post ~", paste(x_vars, collapse = " + ")))
+      
+      # run regressin 
+      reg_o1 <- lm(reg_form, data = hs)
+      reg_o <- data.table(tidy(reg_o1))
+      tab_col <- reg_o[term == "treatment", c(estimate, std.error)]
+      
+      # put stuff in table 
+      table_2.2.2[, temp := tab_col]
+      setnames(table_2.2.2, "temp", paste0("Polynomial ", poly_n))
+      
+      # get fitted values and data
+      temp.rd = rdplot(hs[,mort_related_post], hs[,povrate60] ,hide=TRUE)
+      temp.rd_dt <- data.table(rdplot_mean_x = temp.rd$vars_bins$rdplot_mean_x, rdplot_mean_y =  temp.rd$vars_bins$rdplot_mean_y)
+      fitted_dt <- data.table(x = hs$povrate60, y = reg_o1$fitted.values)
+      
+      # make plot 
+      t_plot <- ggplot() + geom_point(data = temp.rd_dt, aes(x = rdplot_mean_x, y = rdplot_mean_y, color = "Binned Values"))
+      t_plot <- t_plot + geom_point(data = fitted_dt, aes(x = x, y = y, color = "Fitted Values"))
+      t_plot <- t_plot + xlab("60 - Poverty rate") + ylab("HS Related Mortality") + scale_color_manual(values = c("black", "blue")) + theme(legend.title=element_blank())
+      t_plot <- t_plot + ggtitle(paste0("Fitted Values for Polynomial of degree ", poly_n, " with interactions")) + plot_attributes
+      t_plot
+      
+      # save plot 
+      png(paste0(f_out, "plot_2.2.2_poly_", poly_n, ".png"), height = 800, width = 1600, type = "cairo")
+      print(t_plot)
+      dev.off()
+      
+    }
 
-  plot(temp.rd$vars_bins$rdplot_mean_x,temp.rd$vars_bins$rdplot_mean_y,pch=20,xlab="povrate60",ylab="mort_related_post")
-  points(x,global.regs[[2]]$fitted.values,pch=6,col="blue")
-  abline(v=0)
-  dev.copy(pdf,'q2-2-const.pdf')
-  dev.off()
-  
+#=================#
+# ==== q2.2.3 ====
+#=================#
+    
+    # drop the interaction terms 
+    hs <- hs[, grep( "treat_poly", colnames(hs), invert = TRUE, value = TRUE), with = FALSE]
+    
+    
+    p <- 3 
+    bw <- 1
+    in_dt <- hs
+    F_223 <- function(p, bw, in_dt){
+      
+      # get x variables we need, there is a better way to do this out this works fine 
+      x_vars <- c("povrate60", "treatment", grep(paste(as.character(c(1:p)), collapse = "|"), colnames(hs), value = TRUE))
+      
+      # subset data down to appropriate binwidth
+      
+    }
 
 
+      # make formula 
+      reg_form <- as.formula(paste0("mort_related_post ~", paste(x_vars, collapse = " + ")))
+      
+      # run regressin 
+      reg_o1 <- lm(reg_form, data = hs)
+      reg_o <- data.table(tidy(reg_o1))
+      tab_col <- reg_o[term == "treatment", c(estimate, std.error)]
+      
+      # put stuff in table 
+      table_2.2.2[, temp := tab_col]
+      setnames(table_2.2.2, "temp", paste0("Polynomial ", poly_n))
+      
+      # get fitted values and data
+      temp.rd = rdplot(hs[,mort_related_post], hs[,povrate60] ,hide=TRUE)
+      temp.rd_dt <- data.table(rdplot_mean_x = temp.rd$vars_bins$rdplot_mean_x, rdplot_mean_y =  temp.rd$vars_bins$rdplot_mean_y)
+      fitted_dt <- data.table(x = hs$povrate60, y = reg_o1$fitted.values)
+      
+      # make plot 
+      t_plot <- ggplot() + geom_point(data = temp.rd_dt, aes(x = rdplot_mean_x, y = rdplot_mean_y, color = "Binned Values"))
+      t_plot <- t_plot + geom_point(data = fitted_dt, aes(x = x, y = y, color = "Fitted Values"))
+      t_plot <- t_plot + xlab("60 - Poverty rate") + ylab("HS Related Mortality") + scale_color_manual(values = c("black", "blue")) + theme(legend.title=element_blank())
+      t_plot <- t_plot + ggtitle(paste0("Fitted Values for Polynomial of degree ", poly_n, " with interactions")) + plot_attributes
+      t_plot
+      
+      # save plot 
+      png(paste0(f_out, "plot_2.2.2_poly_", poly_n, ".png"), height = 800, width = 1600, type = "cairo")
+      print(t_plot)
+      dev.off()
+      
+    }
+  #======================#
+  # ==== save tables ====
+  #======================#
+  print(xtable(table_2.2.1, type = "latex"), 
+        file = paste0(f_out, "table_2.2.1.tex"),
+        include.rownames = FALSE,
+        floating = FALSE)
   
-  
+  print(xtable(table_2.2.2, type = "latex"), 
+        file = paste0(f_out, "table_2.2.2.tex"),
+        include.rownames = FALSE,
+        floating = FALSE)
   
   
   
