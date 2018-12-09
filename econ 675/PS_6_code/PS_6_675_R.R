@@ -34,8 +34,8 @@ plot_attributes <- theme( plot.background = element_rect(fill = "lightgrey"),
                           panel.grid.minor  = element_blank(),
                           panel.background = element_rect(fill = "white", colour = "black") , 
                           panel.grid.major.y = element_line(color = "gray90"),
-                          text = element_text(size= 30),
-                          plot.title = element_text(vjust=0, hjust = 0.5, colour = "#0B6357",face = "bold", size = 40))
+                          text = element_text(size= 20),
+                          plot.title = element_text(vjust=0, hjust = 0.5, colour = "#0B6357",face = "bold", size = 20))
 
 
 #=====================#
@@ -57,22 +57,22 @@ hs
     # Evenly-spaced bins, IMSE optimal
     rdplot(hs[,mort_related_pre], hs[,povrate60], c =0, p=1, binselect = "es", x.label="povrate60", y.label="mort_related_pre", title="Evenly-spaced bins, IMSE optimal")
     # I guess do this because this since I can't make ggplots with this function 
-    dev.copy(pdf, paste0(f_out, 'plot_2.1.1.i.a.pdf'))
+    dev.copy(pdf, paste0(f_out, 'plot_211ia.pdf'))
     dev.off()
     
     # Evenly-spaced bins, mimicking variance 
     rdplot(hs[,mort_related_pre],hs[,povrate60],p=1, binselect = "esmv",x.label="povrate60",y.label="mort_related_pre",title="Evenly-spaced bins, mimicking variance ")
-    dev.copy(pdf, paste0(f_out, 'plot_2.1.1.i.b.pdf'))
+    dev.copy(pdf, paste0(f_out, 'plot_211ib.pdf'))
     dev.off()
     
     # Quantile-spaced bins, IMSE optimal
     rdplot(hs[,mort_related_pre],hs[,povrate60],p=1, binselect = "qs",x.label="povrate60",y.label="mort_related_pre",title="Quantile-spaced bins, IMSE optimal")
-    dev.copy(pdf, paste0(f_out, 'plot_2.1.1.ii.a.pdf'))
+    dev.copy(pdf, paste0(f_out, 'plot_211iia.pdf'))
     dev.off()
     
     # Quantile-spaced bins, mimicking variance
     rdplot(hs[,mort_related_pre],hs[,povrate60],p=1, binselect = "qsmv", x.label="povrate60", y.label="mort_related_pre", title="Quantile-spaced bins, mimicking variance")
-    dev.copy(pdf, paste0(f_out, 'plot_2.1.1.ii.b.pdf'))
+    dev.copy(pdf, paste0(f_out, 'plot_211iib.pdf'))
     dev.off()
     
   #==================#
@@ -115,6 +115,17 @@ hs
   ## Continuity in density tests (defaults are triangular kernel, jackknife SEs)
   cdt <- rddensity(hs$povrate60)
 
+  # save plot 
+  png(paste0(f_out, "plot_212i.png"), height = 400, width = 800, type = "cairo")
+  print(plot_2.1.2.i)
+  dev.off()
+  
+  # save table 
+  print(xtable(table_2.1.2.ii, type = "latex"), 
+        file = paste0(f_out, "table_212ii.tex"),
+        include.rownames = FALSE,
+        floating = FALSE)
+  
 #================#
 # ==== Q 2.2 ====
 #================#
@@ -165,7 +176,7 @@ hs
     t_plot
     
     # save plot 
-    png(paste0(f_out, "plot_2.2.1_poly_", poly_n, ".png"), height = 800, width = 1600, type = "cairo")
+    png(paste0(f_out, "plot_221_poly_", poly_n, ".png"), height = 400, width = 800, type = "cairo")
     print(t_plot)
     dev.off()
     
@@ -218,7 +229,7 @@ hs
       t_plot
       
       # save plot 
-      png(paste0(f_out, "plot_2.2.2_poly_", poly_n, ".png"), height = 800, width = 1600, type = "cairo")
+      png(paste0(f_out, "plot_222_poly_", poly_n, ".png"), height = 400, width = 800, type = "cairo")
       print(t_plot)
       dev.off()
       
@@ -232,8 +243,6 @@ hs
     hs <- hs[, grep( "treat_poly", colnames(hs), invert = TRUE, value = TRUE), with = FALSE]
     
     
-    p <- 3 
-    bw <- 1
     in_dt <- hs
     F_223 <- function(p, bw, in_dt = hs){
       
@@ -264,11 +273,11 @@ hs
       t_plot <- ggplot() + geom_point(data = temp.rd_dt, aes(x = rdplot_mean_x, y = rdplot_mean_y, color = "Binned Values"))
       t_plot <- t_plot + geom_point(data = fitted_dt, aes(x = x, y = y, color = "Fitted Values"))  + geom_vline(xintercept = 0)
       t_plot <- t_plot + xlab("60 - Poverty rate") + ylab("HS Related Mortality") + scale_color_manual(values = c("black", "blue")) + theme(legend.title=element_blank())
-      t_plot <- t_plot + ggtitle(paste0("Fitted Values for Polynomial of degree ", poly_n, " Bin Width ", bw)) + plot_attributes
+      t_plot <- t_plot + ggtitle(paste0("Fitted Values for Polynomial of degree ", p, " Bin Width ", bw)) + plot_attributes
       t_plot
       
       # save plot 
-      png(paste0(f_out, "plot_2.2.3_poly_", p, "_bw_", bw, ".png"), height = 800, width = 1600, type = "cairo")
+      png(paste0(f_out, "plot_223_poly_", p, "_bw_", bw, ".png"), height = 400, width = 800, type = "cairo")
       print(t_plot)
       dev.off()
       
@@ -289,7 +298,7 @@ hs
       for(tab_i in tabs){
         
         print(xtable(get(tab_i), type = "latex"), 
-              file = paste0(f_out, "table_2.2.3_", tab_i, ".tex"),
+              file = paste0(f_out, "table_223_", tab_i, ".tex"),
               include.rownames = FALSE,
               floating = FALSE)
         
@@ -321,7 +330,7 @@ hs
     for(i in 1:3){
       
       print(xtable(tables_231[[i]], type = "latex"), 
-            file = paste0(f_out, "table_2.3.1_poly_", paste0(i-1), ".tex"),
+            file = paste0(f_out, "table_231_poly_", paste0(i-1), ".tex"),
             include.rownames = FALSE,
             floating = FALSE)
       
@@ -383,7 +392,7 @@ hs
     
     # Save it 
     print(xtable(table_2.3.2b, type = "latex"), 
-          file = paste0(f_out, "table_2.3.2b.tex"),
+          file = paste0(f_out, "table_232b.tex"),
           include.rownames = TRUE,
           floating = FALSE)
     #============#
@@ -414,7 +423,7 @@ hs
     
     # Save it 
     print(xtable(table_2.3.2c, type = "latex"), 
-          file = paste0(f_out, "table_2.3.2c.tex"),
+          file = paste0(f_out, "table_232c.tex"),
           include.rownames = TRUE,
           floating = FALSE)
     
@@ -439,7 +448,7 @@ hs
     
     # Save it 
     print(xtable(table_2.3.2d, type = "latex"), 
-          file = paste0(f_out, "table_2.3.2c.tex"),
+          file = paste0(f_out, "table_232c.tex"),
           include.rownames = TRUE,
           floating = FALSE)
         
@@ -477,7 +486,7 @@ hs
     
     #save it 
     print(xtable(table_2.4, type = "latex"), 
-          file = paste0(f_out, "table_2.4.tex"),
+          file = paste0(f_out, "table_24.tex"),
           include.rownames = TRUE,
           floating = FALSE)
     
@@ -487,12 +496,12 @@ hs
   #============================#
 
   print(xtable(table_2.2.1, type = "latex"), 
-        file = paste0(f_out, "table_2.2.1.tex"),
+        file = paste0(f_out, "table_221.tex"),
         include.rownames = FALSE,
         floating = FALSE)
   
   print(xtable(table_2.2.2, type = "latex"), 
-        file = paste0(f_out, "table_2.2.2.tex"),
+        file = paste0(f_out, "table_222.tex"),
         include.rownames = FALSE,
         floating = FALSE)
   
