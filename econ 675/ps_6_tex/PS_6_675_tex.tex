@@ -1,0 +1,355 @@
+%	PACKAGES AND OTHER DOCUMENT CONFIGURATIONS
+%----------------------------------------------------------------------------------
+
+\documentclass[11pt]{article}
+
+\usepackage[top=2cm, bottom=3cm, left=2cm, right=2cm]{geometry}
+
+\setlength{\parindent}{0in}
+
+\newcommand{\Var}{\mathrm{Var}}
+
+\newcommand{\Cov}{\mathrm{Cov}}
+
+\newcommand{\plim}{\rightarrow_{p}}
+
+\usepackage{pdfpages}
+\usepackage{amsmath, amsfonts}
+\usepackage{graphicx}
+\usepackage{bm}
+\usepackage{listings}
+\usepackage{multirow,array}
+\usepackage{enumerate}
+\usepackage{bbm}
+
+
+\usepackage[latin1]{inputenc}
+
+\usepackage{amssymb}
+\usepackage{subfig}
+\usepackage{mathrsfs}
+\usepackage{float}
+\usepackage{booktabs}
+\usepackage{color}
+\usepackage{rotating}
+\usepackage{amsthm}
+\usepackage{multirow,array}
+\usepackage{caption}
+\usepackage{url}
+
+
+\DeclareMathOperator*{\argmax}{arg\,max}
+\DeclareMathOperator*{\argmin}{arg\,min}
+
+
+
+% Expectation symbol
+\newcommand{\E}{\mathrm{E}}
+\newcommand{\V}{\mathrm{V}}
+\newcommand{\N}{\mathcal{N}}
+\newcommand{\R}{\mathbb{R}} 
+
+%----------------------------------------------------------------------------------
+%	TITLE AND AUTHOR(S)
+%----------------------------------------------------------------------------------
+\title{Econ 675 Assignment 6} % The article title
+
+
+\author{Nathan Mather\thanks{Shouts out to Ani for the help with question 1 }}  % The article author(s) 
+
+\date{\today} % An optional date to appear under the author(s)
+
+
+%----------------------------------------------------------------------------------
+\begin{document}
+	
+%------------------------------------------------------------------------------
+%	TABLE OF CONTENTS & LISTS OF FIGURES AND TABLES
+%------------------------------------------------------------------------------
+\maketitle % Print the title/author/date block
+
+\setcounter{tocdepth}{2} % Set the depth of the table of contents to show sections and subsections only
+
+\tableofcontents % Print the table of contents
+
+
+%-------------------------------------------------------------
+% Question 1 
+%-------------------------------------------------------------
+
+\section{Q1}
+
+TO DO
+%-------------------------------------------------------------
+% Question 2 
+%-------------------------------------------------------------
+
+\section{Question 2: The Effect of Head Start on Child Mortality}
+
+\subsection{Q2.1 RD Plots and Falsification Tests}
+
+\subsubsection{Q2.1.1}
+
+\begin{figure}[H]
+	\centering
+	\subfloat{
+		\includegraphics[width=80mm]{plot_211ia.pdf}
+	}
+	\subfloat{
+		\includegraphics[width=80mm]{plot_211ib.pdf}
+	}
+	\newline
+	\subfloat{
+		\includegraphics[width=80mm]{plot_211iia.pdf}
+	}
+	\subfloat{
+		\includegraphics[width=80mm]{plot_211iib.pdf}
+	}
+	
+\end{figure}
+
+\subsubsection{Q2.1.2}
+\begin{center}
+	\includegraphics[width=.8\linewidth]{plot_212i.png}
+	
+\end{center}
+\begin{center}
+	\centering
+	\textbf{local binomial test}\par\medskip
+	\scalebox{0.85}{
+		\input{table_212ii.tex}
+	}
+\end{center}
+
+
+\subsection{Q2.2 Global and Flexible Parametric Methods}
+\subsubsection{Q2.2.1}
+
+\begin{center}
+	\centering
+	\textbf{global polynomial fit}\par\medskip
+	\scalebox{1}{
+		\input{table_221.tex}
+	}
+\end{center}
+ .
+\\ \\
+
+
+\includegraphics[width=.8\linewidth]{plot_221_poly_3.png}
+\\ \\
+\includegraphics[width=.8\linewidth]{plot_221_poly_4.png}
+\\ \\
+\includegraphics[width=.8\linewidth]{plot_221_poly_5.png}
+\\ \\
+\includegraphics[width=.8\linewidth]{plot_221_poly_6.png}
+
+
+\subsubsection{Q2.2.2}
+
+
+\begin{center}
+	\centering
+	\textbf{global polynomial fit, Fully Interacted }\par\medskip
+	\scalebox{1}{
+		\input{table_222.tex}
+	}
+\end{center}
+ .
+\\ \\ 
+
+\includegraphics[width=.8\linewidth]{plot_222_poly_3.png}
+\\ \\
+\includegraphics[width=.8\linewidth]{plot_222_poly_4.png}
+\\ \\
+\includegraphics[width=.8\linewidth]{plot_222_poly_5.png}
+\\ \\
+\includegraphics[width=.8\linewidth]{plot_222_poly_6.png}
+
+
+\subsubsection{Q2.2.3}
+
+% bw 1 
+\begin{center}
+	\centering
+	\textbf{Local Parametric Model Bandwidth of 1 }\par\medskip
+	\scalebox{1}{
+		\input{table_223_bw1.tex}
+	}
+\end{center}
+
+\begin{center}
+	{\large \bf{Graphs for Bandwidth of 1}}
+\end{center}
+
+\includegraphics[width=.8\linewidth]{plot_223_poly_1_bw_1.png}
+\\ \\
+\includegraphics[width=.8\linewidth]{plot_223_poly_2_bw_1.png}
+\\ \\
+\includegraphics[width=.8\linewidth]{plot_223_poly_3_bw_1.png}
+
+% bw 5 
+
+\begin{center}
+	\centering
+	\textbf{Local Parametric Model Bandwidth of 5 }\par\medskip
+	\scalebox{1}{
+		\input{table_223_bw5.tex}
+	}
+\end{center}
+
+\begin{center}
+	{\large \bf{Graphs for Bandwidth of 5}}
+\end{center}
+
+\includegraphics[width=.8\linewidth]{plot_223_poly_1_bw_5.png}
+\\ \\
+\includegraphics[width=.8\linewidth]{plot_223_poly_2_bw_5.png}
+\\ \\
+\includegraphics[width=.8\linewidth]{plot_223_poly_3_bw_5.png}
+
+
+% bw 9 
+
+\begin{center}
+	\centering
+	\textbf{Local Parametric Model Bandwidth of 9 }\par\medskip
+	\scalebox{1}{
+		\input{table_223_bw9.tex}
+	}
+\end{center}
+
+\begin{center}
+	{\large \bf{Graphs for Bandwidth of 9}}
+\end{center}
+
+\includegraphics[width=.8\linewidth]{plot_223_poly_1_bw_9.png}
+\\ \\
+\includegraphics[width=.8\linewidth]{plot_223_poly_2_bw_9.png}
+\\ \\
+\includegraphics[width=.8\linewidth]{plot_223_poly_3_bw_9.png}
+.
+\\
+\\
+% bw 18
+
+\begin{center}
+	\centering
+	\textbf{Local Parametric Model Bandwidth of 18 }\par\medskip
+	\scalebox{1}{
+		\input{table_223_bw18.tex}
+	}
+\end{center}
+
+\begin{center}
+	{\large \bf{Graphs for Bandwidth of 18}}
+\end{center}
+
+\includegraphics[width=.8\linewidth]{plot_223_poly_1_bw_18.png}
+\\ \\
+\includegraphics[width=.8\linewidth]{plot_223_poly_2_bw_18.png}
+\\ \\
+\includegraphics[width=.8\linewidth]{plot_223_poly_3_bw_18.png}
+
+\subsubsection{Q2.2.4}
+
+
+
+\subsection{Q2.3 Robust Local Polynomial Methods}
+
+\subsubsection{Q2.3.1}
+
+% poly 0 
+\begin{center}
+	\centering
+	\textbf{Robust local polynomial degree 0  }\par\medskip
+	\scalebox{1}{
+		\input{table_231_poly_0.tex}
+	}
+\end{center}
+
+% poly 1
+\begin{center}
+	\centering
+	\textbf{Robust local polynomial degree 1  }\par\medskip
+	\scalebox{1}{
+		\input{table_231_poly_1.tex}
+	}
+\end{center}
+
+
+% poly 2
+\begin{center}
+	\centering
+	\textbf{Robust local polynomial degree 2  }\par\medskip
+	\scalebox{1}{
+		\input{table_231_poly_2.tex}
+	}
+\end{center}
+
+\subsubsection{Q2.3.2}
+(a)
+
+\begin{center}
+	\centering
+	\textbf{Placebo Test with Mortality Related Pre-Treatment }\par\medskip
+	\scalebox{1}{
+		\input{table_232ai.tex}
+	}
+\end{center}
+
+\begin{center}
+	\centering
+	\textbf{Placebo Test with Mortality Injury Post-Treatment }\par\medskip
+	\scalebox{1}{
+		\input{table_232aii.tex}
+	}
+\end{center}
+
+(b)
+\begin{center}
+	\centering
+	\textbf{Bandwidth and Kernal Robustness Check }\par\medskip
+	\scalebox{.9}{
+		\input{table_232b.tex}
+	}
+\end{center}
+
+(c)
+
+\begin{center}
+	\centering
+	\textbf{Donut Hole Robustness Check }\par\medskip
+	\scalebox{1}{
+		\input{table_232c.tex}
+	}
+\end{center}
+
+(d)
+
+\begin{center}
+	\centering
+	\textbf{Placebo Cutoff Robustness Check }\par\medskip
+	\scalebox{.9}{
+		\input{table_232d.tex}
+	}
+\end{center}
+\subsubsection{Q2.3.3}
+
+\subsection{Q 2.4 Local Randomization Methods }
+
+
+\begin{center}
+	\centering
+	\textbf{Neynman's approach }\par\medskip
+	\scalebox{.9}{
+		\input{table_24.tex}
+	}
+\end{center}
+
+
+%------------------------------------------------
+% end doc
+%------------------------------------------------
+\end{document}
+
