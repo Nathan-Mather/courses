@@ -1,0 +1,1278 @@
+{smcl}
+{com}{sf}{ul off}{txt}{.-}
+      name:  {res}<unnamed>
+       {txt}log:  {res}C:\Users\Nmath_000\Documents\Code\courses\econ 675\ps_6_tex\pset6_stata.smcl
+  {txt}log type:  {res}smcl
+ {txt}opened on:  {res} 9 Dec 2018, 17:08:11
+{txt}
+{com}. 
+. *******************************************************
+. *** Q2: The Effect of Head Start on Child Mortality ***
+. *******************************************************
+. use "C:\Users\Nmath_000\Documents\MI_school\Second Year\675 Applied Econometrics\hw\hw6\HeadStart.dta", clear
+{txt}
+{com}. cd "C:\Users\Nmath_000\Documents\Code\courses\econ 675\ps_6_tex\"
+{res}C:\Users\Nmath_000\Documents\Code\courses\econ 675\ps_6_tex
+{txt}
+{com}. 
+. global y mort_related_post
+{txt}
+{com}. global z mort_injury_post
+{txt}
+{com}. global yf mort_related_pre
+{txt}
+{com}. global x povrate60 
+{txt}
+{com}. gen treat = ($x > 0)
+{txt}
+{com}. forvalues p = 0/6 {c -(}
+{txt}  2{com}. gen p`p' = $x^`p'
+{txt}  3{com}. gen tp`p' = $x^`p'*treat
+{txt}  4{com}. gen up`p' = $x^`p'*(1-treat)
+{txt}  5{com}. {c )-}
+{txt}
+{com}. order povrate60 mort* treat* p* t* u*
+{txt}
+{com}. 
+. * Q2.1.1 RD Plots
+. 
+. * Evenly spaced bins, IMSE-optimal
+. rdplot $yf $x, c(0) binselect(es) ///
+>     graph_options(title("Evenly-spaced binning, IMSE-optimal")) 
+{res}
+RD Plot with evenly spaced number of bins using spacings estimators.
+
+{txt}{ralign 21: Cutoff c = 0}{col 22} {c |} {col 23}Left of {res}c{col 36}{txt}Right of {res}c{col 54}{txt}Number of obs  = {res}      2783
+{txt}{hline 22}{c +}{hline 22}{col 54}Kernel         = {res}{ralign 10:Uniform}
+{txt}{ralign 21:Number of obs}{col 22} {c |} {col 23}{res}     2489{col 37}      294
+{txt}{ralign 21:Eff. Number of obs}{col 22} {c |} {col 23}{res}     2489{col 37}      294
+{txt}{ralign 21:Order poly. fit (p)}{col 22} {c |} {col 23}{res}        4{col 37}        4
+{txt}{ralign 21:BW poly. fit (h)}{col 22} {c |} {col 23}{res}   43.990{col 37}   22.372
+{txt}{ralign 21:Number of bins scale}{col 22} {c |} {col 23}{res}    1.000{col 37}    1.000
+
+Outcome: mort_related_pre. Running variable: povrate60.
+{txt}{hline 22}{c TT}{hline 22}
+{col 22} {c |} {col 23}Left of {res}c{col 36}{txt}Right of {res}c
+{txt}{hline 22}{c +}{hline 22}
+{ralign 21:Bins selected}{col 22} {c |} {col 23}{res}        5{col 37}        6
+{txt}{ralign 21:Average bin length}{col 22} {c |} {col 23}{res}    8.798{col 37}    3.729
+{txt}{ralign 21:Median bin length}{col 22} {c |} {col 23}{res}    8.798{col 37}    3.729
+{txt}{hline 22}{c +}{hline 22}
+{ralign 21:IMSE-optimal bins}{col 22} {c |} {col 23}{res}        5{col 37}        6
+{txt}{ralign 21:Mimicking Var. bins}{col 22} {c |} {col 23}{res}       47{col 37}       43
+{txt}{hline 22}{c +}{hline 22}
+{lalign 1:Rel. to IMSE-optimal:}{col 22} {c |} 
+{ralign 21:Implied scale}{col 22} {c |} {col 23}{res}    1.000{col 37}    1.000
+{txt}{ralign 21:WIMSE var. weight}{col 22} {c |} {col 23}{res}    0.500{col 37}    0.500
+{txt}{ralign 21:WIMSE bias weight}{col 22} {c |} {col 23}{res}    0.500{col 37}    0.500
+{txt}{hline 22}{c BT}{hline 22}
+
+{res}{txt}
+{com}. 
+. graph save temp1.gph, replace
+{res}{txt}(file temp1.gph saved)
+
+{com}. 
+. * Quantile-spaced bins, IMSE-optimal
+. rdplot $yf $x, c(0) binselect(qs) ///
+>     graph_options(title("Quantile-spaced binning, IMSE-optimal")) 
+{res}
+RD Plot with quantile spaced number of bins using spacings estimators.
+
+{txt}{ralign 21: Cutoff c = 0}{col 22} {c |} {col 23}Left of {res}c{col 36}{txt}Right of {res}c{col 54}{txt}Number of obs  = {res}      2783
+{txt}{hline 22}{c +}{hline 22}{col 54}Kernel         = {res}{ralign 10:Uniform}
+{txt}{ralign 21:Number of obs}{col 22} {c |} {col 23}{res}     2489{col 37}      294
+{txt}{ralign 21:Eff. Number of obs}{col 22} {c |} {col 23}{res}     2489{col 37}      294
+{txt}{ralign 21:Order poly. fit (p)}{col 22} {c |} {col 23}{res}        4{col 37}        4
+{txt}{ralign 21:BW poly. fit (h)}{col 22} {c |} {col 23}{res}   43.990{col 37}   22.372
+{txt}{ralign 21:Number of bins scale}{col 22} {c |} {col 23}{res}    1.000{col 37}    1.000
+
+Outcome: mort_related_pre. Running variable: povrate60.
+{txt}{hline 22}{c TT}{hline 22}
+{col 22} {c |} {col 23}Left of {res}c{col 36}{txt}Right of {res}c
+{txt}{hline 22}{c +}{hline 22}
+{ralign 21:Bins selected}{col 22} {c |} {col 23}{res}        5{col 37}       10
+{txt}{ralign 21:Average bin length}{col 22} {c |} {col 23}{res}    8.798{col 37}    2.237
+{txt}{ralign 21:Median bin length}{col 22} {c |} {col 23}{res}    7.100{col 37}    1.236
+{txt}{hline 22}{c +}{hline 22}
+{ralign 21:IMSE-optimal bins}{col 22} {c |} {col 23}{res}        5{col 37}       10
+{txt}{ralign 21:Mimicking Var. bins}{col 22} {c |} {col 23}{res}       44{col 37}       48
+{txt}{hline 22}{c +}{hline 22}
+{lalign 1:Rel. to IMSE-optimal:}{col 22} {c |} 
+{ralign 21:Implied scale}{col 22} {c |} {col 23}{res}    1.000{col 37}    1.000
+{txt}{ralign 21:WIMSE var. weight}{col 22} {c |} {col 23}{res}    0.500{col 37}    0.500
+{txt}{ralign 21:WIMSE bias weight}{col 22} {c |} {col 23}{res}    0.500{col 37}    0.500
+{txt}{hline 22}{c BT}{hline 22}
+
+{res}{txt}
+{com}. 
+. graph save temp2.gph, replace
+{res}{txt}(file temp2.gph saved)
+
+{com}. 
+. 
+. * Evenly spaced bins, IMSE-optimal
+. rdplot $yf $x, c(0) binselect(esmv) ///
+>     graph_options(title("Evenly-spaced binning, Minimum-variance")) 
+{res}
+RD Plot with evenly spaced mimicking variance number of bins using spacings estimators.
+
+{txt}{ralign 21: Cutoff c = 0}{col 22} {c |} {col 23}Left of {res}c{col 36}{txt}Right of {res}c{col 54}{txt}Number of obs  = {res}      2783
+{txt}{hline 22}{c +}{hline 22}{col 54}Kernel         = {res}{ralign 10:Uniform}
+{txt}{ralign 21:Number of obs}{col 22} {c |} {col 23}{res}     2489{col 37}      294
+{txt}{ralign 21:Eff. Number of obs}{col 22} {c |} {col 23}{res}     2489{col 37}      294
+{txt}{ralign 21:Order poly. fit (p)}{col 22} {c |} {col 23}{res}        4{col 37}        4
+{txt}{ralign 21:BW poly. fit (h)}{col 22} {c |} {col 23}{res}   43.990{col 37}   22.372
+{txt}{ralign 21:Number of bins scale}{col 22} {c |} {col 23}{res}    1.000{col 37}    1.000
+
+Outcome: mort_related_pre. Running variable: povrate60.
+{txt}{hline 22}{c TT}{hline 22}
+{col 22} {c |} {col 23}Left of {res}c{col 36}{txt}Right of {res}c
+{txt}{hline 22}{c +}{hline 22}
+{ralign 21:Bins selected}{col 22} {c |} {col 23}{res}       47{col 37}       43
+{txt}{ralign 21:Average bin length}{col 22} {c |} {col 23}{res}    0.936{col 37}    0.520
+{txt}{ralign 21:Median bin length}{col 22} {c |} {col 23}{res}    0.936{col 37}    0.520
+{txt}{hline 22}{c +}{hline 22}
+{ralign 21:IMSE-optimal bins}{col 22} {c |} {col 23}{res}        5{col 37}        6
+{txt}{ralign 21:Mimicking Var. bins}{col 22} {c |} {col 23}{res}       47{col 37}       43
+{txt}{hline 22}{c +}{hline 22}
+{lalign 1:Rel. to IMSE-optimal:}{col 22} {c |} 
+{ralign 21:Implied scale}{col 22} {c |} {col 23}{res}    9.400{col 37}    7.167
+{txt}{ralign 21:WIMSE var. weight}{col 22} {c |} {col 23}{res}    0.001{col 37}    0.003
+{txt}{ralign 21:WIMSE bias weight}{col 22} {c |} {col 23}{res}    0.999{col 37}    0.997
+{txt}{hline 22}{c BT}{hline 22}
+
+{res}{txt}
+{com}. 
+. graph save temp3.gph, replace
+{res}{txt}(file temp3.gph saved)
+
+{com}. 
+. * Quantile-spaced bins, IMSE-optimal
+. rdplot $yf $x, c(0) binselect(qsmv) ///
+>     graph_options(title("Quantile-spaced binning, Minimum-variance")) 
+{res}
+RD Plot with quantile spaced mimicking variance quantile spaced using spacings estimators.
+
+{txt}{ralign 21: Cutoff c = 0}{col 22} {c |} {col 23}Left of {res}c{col 36}{txt}Right of {res}c{col 54}{txt}Number of obs  = {res}      2783
+{txt}{hline 22}{c +}{hline 22}{col 54}Kernel         = {res}{ralign 10:Uniform}
+{txt}{ralign 21:Number of obs}{col 22} {c |} {col 23}{res}     2489{col 37}      294
+{txt}{ralign 21:Eff. Number of obs}{col 22} {c |} {col 23}{res}     2489{col 37}      294
+{txt}{ralign 21:Order poly. fit (p)}{col 22} {c |} {col 23}{res}        4{col 37}        4
+{txt}{ralign 21:BW poly. fit (h)}{col 22} {c |} {col 23}{res}   43.990{col 37}   22.372
+{txt}{ralign 21:Number of bins scale}{col 22} {c |} {col 23}{res}    1.000{col 37}    1.000
+
+Outcome: mort_related_pre. Running variable: povrate60.
+{txt}{hline 22}{c TT}{hline 22}
+{col 22} {c |} {col 23}Left of {res}c{col 36}{txt}Right of {res}c
+{txt}{hline 22}{c +}{hline 22}
+{ralign 21:Bins selected}{col 22} {c |} {col 23}{res}       44{col 37}       48
+{txt}{ralign 21:Average bin length}{col 22} {c |} {col 23}{res}    1.000{col 37}    0.466
+{txt}{ralign 21:Median bin length}{col 22} {c |} {col 23}{res}    0.859{col 37}    0.273
+{txt}{hline 22}{c +}{hline 22}
+{ralign 21:IMSE-optimal bins}{col 22} {c |} {col 23}{res}        5{col 37}       10
+{txt}{ralign 21:Mimicking Var. bins}{col 22} {c |} {col 23}{res}       44{col 37}       48
+{txt}{hline 22}{c +}{hline 22}
+{lalign 1:Rel. to IMSE-optimal:}{col 22} {c |} 
+{ralign 21:Implied scale}{col 22} {c |} {col 23}{res}    8.800{col 37}    4.800
+{txt}{ralign 21:WIMSE var. weight}{col 22} {c |} {col 23}{res}    0.001{col 37}    0.009
+{txt}{ralign 21:WIMSE bias weight}{col 22} {c |} {col 23}{res}    0.999{col 37}    0.991
+{txt}{hline 22}{c BT}{hline 22}
+
+{res}{txt}
+{com}. 
+. graph save temp4.gph, replace
+{res}{txt}(file temp4.gph saved)
+
+{com}. 
+. * Now combine all graphs
+. 
+. gr combine temp1.gph temp2.gph ///
+>                         temp3.gph temp4.gph, col(2) iscale(.5)
+{res}{txt}
+{com}. 
+. graph export $resdir/q211a_stata.png, replace
+{txt}(note: file /q211a_stata.png not found)
+{err}{p 0 4 2}
+file /q211a_stata.png
+could not be opened
+{p_end}
+{txt}{search r(603), local:r(603);}
+
+end of do-file
+
+{search r(603), local:r(603);}
+
+{com}. help hist
+
+. do "C:\Users\NMATH_~1\AppData\Local\Temp\STD2870_000000.tmp"
+{txt}
+{com}. twoway (hist $x if treat, freq width(3) bcolor("0 18 100 0")) ///
+>            (hist $x if !treat, freq width(3) bcolor("100 65 0 55") xline(0)), ///
+>            legend(label(1 "Treated") label(2 "Untreated"))
+{res}{txt}
+{com}. 
+{txt}end of do-file
+
+{com}. do "C:\Users\NMATH_~1\AppData\Local\Temp\STD2870_000000.tmp"
+{txt}
+{com}. twoway (hist $x if treat, freq width(2) bcolor("0 18 100 0")) ///
+>            (hist $x if !treat, freq width(2) bcolor("100 65 0 55") xline(0)), ///
+>            legend(label(1 "Treated") label(2 "Untreated"))
+{res}{txt}
+{com}. 
+{txt}end of do-file
+
+{com}. do "C:\Users\NMATH_~1\AppData\Local\Temp\STD2870_000000.tmp"
+{txt}
+{com}. twoway (hist $x if treat, freq width(2) bcolor("0 18 100 0")) ///
+>            (hist $x if !treat, freq width(2) bcolor("100 65 0 55") xline(0)), ///
+>            legend(label(1 "Treated") label(2 "Untreated"))
+{res}{txt}
+{com}. 
+{txt}end of do-file
+
+{com}. hist $x if treat, freq width(2) bcolor("0 18 100 0"))
+{err}option {bf:)} not allowed
+{txt}{search r(198), local:r(198);}
+
+{com}. hist $x if treat, freq width(2) bcolor("0 18 100 0")
+{txt}(bin={res}12{txt}, start={res}.00001385{txt}, width={res}2{txt})
+{res}
+{com}. hist $x if treat, freq width(2)
+{txt}(bin={res}12{txt}, start={res}.00001385{txt}, width={res}2{txt})
+{res}
+{com}. hist $x if treat, freq width(2) bcolor("0")
+{txt}(bin={res}12{txt}, start={res}.00001385{txt}, width={res}2{txt})
+{p 0 4 2}
+{txt}(note:  named style
+0 not found in class
+color,  default attributes used)
+{p_end}
+{p 0 4 2}
+{txt}(note:  named style
+0 not found in class
+color,  default attributes used)
+{p_end}
+{res}
+{com}. hist $x if treat, freq width(2) bcolor("0 18 0"))
+{err}option {bf:)} not allowed
+{txt}{search r(198), local:r(198);}
+
+{com}. hist $x if treat, freq width(2) bcolor("0 18 0")
+{txt}(bin={res}12{txt}, start={res}.00001385{txt}, width={res}2{txt})
+{res}
+{com}. hist $x if treat, freq width(2) bcolor("0 18 100 0")
+{txt}(bin={res}12{txt}, start={res}.00001385{txt}, width={res}2{txt})
+{res}
+{com}. hist $x if treat, freq width(2) bcolor("20 18 100 0")
+{txt}(bin={res}12{txt}, start={res}.00001385{txt}, width={res}2{txt})
+{res}
+{com}. hist $x if treat, freq width(2) bcolor("20 18 100 50")
+{txt}(bin={res}12{txt}, start={res}.00001385{txt}, width={res}2{txt})
+{res}
+{com}. hist $x if treat, freq width(2) bcolor("20 18 75 50")
+{txt}(bin={res}12{txt}, start={res}.00001385{txt}, width={res}2{txt})
+{res}
+{com}. hist $x if treat, freq width(2) bcolor("20 18 20 50")
+{txt}(bin={res}12{txt}, start={res}.00001385{txt}, width={res}2{txt})
+{res}
+{com}. hist $x if treat, freq width(2) bcolor("20 75 20 50")
+{txt}(bin={res}12{txt}, start={res}.00001385{txt}, width={res}2{txt})
+{res}
+{com}. hist $x if treat, freq width(2) bcolor("7 75 20 50")
+{txt}(bin={res}12{txt}, start={res}.00001385{txt}, width={res}2{txt})
+{res}
+{com}. hist $x if treat, freq width(2) bcolor("0 75 0 0")
+{txt}(bin={res}12{txt}, start={res}.00001385{txt}, width={res}2{txt})
+{res}
+{com}. hist $x if treat, freq width(2) bcolor("0 100 0 0")
+{txt}(bin={res}12{txt}, start={res}.00001385{txt}, width={res}2{txt})
+{res}
+{com}. hist $x if treat, freq width(2) bcolor("100 0 0 0")
+{txt}(bin={res}12{txt}, start={res}.00001385{txt}, width={res}2{txt})
+{res}
+{com}. hist $x if treat, freq width(2) bcolor("0 0 100 0")
+{txt}(bin={res}12{txt}, start={res}.00001385{txt}, width={res}2{txt})
+{res}
+{com}. hist $x if treat, freq width(2) bcolor("0 0 0 100")
+{txt}(bin={res}12{txt}, start={res}.00001385{txt}, width={res}2{txt})
+{res}
+{com}. hist $x if treat, freq width(2) bcolor("0 100 0 0")
+{txt}(bin={res}12{txt}, start={res}.00001385{txt}, width={res}2{txt})
+{res}
+{com}. do "C:\Users\NMATH_~1\AppData\Local\Temp\STD2870_000000.tmp"
+{txt}
+{com}. twoway (hist $x if treat, freq width(2) bcolor("0 100 0 0")) ///
+>            (hist $x if !treat, freq width(2) bcolor("100 0 0 0") xline(0)), ///
+>            legend(label(1 "Treated") label(2 "Untreated"))
+{res}{txt}
+{com}. 
+{txt}end of do-file
+
+{com}. help twoway
+
+. do "C:\Users\NMATH_~1\AppData\Local\Temp\STD2870_000000.tmp"
+{txt}
+{com}. * Local Randomization
+. rdwinselect $x 
+{res}
+
+{txt}Window selection for RD under local randomization
+
+
+Cutoff c = {res}0.00{txt}{col 18} {c |} {col 19}Left of c{col 33}Right of c{col 51}Number of obs  = {res}         2783
+{txt}{hline 18}{c +}{hline 23}{col 51}Order of poly  = {res}            0
+{txt}{ralign 17:Number of obs}{col 18} {c |} {col 17}{res}     2489{col 34}      294{col 51}{txt}Kernel type    = {res}{ralign 13: uniform}
+{txt}{ralign 17:1st percentile}{col 18} {c |} {col 17}{res}       25{col 34}        3{col 51}{txt}Reps           = {res}         1000
+{txt}{ralign 17:5th percentile}{col 18} {c |} {col 17}{res}      125{col 34}       14{col 51}{txt}Testing method = {res}{ralign 13: rdrandinf}
+{txt}{ralign 17:10th percentile}{col 18} {c |} {col 17}{res}      249{col 34}       29{col 51}{txt}Balance test   = {res}{ralign 13: diffmeans}
+{txt}{ralign 17:20th percentile}{col 18} {c |} {col 17}{res}      497{col 34}       59
+
+
+{txt}{col 18} {c |}{col 23}Bal. test {col 41}Var. name{col 54}Bin. test 
+{col 1} Window length /2 {c |}{col 24}p-value{col 39}(min p-value){col 55}p-value{col 66} Obs<c {col 74} Obs>=c
+{hline 18}{c +}{hline 61}
+{res}            0.304{col 18}{txt} {c |}{res}{col 26}   . {col 38}         -{col 54}   1.000 {col 64}      10 {col 73}      10
+            0.431{col 18}{txt} {c |}{res}{col 26}   . {col 38}         -{col 54}   1.000 {col 64}      13 {col 73}      14
+            0.558{col 18}{txt} {c |}{res}{col 26}   . {col 38}         -{col 54}   0.871 {col 64}      20 {col 73}      18
+            0.684{col 18}{txt} {c |}{res}{col 26}   . {col 38}         -{col 54}   1.000 {col 64}      22 {col 73}      21
+            0.811{col 18}{txt} {c |}{res}{col 26}   . {col 38}         -{col 54}   0.678 {col 64}      28 {col 73}      24
+            0.938{col 18}{txt} {c |}{res}{col 26}   . {col 38}         -{col 54}   0.603 {col 64}      32 {col 73}      27
+            1.064{col 18}{txt} {c |}{res}{col 26}   . {col 38}         -{col 54}   0.349 {col 64}      41 {col 73}      32
+            1.191{col 18}{txt} {c |}{res}{col 26}   . {col 38}         -{col 54}   0.368 {col 64}      44 {col 73}      35
+            1.318{col 18}{txt} {c |}{res}{col 26}   . {col 38}         -{col 54}   0.203 {col 64}      51 {col 73}      38
+            1.444{col 18}{txt} {c |}{res}{col 26}   . {col 38}         -{col 54}   0.213 {col 64}      53 {col 73}      40
+
+{txt}Variable used in binomial test (running variable): {res}povrate60
+
+{txt}Note: no covariates specified.
+Need to specify covariates to find recommended length.
+
+{com}. 
+{txt}end of do-file
+
+{com}. do "C:\Users\NMATH_~1\AppData\Local\Temp\STD2870_000000.tmp"
+{txt}
+{com}. * Local Randomization
+. rdwinselect $x 
+{res}
+
+{txt}Window selection for RD under local randomization
+
+
+Cutoff c = {res}0.00{txt}{col 18} {c |} {col 19}Left of c{col 33}Right of c{col 51}Number of obs  = {res}         2783
+{txt}{hline 18}{c +}{hline 23}{col 51}Order of poly  = {res}            0
+{txt}{ralign 17:Number of obs}{col 18} {c |} {col 17}{res}     2489{col 34}      294{col 51}{txt}Kernel type    = {res}{ralign 13: uniform}
+{txt}{ralign 17:1st percentile}{col 18} {c |} {col 17}{res}       25{col 34}        3{col 51}{txt}Reps           = {res}         1000
+{txt}{ralign 17:5th percentile}{col 18} {c |} {col 17}{res}      125{col 34}       14{col 51}{txt}Testing method = {res}{ralign 13: rdrandinf}
+{txt}{ralign 17:10th percentile}{col 18} {c |} {col 17}{res}      249{col 34}       29{col 51}{txt}Balance test   = {res}{ralign 13: diffmeans}
+{txt}{ralign 17:20th percentile}{col 18} {c |} {col 17}{res}      497{col 34}       59
+
+
+{txt}{col 18} {c |}{col 23}Bal. test {col 41}Var. name{col 54}Bin. test 
+{col 1} Window length /2 {c |}{col 24}p-value{col 39}(min p-value){col 55}p-value{col 66} Obs<c {col 74} Obs>=c
+{hline 18}{c +}{hline 61}
+{res}            0.304{col 18}{txt} {c |}{res}{col 26}   . {col 38}         -{col 54}   1.000 {col 64}      10 {col 73}      10
+            0.431{col 18}{txt} {c |}{res}{col 26}   . {col 38}         -{col 54}   1.000 {col 64}      13 {col 73}      14
+            0.558{col 18}{txt} {c |}{res}{col 26}   . {col 38}         -{col 54}   0.871 {col 64}      20 {col 73}      18
+            0.684{col 18}{txt} {c |}{res}{col 26}   . {col 38}         -{col 54}   1.000 {col 64}      22 {col 73}      21
+            0.811{col 18}{txt} {c |}{res}{col 26}   . {col 38}         -{col 54}   0.678 {col 64}      28 {col 73}      24
+            0.938{col 18}{txt} {c |}{res}{col 26}   . {col 38}         -{col 54}   0.603 {col 64}      32 {col 73}      27
+            1.064{col 18}{txt} {c |}{res}{col 26}   . {col 38}         -{col 54}   0.349 {col 64}      41 {col 73}      32
+            1.191{col 18}{txt} {c |}{res}{col 26}   . {col 38}         -{col 54}   0.368 {col 64}      44 {col 73}      35
+            1.318{col 18}{txt} {c |}{res}{col 26}   . {col 38}         -{col 54}   0.203 {col 64}      51 {col 73}      38
+            1.444{col 18}{txt} {c |}{res}{col 26}   . {col 38}         -{col 54}   0.213 {col 64}      53 {col 73}      40
+
+{txt}Variable used in binomial test (running variable): {res}povrate60
+
+{txt}Note: no covariates specified.
+Need to specify covariates to find recommended length.
+
+{com}. 
+{txt}end of do-file
+
+{com}. do "C:\Users\NMATH_~1\AppData\Local\Temp\STD2870_000000.tmp"
+{txt}
+{com}. * Local Randomization
+. rdwinselect $x 
+{res}
+
+{txt}Window selection for RD under local randomization
+
+
+Cutoff c = {res}0.00{txt}{col 18} {c |} {col 19}Left of c{col 33}Right of c{col 51}Number of obs  = {res}         2783
+{txt}{hline 18}{c +}{hline 23}{col 51}Order of poly  = {res}            0
+{txt}{ralign 17:Number of obs}{col 18} {c |} {col 17}{res}     2489{col 34}      294{col 51}{txt}Kernel type    = {res}{ralign 13: uniform}
+{txt}{ralign 17:1st percentile}{col 18} {c |} {col 17}{res}       25{col 34}        3{col 51}{txt}Reps           = {res}         1000
+{txt}{ralign 17:5th percentile}{col 18} {c |} {col 17}{res}      125{col 34}       14{col 51}{txt}Testing method = {res}{ralign 13: rdrandinf}
+{txt}{ralign 17:10th percentile}{col 18} {c |} {col 17}{res}      249{col 34}       29{col 51}{txt}Balance test   = {res}{ralign 13: diffmeans}
+{txt}{ralign 17:20th percentile}{col 18} {c |} {col 17}{res}      497{col 34}       59
+
+
+{txt}{col 18} {c |}{col 23}Bal. test {col 41}Var. name{col 54}Bin. test 
+{col 1} Window length /2 {c |}{col 24}p-value{col 39}(min p-value){col 55}p-value{col 66} Obs<c {col 74} Obs>=c
+{hline 18}{c +}{hline 61}
+{res}            0.304{col 18}{txt} {c |}{res}{col 26}   . {col 38}         -{col 54}   1.000 {col 64}      10 {col 73}      10
+            0.431{col 18}{txt} {c |}{res}{col 26}   . {col 38}         -{col 54}   1.000 {col 64}      13 {col 73}      14
+            0.558{col 18}{txt} {c |}{res}{col 26}   . {col 38}         -{col 54}   0.871 {col 64}      20 {col 73}      18
+            0.684{col 18}{txt} {c |}{res}{col 26}   . {col 38}         -{col 54}   1.000 {col 64}      22 {col 73}      21
+            0.811{col 18}{txt} {c |}{res}{col 26}   . {col 38}         -{col 54}   0.678 {col 64}      28 {col 73}      24
+            0.938{col 18}{txt} {c |}{res}{col 26}   . {col 38}         -{col 54}   0.603 {col 64}      32 {col 73}      27
+            1.064{col 18}{txt} {c |}{res}{col 26}   . {col 38}         -{col 54}   0.349 {col 64}      41 {col 73}      32
+            1.191{col 18}{txt} {c |}{res}{col 26}   . {col 38}         -{col 54}   0.368 {col 64}      44 {col 73}      35
+            1.318{col 18}{txt} {c |}{res}{col 26}   . {col 38}         -{col 54}   0.203 {col 64}      51 {col 73}      38
+            1.444{col 18}{txt} {c |}{res}{col 26}   . {col 38}         -{col 54}   0.213 {col 64}      53 {col 73}      40
+
+{txt}Variable used in binomial test (running variable): {res}povrate60
+
+{txt}Note: no covariates specified.
+Need to specify covariates to find recommended length.
+
+{com}. 
+{txt}end of do-file
+
+{com}. do "C:\Users\NMATH_~1\AppData\Local\Temp\STD2870_000000.tmp"
+{txt}
+{com}. * Continuity in Density
+. rddensity $x
+{res}Computing data-driven bandwidth selectors.
+
+RD Manipulation Test using local polynomial density estimation.
+
+{txt}{ralign 18: Cutoff c = 0}{col 19} {c |}{col 21}Left of {res}c{col 33}{txt}Right of {res}c{col 53}{txt}Number of obs = {res}        2783
+{txt}{hline 19}{c +}{hline 22}{col 53}Model         = {res}{ralign 12:unrestricted}
+{txt}{ralign 18:Number of obs}{col 19} {c |} {col 21}{res}     2489{col 34}      294{col 53}{txt}BW method     = {res}{ralign 12:comb}
+{txt}{ralign 18:Eff. Number of obs}{col 19} {c |} {col 21}{res}      331{col 34}      211{col 53}{txt}Kernel        = {res}{ralign 12:triangular}
+{txt}{ralign 18:Order est. (p)}{col 19} {c |} {col 21}{res}        2{col 34}        2{col 53}{txt}VCE method    = {res}{ralign 12:jackknife}
+{txt}{ralign 18:Order bias (q)}{col 19} {c |} {col 21}{res}        3{col 34}        3
+{txt}{ralign 18:BW est. (h)}{col 19} {c |} {col 21}{res}    9.585{col 34}    8.469
+
+Running variable: povrate60.
+{txt}{hline 19}{c TT}{hline 27}
+{ralign 18:Method}{col 19} {c |} {col 27}    T{col 40}P>|T|
+{hline 19}{c +}{hline 27}
+{ralign 18:Robust}{col 19} {c |} {col 27}{res}-0.4692{col 39} 0.6389
+{txt}{hline 19}{c BT}{hline 27}
+
+{res}{txt}
+{com}. 
+{txt}end of do-file
+
+{com}. do "C:\Users\NMATH_~1\AppData\Local\Temp\STD2870_000000.tmp"
+{txt}
+{com}. * Local Randomization
+. rdwinselect $x 
+{res}
+
+{txt}Window selection for RD under local randomization
+
+
+Cutoff c = {res}0.00{txt}{col 18} {c |} {col 19}Left of c{col 33}Right of c{col 51}Number of obs  = {res}         2783
+{txt}{hline 18}{c +}{hline 23}{col 51}Order of poly  = {res}            0
+{txt}{ralign 17:Number of obs}{col 18} {c |} {col 17}{res}     2489{col 34}      294{col 51}{txt}Kernel type    = {res}{ralign 13: uniform}
+{txt}{ralign 17:1st percentile}{col 18} {c |} {col 17}{res}       25{col 34}        3{col 51}{txt}Reps           = {res}         1000
+{txt}{ralign 17:5th percentile}{col 18} {c |} {col 17}{res}      125{col 34}       14{col 51}{txt}Testing method = {res}{ralign 13: rdrandinf}
+{txt}{ralign 17:10th percentile}{col 18} {c |} {col 17}{res}      249{col 34}       29{col 51}{txt}Balance test   = {res}{ralign 13: diffmeans}
+{txt}{ralign 17:20th percentile}{col 18} {c |} {col 17}{res}      497{col 34}       59
+
+
+{txt}{col 18} {c |}{col 23}Bal. test {col 41}Var. name{col 54}Bin. test 
+{col 1} Window length /2 {c |}{col 24}p-value{col 39}(min p-value){col 55}p-value{col 66} Obs<c {col 74} Obs>=c
+{hline 18}{c +}{hline 61}
+{res}            0.304{col 18}{txt} {c |}{res}{col 26}   . {col 38}         -{col 54}   1.000 {col 64}      10 {col 73}      10
+            0.431{col 18}{txt} {c |}{res}{col 26}   . {col 38}         -{col 54}   1.000 {col 64}      13 {col 73}      14
+            0.558{col 18}{txt} {c |}{res}{col 26}   . {col 38}         -{col 54}   0.871 {col 64}      20 {col 73}      18
+            0.684{col 18}{txt} {c |}{res}{col 26}   . {col 38}         -{col 54}   1.000 {col 64}      22 {col 73}      21
+            0.811{col 18}{txt} {c |}{res}{col 26}   . {col 38}         -{col 54}   0.678 {col 64}      28 {col 73}      24
+            0.938{col 18}{txt} {c |}{res}{col 26}   . {col 38}         -{col 54}   0.603 {col 64}      32 {col 73}      27
+            1.064{col 18}{txt} {c |}{res}{col 26}   . {col 38}         -{col 54}   0.349 {col 64}      41 {col 73}      32
+            1.191{col 18}{txt} {c |}{res}{col 26}   . {col 38}         -{col 54}   0.368 {col 64}      44 {col 73}      35
+            1.318{col 18}{txt} {c |}{res}{col 26}   . {col 38}         -{col 54}   0.203 {col 64}      51 {col 73}      38
+            1.444{col 18}{txt} {c |}{res}{col 26}   . {col 38}         -{col 54}   0.213 {col 64}      53 {col 73}      40
+
+{txt}Variable used in binomial test (running variable): {res}povrate60
+
+{txt}Note: no covariates specified.
+Need to specify covariates to find recommended length.
+
+{com}. 
+{txt}end of do-file
+
+{com}. help rdwinselect
+
+. help predict
+
+. do "C:\Users\NMATH_~1\AppData\Local\Temp\STD2870_000000.tmp"
+{txt}
+{com}. * Run regressions, save beta and se, graph residuals
+. forvalues pol = 3/6 {c -(}
+{txt}  2{com}. eststo: reg $y treat p1-p`pol', vce(hc2)
+{txt}  3{com}. capture drop pred
+{txt}  4{com}. predict pred
+{txt}  5{com}. twoway scatter pred $x, title("Order `pol'")
+{txt}  6{com}. graph save temp`pol'.gph, replace
+{txt}  7{com}. {c )-}
+
+{txt}Linear regression                               Number of obs     = {res}     2,783
+                                                {txt}F(4, 2778)        =  {res}     4.14
+                                                {txt}Prob > F          = {res}    0.0024
+                                                {txt}R-squared         = {res}    0.0052
+                                                {txt}Root MSE          =    {res}  5.715
+
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 14}{c |}{col 26}  Robust HC2
+{col 1}mort_relat~t{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 7}treat {c |}{col 14}{res}{space 2}-1.119972{col 26}{space 2} .5946944{col 37}{space 1}   -1.88{col 46}{space 3}0.060{col 54}{space 4} -2.28606{col 67}{space 3} .0461152
+{txt}{space 10}p1 {c |}{col 14}{res}{space 2} .0439276{col 26}{space 2} .0273691{col 37}{space 1}    1.61{col 46}{space 3}0.109{col 54}{space 4}-.0097382{col 67}{space 3} .0975935
+{txt}{space 10}p2 {c |}{col 14}{res}{space 2} -.000286{col 26}{space 2} .0010951{col 37}{space 1}   -0.26{col 46}{space 3}0.794{col 54}{space 4}-.0024333{col 67}{space 3} .0018613
+{txt}{space 10}p3 {c |}{col 14}{res}{space 2}-.0000116{col 26}{space 2} .0000223{col 37}{space 1}   -0.52{col 46}{space 3}0.602{col 54}{space 4}-.0000553{col 67}{space 3} .0000321
+{txt}{space 7}_cons {c |}{col 14}{res}{space 2} 3.280616{col 26}{space 2} .3849699{col 37}{space 1}    8.52{col 46}{space 3}0.000{col 54}{space 4}  2.52576{col 67}{space 3} 4.035472
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}{txt}({res}est1{txt} stored)
+(option {bf:xb} assumed; fitted values)
+{res}{txt}(file temp3.gph saved)
+
+Linear regression                               Number of obs     = {res}     2,783
+                                                {txt}F(5, 2777)        =  {res}     3.40
+                                                {txt}Prob > F          = {res}    0.0046
+                                                {txt}R-squared         = {res}    0.0052
+                                                {txt}Root MSE          =    {res} 5.7159
+
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 14}{c |}{col 26}  Robust HC2
+{col 1}mort_relat~t{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 7}treat {c |}{col 14}{res}{space 2}-1.018176{col 26}{space 2} .7535121{col 37}{space 1}   -1.35{col 46}{space 3}0.177{col 54}{space 4}-2.495677{col 67}{space 3} .4593244
+{txt}{space 10}p1 {c |}{col 14}{res}{space 2} .0335796{col 26}{space 2} .0524126{col 37}{space 1}    0.64{col 46}{space 3}0.522{col 54}{space 4} -.069192{col 67}{space 3} .1363513
+{txt}{space 10}p2 {c |}{col 14}{res}{space 2}-.0001852{col 26}{space 2} .0011164{col 37}{space 1}   -0.17{col 46}{space 3}0.868{col 54}{space 4}-.0023742{col 67}{space 3} .0020039
+{txt}{space 10}p3 {c |}{col 14}{res}{space 2} .0000158{col 26}{space 2} .0001015{col 37}{space 1}    0.16{col 46}{space 3}0.876{col 54}{space 4}-.0001831{col 67}{space 3} .0002148
+{txt}{space 10}p4 {c |}{col 14}{res}{space 2} 4.89e-07{col 26}{space 2} 1.75e-06{col 37}{space 1}    0.28{col 46}{space 3}0.779{col 54}{space 4}-2.93e-06{col 67}{space 3} 3.91e-06
+{txt}{space 7}_cons {c |}{col 14}{res}{space 2} 3.206047{col 26}{space 2}  .503915{col 37}{space 1}    6.36{col 46}{space 3}0.000{col 54}{space 4} 2.217961{col 67}{space 3} 4.194133
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}{txt}({res}est2{txt} stored)
+(option {bf:xb} assumed; fitted values)
+{res}{txt}(file temp4.gph saved)
+
+Linear regression                               Number of obs     = {res}     2,783
+                                                {txt}F(6, 2776)        =  {res}     3.53
+                                                {txt}Prob > F          = {res}    0.0018
+                                                {txt}R-squared         = {res}    0.0061
+                                                {txt}Root MSE          =    {res} 5.7143
+
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 14}{c |}{col 26}  Robust HC2
+{col 1}mort_relat~t{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 7}treat {c |}{col 14}{res}{space 2}-1.659208{col 26}{space 2} .8111913{col 37}{space 1}   -2.05{col 46}{space 3}0.041{col 54}{space 4}-3.249808{col 67}{space 3}-.0686092
+{txt}{space 10}p1 {c |}{col 14}{res}{space 2} .1146616{col 26}{space 2} .0674717{col 37}{space 1}    1.70{col 46}{space 3}0.089{col 54}{space 4}-.0176382{col 67}{space 3} .2469615
+{txt}{space 10}p2 {c |}{col 14}{res}{space 2} .0038814{col 26}{space 2} .0025235{col 37}{space 1}    1.54{col 46}{space 3}0.124{col 54}{space 4}-.0010668{col 67}{space 3} .0088295
+{txt}{space 10}p3 {c |}{col 14}{res}{space 2}-.0001485{col 26}{space 2}  .000131{col 37}{space 1}   -1.13{col 46}{space 3}0.257{col 54}{space 4}-.0004052{col 67}{space 3} .0001083
+{txt}{space 10}p4 {c |}{col 14}{res}{space 2}-.0000117{col 26}{space 2} 6.64e-06{col 37}{space 1}   -1.77{col 46}{space 3}0.077{col 54}{space 4}-.0000248{col 67}{space 3} 1.28e-06
+{txt}{space 10}p5 {c |}{col 14}{res}{space 2}-1.68e-07{col 26}{space 2} 8.74e-08{col 37}{space 1}   -1.92{col 46}{space 3}0.054{col 54}{space 4}-3.39e-07{col 67}{space 3} 3.17e-09
+{txt}{space 7}_cons {c |}{col 14}{res}{space 2} 3.405855{col 26}{space 2} .5133951{col 37}{space 1}    6.63{col 46}{space 3}0.000{col 54}{space 4} 2.399181{col 67}{space 3}  4.41253
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}{txt}({res}est3{txt} stored)
+(option {bf:xb} assumed; fitted values)
+{res}{txt}(note: file temp5.gph not found)
+{res}{txt}(file temp5.gph saved)
+
+Linear regression                               Number of obs     = {res}     2,783
+                                                {txt}{help j_robustsingular:F(6, 2775) }       =  {res}        .
+                                                {txt}Prob > F          = {res}         .
+                                                {txt}R-squared         = {res}    0.0063
+                                                {txt}Root MSE          =    {res} 5.7148
+
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 14}{c |}{col 26}  Robust HC2
+{col 1}mort_relat~t{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 7}treat {c |}{col 14}{res}{space 2}-1.746761{col 26}{space 2} .8603792{col 37}{space 1}   -2.03{col 46}{space 3}0.042{col 54}{space 4}-3.433809{col 67}{space 3}-.0597126
+{txt}{space 10}p1 {c |}{col 14}{res}{space 2}  .126275{col 26}{space 2} .0756002{col 37}{space 1}    1.67{col 46}{space 3}0.095{col 54}{space 4}-.0219634{col 67}{space 3} .2745133
+{txt}{space 10}p2 {c |}{col 14}{res}{space 2} .0014792{col 26}{space 2} .0034465{col 37}{space 1}    0.43{col 46}{space 3}0.668{col 54}{space 4}-.0052786{col 67}{space 3} .0082371
+{txt}{space 10}p3 {c |}{col 14}{res}{space 2}-.0002803{col 26}{space 2} .0002607{col 37}{space 1}   -1.08{col 46}{space 3}0.282{col 54}{space 4}-.0007914{col 67}{space 3} .0002309
+{txt}{space 10}p4 {c |}{col 14}{res}{space 2}-7.26e-06{col 26}{space 2} 7.04e-06{col 37}{space 1}   -1.03{col 46}{space 3}0.302{col 54}{space 4}-.0000211{col 67}{space 3} 6.54e-06
+{txt}{space 10}p5 {c |}{col 14}{res}{space 2} 1.50e-07{col 26}{space 2} 4.00e-07{col 37}{space 1}    0.37{col 46}{space 3}0.708{col 54}{space 4}-6.35e-07{col 67}{space 3} 9.35e-07
+{txt}{space 10}p6 {c |}{col 14}{res}{space 2} 4.09e-09{col 26}{space 2} 5.38e-09{col 37}{space 1}    0.76{col 46}{space 3}0.447{col 54}{space 4}-6.45e-09{col 67}{space 3} 1.46e-08
+{txt}{space 7}_cons {c |}{col 14}{res}{space 2} 3.549386{col 26}{space 2} .5936055{col 37}{space 1}    5.98{col 46}{space 3}0.000{col 54}{space 4} 2.385433{col 67}{space 3} 4.713339
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}{txt}({res}est4{txt} stored)
+(option {bf:xb} assumed; fitted values)
+{res}{txt}(note: file temp6.gph not found)
+{res}{txt}(file temp6.gph saved)
+
+{com}. 
+{txt}end of do-file
+
+{com}. do "C:\Users\NMATH_~1\AppData\Local\Temp\STD2870_000000.tmp"
+{txt}
+{com}. * Export graph
+. graph combine temp3.gph temp4.gph ///
+>         temp5.gph temp6.gph, col(2) iscale(.5)
+{res}{txt}
+{com}. 
+. graph export pset6_q221_stata.png, replace
+{txt}(note: file pset6_q221_stata.png not found)
+(file pset6_q221_stata.png written in PNG format)
+
+{com}. 
+{txt}end of do-file
+
+{com}. help esttab
+
+. do "C:\Users\NMATH_~1\AppData\Local\Temp\STD2870_000000.tmp"
+{txt}
+{com}. esttab using table_q221_stata.tex, b se keep(treat) ///
+>                 noobs nostar nonote mtitles("p:3" "p:4" "p:5" "p:6") nonumbers replace  
+{res}{txt}(note: file table_q221_stata.tex not found)
+(output written to {browse  `"table_q221_stata.tex"'})
+
+{com}.                 
+. 
+{txt}end of do-file
+
+{com}. * 2.2.1
+
+. 
+. eststo clear
+
+. 
+. * Run regressions, save beta and se, graph residuals
+
+. 
+. forvalues pol = 3/6 {c -(}
+{txt}  2{com}. 
+. eststo: reg $y treat p1-p`pol', vce(hc2)
+{txt}  3{com}. 
+. capture drop pred
+{txt}  4{com}. 
+. predict pred
+{txt}  5{com}. 
+. twoway scatter pred $x, title("Order `pol'")
+{txt}  6{com}. 
+. graph save temp`pol'.gph, replace
+{txt}  7{com}. 
+. {c )-}
+
+{txt}Linear regression                               Number of obs     = {res}     2,783
+                                                {txt}F(4, 2778)        =  {res}     4.14
+                                                {txt}Prob > F          = {res}    0.0024
+                                                {txt}R-squared         = {res}    0.0052
+                                                {txt}Root MSE          =    {res}  5.715
+
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 14}{c |}{col 26}  Robust HC2
+{col 1}mort_relat~t{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 7}treat {c |}{col 14}{res}{space 2}-1.119972{col 26}{space 2} .5946944{col 37}{space 1}   -1.88{col 46}{space 3}0.060{col 54}{space 4} -2.28606{col 67}{space 3} .0461152
+{txt}{space 10}p1 {c |}{col 14}{res}{space 2} .0439276{col 26}{space 2} .0273691{col 37}{space 1}    1.61{col 46}{space 3}0.109{col 54}{space 4}-.0097382{col 67}{space 3} .0975935
+{txt}{space 10}p2 {c |}{col 14}{res}{space 2} -.000286{col 26}{space 2} .0010951{col 37}{space 1}   -0.26{col 46}{space 3}0.794{col 54}{space 4}-.0024333{col 67}{space 3} .0018613
+{txt}{space 10}p3 {c |}{col 14}{res}{space 2}-.0000116{col 26}{space 2} .0000223{col 37}{space 1}   -0.52{col 46}{space 3}0.602{col 54}{space 4}-.0000553{col 67}{space 3} .0000321
+{txt}{space 7}_cons {c |}{col 14}{res}{space 2} 3.280616{col 26}{space 2} .3849699{col 37}{space 1}    8.52{col 46}{space 3}0.000{col 54}{space 4}  2.52576{col 67}{space 3} 4.035472
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}{txt}({res}est1{txt} stored)
+(option {bf:xb} assumed; fitted values)
+{res}{txt}(file temp3.gph saved)
+
+Linear regression                               Number of obs     = {res}     2,783
+                                                {txt}F(5, 2777)        =  {res}     3.40
+                                                {txt}Prob > F          = {res}    0.0046
+                                                {txt}R-squared         = {res}    0.0052
+                                                {txt}Root MSE          =    {res} 5.7159
+
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 14}{c |}{col 26}  Robust HC2
+{col 1}mort_relat~t{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 7}treat {c |}{col 14}{res}{space 2}-1.018176{col 26}{space 2} .7535121{col 37}{space 1}   -1.35{col 46}{space 3}0.177{col 54}{space 4}-2.495677{col 67}{space 3} .4593244
+{txt}{space 10}p1 {c |}{col 14}{res}{space 2} .0335796{col 26}{space 2} .0524126{col 37}{space 1}    0.64{col 46}{space 3}0.522{col 54}{space 4} -.069192{col 67}{space 3} .1363513
+{txt}{space 10}p2 {c |}{col 14}{res}{space 2}-.0001852{col 26}{space 2} .0011164{col 37}{space 1}   -0.17{col 46}{space 3}0.868{col 54}{space 4}-.0023742{col 67}{space 3} .0020039
+{txt}{space 10}p3 {c |}{col 14}{res}{space 2} .0000158{col 26}{space 2} .0001015{col 37}{space 1}    0.16{col 46}{space 3}0.876{col 54}{space 4}-.0001831{col 67}{space 3} .0002148
+{txt}{space 10}p4 {c |}{col 14}{res}{space 2} 4.89e-07{col 26}{space 2} 1.75e-06{col 37}{space 1}    0.28{col 46}{space 3}0.779{col 54}{space 4}-2.93e-06{col 67}{space 3} 3.91e-06
+{txt}{space 7}_cons {c |}{col 14}{res}{space 2} 3.206047{col 26}{space 2}  .503915{col 37}{space 1}    6.36{col 46}{space 3}0.000{col 54}{space 4} 2.217961{col 67}{space 3} 4.194133
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}{txt}({res}est2{txt} stored)
+(option {bf:xb} assumed; fitted values)
+{res}{txt}(file temp4.gph saved)
+
+Linear regression                               Number of obs     = {res}     2,783
+                                                {txt}F(6, 2776)        =  {res}     3.53
+                                                {txt}Prob > F          = {res}    0.0018
+                                                {txt}R-squared         = {res}    0.0061
+                                                {txt}Root MSE          =    {res} 5.7143
+
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 14}{c |}{col 26}  Robust HC2
+{col 1}mort_relat~t{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 7}treat {c |}{col 14}{res}{space 2}-1.659208{col 26}{space 2} .8111913{col 37}{space 1}   -2.05{col 46}{space 3}0.041{col 54}{space 4}-3.249808{col 67}{space 3}-.0686092
+{txt}{space 10}p1 {c |}{col 14}{res}{space 2} .1146616{col 26}{space 2} .0674717{col 37}{space 1}    1.70{col 46}{space 3}0.089{col 54}{space 4}-.0176382{col 67}{space 3} .2469615
+{txt}{space 10}p2 {c |}{col 14}{res}{space 2} .0038814{col 26}{space 2} .0025235{col 37}{space 1}    1.54{col 46}{space 3}0.124{col 54}{space 4}-.0010668{col 67}{space 3} .0088295
+{txt}{space 10}p3 {c |}{col 14}{res}{space 2}-.0001485{col 26}{space 2}  .000131{col 37}{space 1}   -1.13{col 46}{space 3}0.257{col 54}{space 4}-.0004052{col 67}{space 3} .0001083
+{txt}{space 10}p4 {c |}{col 14}{res}{space 2}-.0000117{col 26}{space 2} 6.64e-06{col 37}{space 1}   -1.77{col 46}{space 3}0.077{col 54}{space 4}-.0000248{col 67}{space 3} 1.28e-06
+{txt}{space 10}p5 {c |}{col 14}{res}{space 2}-1.68e-07{col 26}{space 2} 8.74e-08{col 37}{space 1}   -1.92{col 46}{space 3}0.054{col 54}{space 4}-3.39e-07{col 67}{space 3} 3.17e-09
+{txt}{space 7}_cons {c |}{col 14}{res}{space 2} 3.405855{col 26}{space 2} .5133951{col 37}{space 1}    6.63{col 46}{space 3}0.000{col 54}{space 4} 2.399181{col 67}{space 3}  4.41253
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}{txt}({res}est3{txt} stored)
+(option {bf:xb} assumed; fitted values)
+{res}{txt}(file temp5.gph saved)
+
+Linear regression                               Number of obs     = {res}     2,783
+                                                {txt}{help j_robustsingular:F(6, 2775) }       =  {res}        .
+                                                {txt}Prob > F          = {res}         .
+                                                {txt}R-squared         = {res}    0.0063
+                                                {txt}Root MSE          =    {res} 5.7148
+
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 14}{c |}{col 26}  Robust HC2
+{col 1}mort_relat~t{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 7}treat {c |}{col 14}{res}{space 2}-1.746761{col 26}{space 2} .8603792{col 37}{space 1}   -2.03{col 46}{space 3}0.042{col 54}{space 4}-3.433809{col 67}{space 3}-.0597126
+{txt}{space 10}p1 {c |}{col 14}{res}{space 2}  .126275{col 26}{space 2} .0756002{col 37}{space 1}    1.67{col 46}{space 3}0.095{col 54}{space 4}-.0219634{col 67}{space 3} .2745133
+{txt}{space 10}p2 {c |}{col 14}{res}{space 2} .0014792{col 26}{space 2} .0034465{col 37}{space 1}    0.43{col 46}{space 3}0.668{col 54}{space 4}-.0052786{col 67}{space 3} .0082371
+{txt}{space 10}p3 {c |}{col 14}{res}{space 2}-.0002803{col 26}{space 2} .0002607{col 37}{space 1}   -1.08{col 46}{space 3}0.282{col 54}{space 4}-.0007914{col 67}{space 3} .0002309
+{txt}{space 10}p4 {c |}{col 14}{res}{space 2}-7.26e-06{col 26}{space 2} 7.04e-06{col 37}{space 1}   -1.03{col 46}{space 3}0.302{col 54}{space 4}-.0000211{col 67}{space 3} 6.54e-06
+{txt}{space 10}p5 {c |}{col 14}{res}{space 2} 1.50e-07{col 26}{space 2} 4.00e-07{col 37}{space 1}    0.37{col 46}{space 3}0.708{col 54}{space 4}-6.35e-07{col 67}{space 3} 9.35e-07
+{txt}{space 10}p6 {c |}{col 14}{res}{space 2} 4.09e-09{col 26}{space 2} 5.38e-09{col 37}{space 1}    0.76{col 46}{space 3}0.447{col 54}{space 4}-6.45e-09{col 67}{space 3} 1.46e-08
+{txt}{space 7}_cons {c |}{col 14}{res}{space 2} 3.549386{col 26}{space 2} .5936055{col 37}{space 1}    5.98{col 46}{space 3}0.000{col 54}{space 4} 2.385433{col 67}{space 3} 4.713339
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}{txt}({res}est4{txt} stored)
+(option {bf:xb} assumed; fitted values)
+{res}{txt}(file temp6.gph saved)
+
+{com}. 
+. 
+. 
+. * Export graph
+
+. 
+. graph combine temp3.gph temp4.gph ///
+{res}{err}/// is not a memory graph
+{txt}{search r(198), local:r(198);}
+
+{com}. 
+. temp5.gph temp6.gph, col(2) iscale(.5)
+{bf}{err}temp5.gph{sf} is not a valid command name
+{txt}{search r(199), local:r(199);}
+
+{com}. 
+. 
+. 
+. graph export pset6_q221_stata.png, replace
+{err}could not find Graph window
+{txt}{search r(693), local:r(693);}
+
+{com}. 
+. 
+. 
+. * Export table
+
+. 
+. esttab using table_q221_stata.tex, b se keep(treat) ///
+{err}option {bf:/} not allowed
+{txt}{search r(198), local:r(198);}
+
+{com}. 
+. noobs nostar nonote mtitles("p:3" "p:4" "p:5" "p:6") nonumbers replace
+{err}command {bf}noobs{sf} is unrecognized
+{txt}{search r(199), local:r(199);}
+
+{com}. 
+. 
+. do "C:\Users\NMATH_~1\AppData\Local\Temp\STD2870_000000.tmp"
+{txt}
+{com}. * 2.2.1
+. eststo clear
+{txt}
+{com}. * Run regressions, save beta and se, graph residuals
+. forvalues pol = 3/6 {c -(}
+{txt}  2{com}. eststo: reg $y treat p1-p`pol', vce(hc2)
+{txt}  3{com}. capture drop pred
+{txt}  4{com}. predict pred
+{txt}  5{com}. twoway scatter pred $x, title("Order `pol'")
+{txt}  6{com}. graph save temp`pol'.gph, replace
+{txt}  7{com}. {c )-}
+
+{txt}Linear regression                               Number of obs     = {res}     2,783
+                                                {txt}F(4, 2778)        =  {res}     4.14
+                                                {txt}Prob > F          = {res}    0.0024
+                                                {txt}R-squared         = {res}    0.0052
+                                                {txt}Root MSE          =    {res}  5.715
+
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 14}{c |}{col 26}  Robust HC2
+{col 1}mort_relat~t{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 7}treat {c |}{col 14}{res}{space 2}-1.119972{col 26}{space 2} .5946944{col 37}{space 1}   -1.88{col 46}{space 3}0.060{col 54}{space 4} -2.28606{col 67}{space 3} .0461152
+{txt}{space 10}p1 {c |}{col 14}{res}{space 2} .0439276{col 26}{space 2} .0273691{col 37}{space 1}    1.61{col 46}{space 3}0.109{col 54}{space 4}-.0097382{col 67}{space 3} .0975935
+{txt}{space 10}p2 {c |}{col 14}{res}{space 2} -.000286{col 26}{space 2} .0010951{col 37}{space 1}   -0.26{col 46}{space 3}0.794{col 54}{space 4}-.0024333{col 67}{space 3} .0018613
+{txt}{space 10}p3 {c |}{col 14}{res}{space 2}-.0000116{col 26}{space 2} .0000223{col 37}{space 1}   -0.52{col 46}{space 3}0.602{col 54}{space 4}-.0000553{col 67}{space 3} .0000321
+{txt}{space 7}_cons {c |}{col 14}{res}{space 2} 3.280616{col 26}{space 2} .3849699{col 37}{space 1}    8.52{col 46}{space 3}0.000{col 54}{space 4}  2.52576{col 67}{space 3} 4.035472
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}{txt}({res}est1{txt} stored)
+(option {bf:xb} assumed; fitted values)
+{res}{txt}(file temp3.gph saved)
+
+Linear regression                               Number of obs     = {res}     2,783
+                                                {txt}F(5, 2777)        =  {res}     3.40
+                                                {txt}Prob > F          = {res}    0.0046
+                                                {txt}R-squared         = {res}    0.0052
+                                                {txt}Root MSE          =    {res} 5.7159
+
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 14}{c |}{col 26}  Robust HC2
+{col 1}mort_relat~t{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 7}treat {c |}{col 14}{res}{space 2}-1.018176{col 26}{space 2} .7535121{col 37}{space 1}   -1.35{col 46}{space 3}0.177{col 54}{space 4}-2.495677{col 67}{space 3} .4593244
+{txt}{space 10}p1 {c |}{col 14}{res}{space 2} .0335796{col 26}{space 2} .0524126{col 37}{space 1}    0.64{col 46}{space 3}0.522{col 54}{space 4} -.069192{col 67}{space 3} .1363513
+{txt}{space 10}p2 {c |}{col 14}{res}{space 2}-.0001852{col 26}{space 2} .0011164{col 37}{space 1}   -0.17{col 46}{space 3}0.868{col 54}{space 4}-.0023742{col 67}{space 3} .0020039
+{txt}{space 10}p3 {c |}{col 14}{res}{space 2} .0000158{col 26}{space 2} .0001015{col 37}{space 1}    0.16{col 46}{space 3}0.876{col 54}{space 4}-.0001831{col 67}{space 3} .0002148
+{txt}{space 10}p4 {c |}{col 14}{res}{space 2} 4.89e-07{col 26}{space 2} 1.75e-06{col 37}{space 1}    0.28{col 46}{space 3}0.779{col 54}{space 4}-2.93e-06{col 67}{space 3} 3.91e-06
+{txt}{space 7}_cons {c |}{col 14}{res}{space 2} 3.206047{col 26}{space 2}  .503915{col 37}{space 1}    6.36{col 46}{space 3}0.000{col 54}{space 4} 2.217961{col 67}{space 3} 4.194133
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}{txt}({res}est2{txt} stored)
+(option {bf:xb} assumed; fitted values)
+{res}{txt}(file temp4.gph saved)
+
+Linear regression                               Number of obs     = {res}     2,783
+                                                {txt}F(6, 2776)        =  {res}     3.53
+                                                {txt}Prob > F          = {res}    0.0018
+                                                {txt}R-squared         = {res}    0.0061
+                                                {txt}Root MSE          =    {res} 5.7143
+
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 14}{c |}{col 26}  Robust HC2
+{col 1}mort_relat~t{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 7}treat {c |}{col 14}{res}{space 2}-1.659208{col 26}{space 2} .8111913{col 37}{space 1}   -2.05{col 46}{space 3}0.041{col 54}{space 4}-3.249808{col 67}{space 3}-.0686092
+{txt}{space 10}p1 {c |}{col 14}{res}{space 2} .1146616{col 26}{space 2} .0674717{col 37}{space 1}    1.70{col 46}{space 3}0.089{col 54}{space 4}-.0176382{col 67}{space 3} .2469615
+{txt}{space 10}p2 {c |}{col 14}{res}{space 2} .0038814{col 26}{space 2} .0025235{col 37}{space 1}    1.54{col 46}{space 3}0.124{col 54}{space 4}-.0010668{col 67}{space 3} .0088295
+{txt}{space 10}p3 {c |}{col 14}{res}{space 2}-.0001485{col 26}{space 2}  .000131{col 37}{space 1}   -1.13{col 46}{space 3}0.257{col 54}{space 4}-.0004052{col 67}{space 3} .0001083
+{txt}{space 10}p4 {c |}{col 14}{res}{space 2}-.0000117{col 26}{space 2} 6.64e-06{col 37}{space 1}   -1.77{col 46}{space 3}0.077{col 54}{space 4}-.0000248{col 67}{space 3} 1.28e-06
+{txt}{space 10}p5 {c |}{col 14}{res}{space 2}-1.68e-07{col 26}{space 2} 8.74e-08{col 37}{space 1}   -1.92{col 46}{space 3}0.054{col 54}{space 4}-3.39e-07{col 67}{space 3} 3.17e-09
+{txt}{space 7}_cons {c |}{col 14}{res}{space 2} 3.405855{col 26}{space 2} .5133951{col 37}{space 1}    6.63{col 46}{space 3}0.000{col 54}{space 4} 2.399181{col 67}{space 3}  4.41253
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}{txt}({res}est3{txt} stored)
+(option {bf:xb} assumed; fitted values)
+{res}{txt}(file temp5.gph saved)
+
+Linear regression                               Number of obs     = {res}     2,783
+                                                {txt}{help j_robustsingular:F(6, 2775) }       =  {res}        .
+                                                {txt}Prob > F          = {res}         .
+                                                {txt}R-squared         = {res}    0.0063
+                                                {txt}Root MSE          =    {res} 5.7148
+
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 14}{c |}{col 26}  Robust HC2
+{col 1}mort_relat~t{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 7}treat {c |}{col 14}{res}{space 2}-1.746761{col 26}{space 2} .8603792{col 37}{space 1}   -2.03{col 46}{space 3}0.042{col 54}{space 4}-3.433809{col 67}{space 3}-.0597126
+{txt}{space 10}p1 {c |}{col 14}{res}{space 2}  .126275{col 26}{space 2} .0756002{col 37}{space 1}    1.67{col 46}{space 3}0.095{col 54}{space 4}-.0219634{col 67}{space 3} .2745133
+{txt}{space 10}p2 {c |}{col 14}{res}{space 2} .0014792{col 26}{space 2} .0034465{col 37}{space 1}    0.43{col 46}{space 3}0.668{col 54}{space 4}-.0052786{col 67}{space 3} .0082371
+{txt}{space 10}p3 {c |}{col 14}{res}{space 2}-.0002803{col 26}{space 2} .0002607{col 37}{space 1}   -1.08{col 46}{space 3}0.282{col 54}{space 4}-.0007914{col 67}{space 3} .0002309
+{txt}{space 10}p4 {c |}{col 14}{res}{space 2}-7.26e-06{col 26}{space 2} 7.04e-06{col 37}{space 1}   -1.03{col 46}{space 3}0.302{col 54}{space 4}-.0000211{col 67}{space 3} 6.54e-06
+{txt}{space 10}p5 {c |}{col 14}{res}{space 2} 1.50e-07{col 26}{space 2} 4.00e-07{col 37}{space 1}    0.37{col 46}{space 3}0.708{col 54}{space 4}-6.35e-07{col 67}{space 3} 9.35e-07
+{txt}{space 10}p6 {c |}{col 14}{res}{space 2} 4.09e-09{col 26}{space 2} 5.38e-09{col 37}{space 1}    0.76{col 46}{space 3}0.447{col 54}{space 4}-6.45e-09{col 67}{space 3} 1.46e-08
+{txt}{space 7}_cons {c |}{col 14}{res}{space 2} 3.549386{col 26}{space 2} .5936055{col 37}{space 1}    5.98{col 46}{space 3}0.000{col 54}{space 4} 2.385433{col 67}{space 3} 4.713339
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}{txt}({res}est4{txt} stored)
+(option {bf:xb} assumed; fitted values)
+{res}{txt}(file temp6.gph saved)
+
+{com}. 
+. * Export graph
+. graph combine temp3.gph temp4.gph ///
+>         temp5.gph temp6.gph, col(2) iscale(.5)
+{res}{txt}
+{com}. 
+. graph export pset6_q221_stata.png, replace
+{txt}(file pset6_q221_stata.png written in PNG format)
+
+{com}. 
+. * Export table
+. esttab using table_q221_stata.tex, b se keep(treat) ///
+>                 noobs nostar nonote mtitles("p:3" "p:4" "p:5" "p:6") nonumbers replace  
+{res}{txt}(output written to {browse  `"table_q221_stata.tex"'})
+
+{com}.                 
+. 
+{txt}end of do-file
+
+{com}. help rdrobust
+
+. do "C:\Users\NMATH_~1\AppData\Local\Temp\STD2870_000000.tmp"
+{txt}
+{com}. foreach k in diffmeans ksmirnov ranksum hotelling {c -(}
+{txt}  2{com}.         rdwinselect $x $yf $z, wmin(0.1) wstep(0.2) nwindows(20) ///
+>                 statistic(`stat')
+{txt}  3{com}. {c )-}
+
+
+{txt}Window selection for RD under local randomization
+
+
+Cutoff c = {res}0.00{txt}{col 18} {c |} {col 19}Left of c{col 33}Right of c{col 51}Number of obs  = {res}         2783
+{txt}{hline 18}{c +}{hline 23}{col 51}Order of poly  = {res}            0
+{txt}{ralign 17:Number of obs}{col 18} {c |} {col 17}{res}     2489{col 34}      294{col 51}{txt}Kernel type    = {res}{ralign 13: uniform}
+{txt}{ralign 17:1st percentile}{col 18} {c |} {col 17}{res}       25{col 34}        3{col 51}{txt}Reps           = {res}         1000
+{txt}{ralign 17:5th percentile}{col 18} {c |} {col 17}{res}      125{col 34}       14{col 51}{txt}Testing method = {res}{ralign 13: rdrandinf}
+{txt}{ralign 17:10th percentile}{col 18} {c |} {col 17}{res}      249{col 34}       29{col 51}{txt}Balance test   = {res}{ralign 13: diffmeans}
+{txt}{ralign 17:20th percentile}{col 18} {c |} {col 17}{res}      497{col 34}       59
+
+
+{txt}{col 18} {c |}{col 23}Bal. test {col 41}Var. name{col 54}Bin. test 
+{col 1} Window length /2 {c |}{col 24}p-value{col 39}(min p-value){col 55}p-value{col 66} Obs<c {col 74} Obs>=c
+{hline 18}{c +}{hline 61}
+{res}            0.100{col 18}{txt} {c |}{res}{col 26}0.708 {col 38}mort_injury_post{col 54}   1.000 {col 64}       3 {col 73}       3
+            0.300{col 18}{txt} {c |}{res}{col 26}0.401 {col 38}mort_injury_post{col 54}   1.000 {col 64}       9 {col 73}      10
+            0.500{col 18}{txt} {c |}{res}{col 26}0.586 {col 38}mort_related_pre{col 54}   0.864 {col 64}      18 {col 73}      16
+            0.700{col 18}{txt} {c |}{res}{col 26}0.319 {col 38}mort_related_pre{col 54}   0.883 {col 64}      24 {col 73}      22
+            0.900{col 18}{txt} {c |}{res}{col 26}0.760 {col 38}mort_related_pre{col 54}   0.603 {col 64}      32 {col 73}      27
+            1.100{col 18}{txt} {c |}{res}{col 26}0.682 {col 38}mort_injury_post{col 54}   0.302 {col 64}      43 {col 73}      33
+            1.300{col 18}{txt} {c |}{res}{col 26}0.628 {col 38}mort_related_pre{col 54}   0.203 {col 64}      51 {col 73}      38
+            1.500{col 18}{txt} {c |}{res}{col 26}0.682 {col 38}mort_related_pre{col 54}   0.213 {col 64}      53 {col 73}      40
+            1.700{col 18}{txt} {c |}{res}{col 26}0.187 {col 38}mort_related_pre{col 54}   0.329 {col 64}      58 {col 73}      47
+            1.900{col 18}{txt} {c |}{res}{col 26}0.082 {col 38}mort_related_pre{col 54}   0.263 {col 64}      64 {col 73}      51
+            2.100{col 18}{txt} {c |}{res}{col 26}0.022 {col 38}mort_related_pre{col 54}   0.294 {col 64}      72 {col 73}      59
+            2.300{col 18}{txt} {c |}{res}{col 26}0.029 {col 38}mort_related_pre{col 54}   0.494 {col 64}      73 {col 73}      64
+            2.500{col 18}{txt} {c |}{res}{col 26}0.046 {col 38}mort_related_pre{col 54}   0.413 {col 64}      80 {col 73}      69
+            2.700{col 18}{txt} {c |}{res}{col 26}0.036 {col 38}mort_related_pre{col 54}   0.630 {col 64}      81 {col 73}      74
+            2.900{col 18}{txt} {c |}{res}{col 26}0.021 {col 38}mort_related_pre{col 54}   0.490 {col 64}      90 {col 73}      80
+            3.100{col 18}{txt} {c |}{res}{col 26}0.009 {col 38}mort_related_pre{col 54}   0.335 {col 64}      98 {col 73}      84
+            3.300{col 18}{txt} {c |}{res}{col 26}0.035 {col 38}mort_related_pre{col 54}   0.721 {col 64}     101 {col 73}      95
+            3.500{col 18}{txt} {c |}{res}{col 26}0.037 {col 38}mort_related_pre{col 54}   0.628 {col 64}     108 {col 73}     100
+            3.700{col 18}{txt} {c |}{res}{col 26}0.123 {col 38}mort_related_pre{col 54}   0.734 {col 64}     111 {col 73}     105
+            3.900{col 18}{txt} {c |}{res}{col 26}0.311 {col 38}mort_related_pre{col 54}   0.472 {col 64}     123 {col 73}     111
+
+{txt}Variable used in binomial test (running variable): {res}povrate60
+{txt}Covariates used in balance test: {res}mort_related_pre mort_injury_post
+
+{txt}Recommended window is{res} [-1.7; 1.7]{txt} with {res}105{txt} observations ({res}58{txt} below, {res}47{txt} above).
+
+
+Window selection for RD under local randomization
+
+
+Cutoff c = {res}0.00{txt}{col 18} {c |} {col 19}Left of c{col 33}Right of c{col 51}Number of obs  = {res}         2783
+{txt}{hline 18}{c +}{hline 23}{col 51}Order of poly  = {res}            0
+{txt}{ralign 17:Number of obs}{col 18} {c |} {col 17}{res}     2489{col 34}      294{col 51}{txt}Kernel type    = {res}{ralign 13: uniform}
+{txt}{ralign 17:1st percentile}{col 18} {c |} {col 17}{res}       25{col 34}        3{col 51}{txt}Reps           = {res}         1000
+{txt}{ralign 17:5th percentile}{col 18} {c |} {col 17}{res}      125{col 34}       14{col 51}{txt}Testing method = {res}{ralign 13: rdrandinf}
+{txt}{ralign 17:10th percentile}{col 18} {c |} {col 17}{res}      249{col 34}       29{col 51}{txt}Balance test   = {res}{ralign 13: diffmeans}
+{txt}{ralign 17:20th percentile}{col 18} {c |} {col 17}{res}      497{col 34}       59
+
+
+{txt}{col 18} {c |}{col 23}Bal. test {col 41}Var. name{col 54}Bin. test 
+{col 1} Window length /2 {c |}{col 24}p-value{col 39}(min p-value){col 55}p-value{col 66} Obs<c {col 74} Obs>=c
+{hline 18}{c +}{hline 61}
+{res}            0.100{col 18}{txt} {c |}{res}{col 26}0.708 {col 38}mort_injury_post{col 54}   1.000 {col 64}       3 {col 73}       3
+            0.300{col 18}{txt} {c |}{res}{col 26}0.401 {col 38}mort_injury_post{col 54}   1.000 {col 64}       9 {col 73}      10
+            0.500{col 18}{txt} {c |}{res}{col 26}0.586 {col 38}mort_related_pre{col 54}   0.864 {col 64}      18 {col 73}      16
+            0.700{col 18}{txt} {c |}{res}{col 26}0.319 {col 38}mort_related_pre{col 54}   0.883 {col 64}      24 {col 73}      22
+            0.900{col 18}{txt} {c |}{res}{col 26}0.760 {col 38}mort_related_pre{col 54}   0.603 {col 64}      32 {col 73}      27
+            1.100{col 18}{txt} {c |}{res}{col 26}0.682 {col 38}mort_injury_post{col 54}   0.302 {col 64}      43 {col 73}      33
+            1.300{col 18}{txt} {c |}{res}{col 26}0.628 {col 38}mort_related_pre{col 54}   0.203 {col 64}      51 {col 73}      38
+            1.500{col 18}{txt} {c |}{res}{col 26}0.682 {col 38}mort_related_pre{col 54}   0.213 {col 64}      53 {col 73}      40
+            1.700{col 18}{txt} {c |}{res}{col 26}0.187 {col 38}mort_related_pre{col 54}   0.329 {col 64}      58 {col 73}      47
+            1.900{col 18}{txt} {c |}{res}{col 26}0.082 {col 38}mort_related_pre{col 54}   0.263 {col 64}      64 {col 73}      51
+            2.100{col 18}{txt} {c |}{res}{col 26}0.022 {col 38}mort_related_pre{col 54}   0.294 {col 64}      72 {col 73}      59
+            2.300{col 18}{txt} {c |}{res}{col 26}0.029 {col 38}mort_related_pre{col 54}   0.494 {col 64}      73 {col 73}      64
+            2.500{col 18}{txt} {c |}{res}{col 26}0.046 {col 38}mort_related_pre{col 54}   0.413 {col 64}      80 {col 73}      69
+            2.700{col 18}{txt} {c |}{res}{col 26}0.036 {col 38}mort_related_pre{col 54}   0.630 {col 64}      81 {col 73}      74
+            2.900{col 18}{txt} {c |}{res}{col 26}0.021 {col 38}mort_related_pre{col 54}   0.490 {col 64}      90 {col 73}      80
+            3.100{col 18}{txt} {c |}{res}{col 26}0.009 {col 38}mort_related_pre{col 54}   0.335 {col 64}      98 {col 73}      84
+            3.300{col 18}{txt} {c |}{res}{col 26}0.035 {col 38}mort_related_pre{col 54}   0.721 {col 64}     101 {col 73}      95
+            3.500{col 18}{txt} {c |}{res}{col 26}0.037 {col 38}mort_related_pre{col 54}   0.628 {col 64}     108 {col 73}     100
+            3.700{col 18}{txt} {c |}{res}{col 26}0.123 {col 38}mort_related_pre{col 54}   0.734 {col 64}     111 {col 73}     105
+            3.900{col 18}{txt} {c |}{res}{col 26}0.311 {col 38}mort_related_pre{col 54}   0.472 {col 64}     123 {col 73}     111
+
+{txt}Variable used in binomial test (running variable): {res}povrate60
+{txt}Covariates used in balance test: {res}mort_related_pre mort_injury_post
+
+{txt}Recommended window is{res} [-1.7; 1.7]{txt} with {res}105{txt} observations ({res}58{txt} below, {res}47{txt} above).
+
+
+Window selection for RD under local randomization
+
+
+Cutoff c = {res}0.00{txt}{col 18} {c |} {col 19}Left of c{col 33}Right of c{col 51}Number of obs  = {res}         2783
+{txt}{hline 18}{c +}{hline 23}{col 51}Order of poly  = {res}            0
+{txt}{ralign 17:Number of obs}{col 18} {c |} {col 17}{res}     2489{col 34}      294{col 51}{txt}Kernel type    = {res}{ralign 13: uniform}
+{txt}{ralign 17:1st percentile}{col 18} {c |} {col 17}{res}       25{col 34}        3{col 51}{txt}Reps           = {res}         1000
+{txt}{ralign 17:5th percentile}{col 18} {c |} {col 17}{res}      125{col 34}       14{col 51}{txt}Testing method = {res}{ralign 13: rdrandinf}
+{txt}{ralign 17:10th percentile}{col 18} {c |} {col 17}{res}      249{col 34}       29{col 51}{txt}Balance test   = {res}{ralign 13: diffmeans}
+{txt}{ralign 17:20th percentile}{col 18} {c |} {col 17}{res}      497{col 34}       59
+
+
+{txt}{col 18} {c |}{col 23}Bal. test {col 41}Var. name{col 54}Bin. test 
+{col 1} Window length /2 {c |}{col 24}p-value{col 39}(min p-value){col 55}p-value{col 66} Obs<c {col 74} Obs>=c
+{hline 18}{c +}{hline 61}
+{res}            0.100{col 18}{txt} {c |}{res}{col 26}0.708 {col 38}mort_injury_post{col 54}   1.000 {col 64}       3 {col 73}       3
+            0.300{col 18}{txt} {c |}{res}{col 26}0.401 {col 38}mort_injury_post{col 54}   1.000 {col 64}       9 {col 73}      10
+            0.500{col 18}{txt} {c |}{res}{col 26}0.586 {col 38}mort_related_pre{col 54}   0.864 {col 64}      18 {col 73}      16
+            0.700{col 18}{txt} {c |}{res}{col 26}0.319 {col 38}mort_related_pre{col 54}   0.883 {col 64}      24 {col 73}      22
+            0.900{col 18}{txt} {c |}{res}{col 26}0.760 {col 38}mort_related_pre{col 54}   0.603 {col 64}      32 {col 73}      27
+            1.100{col 18}{txt} {c |}{res}{col 26}0.682 {col 38}mort_injury_post{col 54}   0.302 {col 64}      43 {col 73}      33
+            1.300{col 18}{txt} {c |}{res}{col 26}0.628 {col 38}mort_related_pre{col 54}   0.203 {col 64}      51 {col 73}      38
+            1.500{col 18}{txt} {c |}{res}{col 26}0.682 {col 38}mort_related_pre{col 54}   0.213 {col 64}      53 {col 73}      40
+            1.700{col 18}{txt} {c |}{res}{col 26}0.187 {col 38}mort_related_pre{col 54}   0.329 {col 64}      58 {col 73}      47
+            1.900{col 18}{txt} {c |}{res}{col 26}0.082 {col 38}mort_related_pre{col 54}   0.263 {col 64}      64 {col 73}      51
+            2.100{col 18}{txt} {c |}{res}{col 26}0.022 {col 38}mort_related_pre{col 54}   0.294 {col 64}      72 {col 73}      59
+            2.300{col 18}{txt} {c |}{res}{col 26}0.029 {col 38}mort_related_pre{col 54}   0.494 {col 64}      73 {col 73}      64
+            2.500{col 18}{txt} {c |}{res}{col 26}0.046 {col 38}mort_related_pre{col 54}   0.413 {col 64}      80 {col 73}      69
+            2.700{col 18}{txt} {c |}{res}{col 26}0.036 {col 38}mort_related_pre{col 54}   0.630 {col 64}      81 {col 73}      74
+            2.900{col 18}{txt} {c |}{res}{col 26}0.021 {col 38}mort_related_pre{col 54}   0.490 {col 64}      90 {col 73}      80
+            3.100{col 18}{txt} {c |}{res}{col 26}0.009 {col 38}mort_related_pre{col 54}   0.335 {col 64}      98 {col 73}      84
+            3.300{col 18}{txt} {c |}{res}{col 26}0.035 {col 38}mort_related_pre{col 54}   0.721 {col 64}     101 {col 73}      95
+            3.500{col 18}{txt} {c |}{res}{col 26}0.037 {col 38}mort_related_pre{col 54}   0.628 {col 64}     108 {col 73}     100
+            3.700{col 18}{txt} {c |}{res}{col 26}0.123 {col 38}mort_related_pre{col 54}   0.734 {col 64}     111 {col 73}     105
+            3.900{col 18}{txt} {c |}{res}{col 26}0.311 {col 38}mort_related_pre{col 54}   0.472 {col 64}     123 {col 73}     111
+
+{txt}Variable used in binomial test (running variable): {res}povrate60
+{txt}Covariates used in balance test: {res}mort_related_pre mort_injury_post
+
+{txt}Recommended window is{res} [-1.7; 1.7]{txt} with {res}105{txt} observations ({res}58{txt} below, {res}47{txt} above).
+
+
+Window selection for RD under local randomization
+
+
+Cutoff c = {res}0.00{txt}{col 18} {c |} {col 19}Left of c{col 33}Right of c{col 51}Number of obs  = {res}         2783
+{txt}{hline 18}{c +}{hline 23}{col 51}Order of poly  = {res}            0
+{txt}{ralign 17:Number of obs}{col 18} {c |} {col 17}{res}     2489{col 34}      294{col 51}{txt}Kernel type    = {res}{ralign 13: uniform}
+{txt}{ralign 17:1st percentile}{col 18} {c |} {col 17}{res}       25{col 34}        3{col 51}{txt}Reps           = {res}         1000
+{txt}{ralign 17:5th percentile}{col 18} {c |} {col 17}{res}      125{col 34}       14{col 51}{txt}Testing method = {res}{ralign 13: rdrandinf}
+{txt}{ralign 17:10th percentile}{col 18} {c |} {col 17}{res}      249{col 34}       29{col 51}{txt}Balance test   = {res}{ralign 13: diffmeans}
+{txt}{ralign 17:20th percentile}{col 18} {c |} {col 17}{res}      497{col 34}       59
+
+
+{txt}{col 18} {c |}{col 23}Bal. test {col 41}Var. name{col 54}Bin. test 
+{col 1} Window length /2 {c |}{col 24}p-value{col 39}(min p-value){col 55}p-value{col 66} Obs<c {col 74} Obs>=c
+{hline 18}{c +}{hline 61}
+{res}            0.100{col 18}{txt} {c |}{res}{col 26}0.708 {col 38}mort_injury_post{col 54}   1.000 {col 64}       3 {col 73}       3
+            0.300{col 18}{txt} {c |}{res}{col 26}0.401 {col 38}mort_injury_post{col 54}   1.000 {col 64}       9 {col 73}      10
+            0.500{col 18}{txt} {c |}{res}{col 26}0.586 {col 38}mort_related_pre{col 54}   0.864 {col 64}      18 {col 73}      16
+            0.700{col 18}{txt} {c |}{res}{col 26}0.319 {col 38}mort_related_pre{col 54}   0.883 {col 64}      24 {col 73}      22
+            0.900{col 18}{txt} {c |}{res}{col 26}0.760 {col 38}mort_related_pre{col 54}   0.603 {col 64}      32 {col 73}      27
+            1.100{col 18}{txt} {c |}{res}{col 26}0.682 {col 38}mort_injury_post{col 54}   0.302 {col 64}      43 {col 73}      33
+            1.300{col 18}{txt} {c |}{res}{col 26}0.628 {col 38}mort_related_pre{col 54}   0.203 {col 64}      51 {col 73}      38
+            1.500{col 18}{txt} {c |}{res}{col 26}0.682 {col 38}mort_related_pre{col 54}   0.213 {col 64}      53 {col 73}      40
+            1.700{col 18}{txt} {c |}{res}{col 26}0.187 {col 38}mort_related_pre{col 54}   0.329 {col 64}      58 {col 73}      47
+            1.900{col 18}{txt} {c |}{res}{col 26}0.082 {col 38}mort_related_pre{col 54}   0.263 {col 64}      64 {col 73}      51
+            2.100{col 18}{txt} {c |}{res}{col 26}0.022 {col 38}mort_related_pre{col 54}   0.294 {col 64}      72 {col 73}      59
+            2.300{col 18}{txt} {c |}{res}{col 26}0.029 {col 38}mort_related_pre{col 54}   0.494 {col 64}      73 {col 73}      64
+            2.500{col 18}{txt} {c |}{res}{col 26}0.046 {col 38}mort_related_pre{col 54}   0.413 {col 64}      80 {col 73}      69
+            2.700{col 18}{txt} {c |}{res}{col 26}0.036 {col 38}mort_related_pre{col 54}   0.630 {col 64}      81 {col 73}      74
+            2.900{col 18}{txt} {c |}{res}{col 26}0.021 {col 38}mort_related_pre{col 54}   0.490 {col 64}      90 {col 73}      80
+            3.100{col 18}{txt} {c |}{res}{col 26}0.009 {col 38}mort_related_pre{col 54}   0.335 {col 64}      98 {col 73}      84
+            3.300{col 18}{txt} {c |}{res}{col 26}0.035 {col 38}mort_related_pre{col 54}   0.721 {col 64}     101 {col 73}      95
+            3.500{col 18}{txt} {c |}{res}{col 26}0.037 {col 38}mort_related_pre{col 54}   0.628 {col 64}     108 {col 73}     100
+            3.700{col 18}{txt} {c |}{res}{col 26}0.123 {col 38}mort_related_pre{col 54}   0.734 {col 64}     111 {col 73}     105
+            3.900{col 18}{txt} {c |}{res}{col 26}0.311 {col 38}mort_related_pre{col 54}   0.472 {col 64}     123 {col 73}     111
+
+{txt}Variable used in binomial test (running variable): {res}povrate60
+{txt}Covariates used in balance test: {res}mort_related_pre mort_injury_post
+
+{txt}Recommended window is{res} [-1.7; 1.7]{txt} with {res}105{txt} observations ({res}58{txt} below, {res}47{txt} above).
+
+{com}. 
+{txt}end of do-file
+
+{com}. do "C:\Users\NMATH_~1\AppData\Local\Temp\STD2870_000000.tmp"
+{txt}
+{com}. foreach k in diffmeans ksmirnov ranksum hotelling {c -(}
+{txt}  2{com}.         rdwinselect $x $yf $z, wmin(0.1) wstep(0.2) nwindows(20) ///
+>                 statistic(`stat')
+{txt}  3{com}. {c )-}
+
+
+{txt}Window selection for RD under local randomization
+
+
+Cutoff c = {res}0.00{txt}{col 18} {c |} {col 19}Left of c{col 33}Right of c{col 51}Number of obs  = {res}         2783
+{txt}{hline 18}{c +}{hline 23}{col 51}Order of poly  = {res}            0
+{txt}{ralign 17:Number of obs}{col 18} {c |} {col 17}{res}     2489{col 34}      294{col 51}{txt}Kernel type    = {res}{ralign 13: uniform}
+{txt}{ralign 17:1st percentile}{col 18} {c |} {col 17}{res}       25{col 34}        3{col 51}{txt}Reps           = {res}         1000
+{txt}{ralign 17:5th percentile}{col 18} {c |} {col 17}{res}      125{col 34}       14{col 51}{txt}Testing method = {res}{ralign 13: rdrandinf}
+{txt}{ralign 17:10th percentile}{col 18} {c |} {col 17}{res}      249{col 34}       29{col 51}{txt}Balance test   = {res}{ralign 13: diffmeans}
+{txt}{ralign 17:20th percentile}{col 18} {c |} {col 17}{res}      497{col 34}       59
+
+
+{txt}{col 18} {c |}{col 23}Bal. test {col 41}Var. name{col 54}Bin. test 
+{col 1} Window length /2 {c |}{col 24}p-value{col 39}(min p-value){col 55}p-value{col 66} Obs<c {col 74} Obs>=c
+{hline 18}{c +}{hline 61}
+{res}            0.100{col 18}{txt} {c |}{res}{col 26}0.708 {col 38}mort_injury_post{col 54}   1.000 {col 64}       3 {col 73}       3
+            0.300{col 18}{txt} {c |}{res}{col 26}0.401 {col 38}mort_injury_post{col 54}   1.000 {col 64}       9 {col 73}      10
+            0.500{col 18}{txt} {c |}{res}{col 26}0.586 {col 38}mort_related_pre{col 54}   0.864 {col 64}      18 {col 73}      16
+            0.700{col 18}{txt} {c |}{res}{col 26}0.319 {col 38}mort_related_pre{col 54}   0.883 {col 64}      24 {col 73}      22
+            0.900{col 18}{txt} {c |}{res}{col 26}0.760 {col 38}mort_related_pre{col 54}   0.603 {col 64}      32 {col 73}      27
+            1.100{col 18}{txt} {c |}{res}{col 26}0.682 {col 38}mort_injury_post{col 54}   0.302 {col 64}      43 {col 73}      33
+            1.300{col 18}{txt} {c |}{res}{col 26}0.628 {col 38}mort_related_pre{col 54}   0.203 {col 64}      51 {col 73}      38
+            1.500{col 18}{txt} {c |}{res}{col 26}0.682 {col 38}mort_related_pre{col 54}   0.213 {col 64}      53 {col 73}      40
+            1.700{col 18}{txt} {c |}{res}{col 26}0.187 {col 38}mort_related_pre{col 54}   0.329 {col 64}      58 {col 73}      47
+            1.900{col 18}{txt} {c |}{res}{col 26}0.082 {col 38}mort_related_pre{col 54}   0.263 {col 64}      64 {col 73}      51
+            2.100{col 18}{txt} {c |}{res}{col 26}0.022 {col 38}mort_related_pre{col 54}   0.294 {col 64}      72 {col 73}      59
+            2.300{col 18}{txt} {c |}{res}{col 26}0.029 {col 38}mort_related_pre{col 54}   0.494 {col 64}      73 {col 73}      64
+            2.500{col 18}{txt} {c |}{res}{col 26}0.046 {col 38}mort_related_pre{col 54}   0.413 {col 64}      80 {col 73}      69
+            2.700{col 18}{txt} {c |}{res}{col 26}0.036 {col 38}mort_related_pre{col 54}   0.630 {col 64}      81 {col 73}      74
+            2.900{col 18}{txt} {c |}{res}{col 26}0.021 {col 38}mort_related_pre{col 54}   0.490 {col 64}      90 {col 73}      80
+            3.100{col 18}{txt} {c |}{res}{col 26}0.009 {col 38}mort_related_pre{col 54}   0.335 {col 64}      98 {col 73}      84
+            3.300{col 18}{txt} {c |}{res}{col 26}0.035 {col 38}mort_related_pre{col 54}   0.721 {col 64}     101 {col 73}      95
+            3.500{col 18}{txt} {c |}{res}{col 26}0.037 {col 38}mort_related_pre{col 54}   0.628 {col 64}     108 {col 73}     100
+            3.700{col 18}{txt} {c |}{res}{col 26}0.123 {col 38}mort_related_pre{col 54}   0.734 {col 64}     111 {col 73}     105
+            3.900{col 18}{txt} {c |}{res}{col 26}0.311 {col 38}mort_related_pre{col 54}   0.472 {col 64}     123 {col 73}     111
+
+{txt}Variable used in binomial test (running variable): {res}povrate60
+{txt}Covariates used in balance test: {res}mort_related_pre mort_injury_post
+
+{txt}Recommended window is{res} [-1.7; 1.7]{txt} with {res}105{txt} observations ({res}58{txt} below, {res}47{txt} above).
+
+
+Window selection for RD under local randomization
+
+
+Cutoff c = {res}0.00{txt}{col 18} {c |} {col 19}Left of c{col 33}Right of c{col 51}Number of obs  = {res}         2783
+{txt}{hline 18}{c +}{hline 23}{col 51}Order of poly  = {res}            0
+{txt}{ralign 17:Number of obs}{col 18} {c |} {col 17}{res}     2489{col 34}      294{col 51}{txt}Kernel type    = {res}{ralign 13: uniform}
+{txt}{ralign 17:1st percentile}{col 18} {c |} {col 17}{res}       25{col 34}        3{col 51}{txt}Reps           = {res}         1000
+{txt}{ralign 17:5th percentile}{col 18} {c |} {col 17}{res}      125{col 34}       14{col 51}{txt}Testing method = {res}{ralign 13: rdrandinf}
+{txt}{ralign 17:10th percentile}{col 18} {c |} {col 17}{res}      249{col 34}       29{col 51}{txt}Balance test   = {res}{ralign 13: diffmeans}
+{txt}{ralign 17:20th percentile}{col 18} {c |} {col 17}{res}      497{col 34}       59
+
+
+{txt}{col 18} {c |}{col 23}Bal. test {col 41}Var. name{col 54}Bin. test 
+{col 1} Window length /2 {c |}{col 24}p-value{col 39}(min p-value){col 55}p-value{col 66} Obs<c {col 74} Obs>=c
+{hline 18}{c +}{hline 61}
+{res}            0.100{col 18}{txt} {c |}{res}{col 26}0.708 {col 38}mort_injury_post{col 54}   1.000 {col 64}       3 {col 73}       3
+            0.300{col 18}{txt} {c |}{res}{col 26}0.401 {col 38}mort_injury_post{col 54}   1.000 {col 64}       9 {col 73}      10
+            0.500{col 18}{txt} {c |}{res}{col 26}0.586 {col 38}mort_related_pre{col 54}   0.864 {col 64}      18 {col 73}      16
+            0.700{col 18}{txt} {c |}{res}{col 26}0.319 {col 38}mort_related_pre{col 54}   0.883 {col 64}      24 {col 73}      22
+            0.900{col 18}{txt} {c |}{res}{col 26}0.760 {col 38}mort_related_pre{col 54}   0.603 {col 64}      32 {col 73}      27
+            1.100{col 18}{txt} {c |}{res}{col 26}0.682 {col 38}mort_injury_post{col 54}   0.302 {col 64}      43 {col 73}      33
+            1.300{col 18}{txt} {c |}{res}{col 26}0.628 {col 38}mort_related_pre{col 54}   0.203 {col 64}      51 {col 73}      38
+            1.500{col 18}{txt} {c |}{res}{col 26}0.682 {col 38}mort_related_pre{col 54}   0.213 {col 64}      53 {col 73}      40
+            1.700{col 18}{txt} {c |}{res}{col 26}0.187 {col 38}mort_related_pre{col 54}   0.329 {col 64}      58 {col 73}      47
+            1.900{col 18}{txt} {c |}{res}{col 26}0.082 {col 38}mort_related_pre{col 54}   0.263 {col 64}      64 {col 73}      51
+            2.100{col 18}{txt} {c |}{res}{col 26}0.022 {col 38}mort_related_pre{col 54}   0.294 {col 64}      72 {col 73}      59
+{err}{hline 2}Break{hline 2}
+{txt}{search r(1), local:r(1);}
+
+end of do-file
+
+{err}{hline 2}Break{hline 2}
+{txt}{search r(1), local:r(1);}
+
+{com}. do "C:\Users\NMATH_~1\AppData\Local\Temp\STD2870_000000.tmp"
+{txt}
+{com}. foreach k in diffmeans ksmirnov ranksum hotelling {c -(}
+{txt}  2{com}.         rdwinselect $x $yf $z, wmin(0.1) wstep(0.2) nwindows(20) ///
+>                 statistic(`stat')
+{txt}  3{com}. {c )-}
+
+
+{txt}Window selection for RD under local randomization
+
+
+Cutoff c = {res}0.00{txt}{col 18} {c |} {col 19}Left of c{col 33}Right of c{col 51}Number of obs  = {res}         2783
+{txt}{hline 18}{c +}{hline 23}{col 51}Order of poly  = {res}            0
+{txt}{ralign 17:Number of obs}{col 18} {c |} {col 17}{res}     2489{col 34}      294{col 51}{txt}Kernel type    = {res}{ralign 13: uniform}
+{txt}{ralign 17:1st percentile}{col 18} {c |} {col 17}{res}       25{col 34}        3{col 51}{txt}Reps           = {res}         1000
+{txt}{ralign 17:5th percentile}{col 18} {c |} {col 17}{res}      125{col 34}       14{col 51}{txt}Testing method = {res}{ralign 13: rdrandinf}
+{txt}{ralign 17:10th percentile}{col 18} {c |} {col 17}{res}      249{col 34}       29{col 51}{txt}Balance test   = {res}{ralign 13: diffmeans}
+{txt}{ralign 17:20th percentile}{col 18} {c |} {col 17}{res}      497{col 34}       59
+
+
+{txt}{col 18} {c |}{col 23}Bal. test {col 41}Var. name{col 54}Bin. test 
+{col 1} Window length /2 {c |}{col 24}p-value{col 39}(min p-value){col 55}p-value{col 66} Obs<c {col 74} Obs>=c
+{hline 18}{c +}{hline 61}
+{res}            0.100{col 18}{txt} {c |}{res}{col 26}0.708 {col 38}mort_injury_post{col 54}   1.000 {col 64}       3 {col 73}       3
+{err}{hline 2}Break{hline 2}
+{txt}{search r(1), local:r(1);}
+
+end of do-file
+
+{err}{hline 2}Break{hline 2}
+{txt}{search r(1), local:r(1);}
+
+{com}. do "C:\Users\NMATH_~1\AppData\Local\Temp\STD2870_000000.tmp"
+{txt}
+{com}. rdplot $y $x if abs($x)<=1.7, c(0) p(0) q(1) binselect(es)
+{res}
+RD Plot with evenly spaced number of bins using spacings estimators.
+
+{txt}{ralign 21: Cutoff c = 0}{col 22} {c |} {col 23}Left of {res}c{col 36}{txt}Right of {res}c{col 54}{txt}Number of obs  = {res}       105
+{txt}{hline 22}{c +}{hline 22}{col 54}Kernel         = {res}{ralign 10:Uniform}
+{txt}{ralign 21:Number of obs}{col 22} {c |} {col 23}{res}       58{col 37}       47
+{txt}{ralign 21:Eff. Number of obs}{col 22} {c |} {col 23}{res}       57{col 37}       46
+{txt}{ralign 21:Order poly. fit (p)}{col 22} {c |} {col 23}{res}        0{col 37}        0
+{txt}{ralign 21:BW poly. fit (h)}{col 22} {c |} {col 23}{res}    1.691{col 37}    1.678
+{txt}{ralign 21:Number of bins scale}{col 22} {c |} {col 23}{res}    1.000{col 37}    1.000
+
+Outcome: mort_related_post. Running variable: povrate60.
+{txt}{hline 22}{c TT}{hline 22}
+{col 22} {c |} {col 23}Left of {res}c{col 36}{txt}Right of {res}c
+{txt}{hline 22}{c +}{hline 22}
+{ralign 21:Bins selected}{col 22} {c |} {col 23}{res}        7{col 37}        3
+{txt}{ralign 21:Average bin length}{col 22} {c |} {col 23}{res}    0.242{col 37}    0.559
+{txt}{ralign 21:Median bin length}{col 22} {c |} {col 23}{res}    0.242{col 37}    0.559
+{txt}{hline 22}{c +}{hline 22}
+{ralign 21:IMSE-optimal bins}{col 22} {c |} {col 23}{res}        7{col 37}        3
+{txt}{ralign 21:Mimicking Var. bins}{col 22} {c |} {col 23}{res}       14{col 37}        5
+{txt}{hline 22}{c +}{hline 22}
+{lalign 1:Rel. to IMSE-optimal:}{col 22} {c |} 
+{ralign 21:Implied scale}{col 22} {c |} {col 23}{res}    1.000{col 37}    1.000
+{txt}{ralign 21:WIMSE var. weight}{col 22} {c |} {col 23}{res}    0.500{col 37}    0.500
+{txt}{ralign 21:WIMSE bias weight}{col 22} {c |} {col 23}{res}    0.500{col 37}    0.500
+{txt}{hline 22}{c BT}{hline 22}
+
+{res}{txt}
+{com}. graph export $resdir/pset6_q241_stata.png, replace
+{txt}(note: file /pset6_q241_stata.png not found)
+{err}{p 0 4 2}
+file /pset6_q241_stata.png
+could not be opened
+{p_end}
+{txt}{search r(603), local:r(603);}
+
+end of do-file
+
+{search r(603), local:r(603);}
+
+{com}. do "C:\Users\NMATH_~1\AppData\Local\Temp\STD2870_000000.tmp"
+{txt}
+{com}. * Q2.4.2
+. rdrandinf $y $x, wl(-1.7) wr(1.7) seed(123) stat(all)
+
+{txt}Selected window = {res}[-1.7 ; 1.7]
+
+{txt}Running randomization-based test...
+Randomization-based test complete.
+
+
+Inference for sharp design
+
+
+Cutoff c = {res}0.00{txt}{col 19}{c |}{col 22}Left of c{col 33}Right of c{col 51}Number of obs = {res}          2783
+{txt}{hline 18}{c +}{hline 23}{col 51}Order of poly = {res}             0
+{txt}{ralign 18:Number of obs}{col 19}{c |}{col 22}{res}     2489{col 33}       294{col 51}{txt}Kernel type   = {res}{ralign 14: uniform}
+{txt}{ralign 18:Eff. Number of obs}{col 19}{c |}{col 22}{res}       58{col 33}        47{col 51}{txt}Reps          = {res}          1000
+{txt}{ralign 18:Mean of outcome}{col 19}{c |}{col 22}{res}    3.869{col 33}     1.213{col 51}{txt}Window        = {res}{ralign 14: set by user}
+{txt}{ralign 18:S.D. of outcome}{col 19}{c |}{col 22}{res}    9.277{col 33}     2.596{col 51}{txt}H0:       tau = {res}         0.000
+{txt}{ralign 18:Window}{col 19}{c |}{col 22}{res}   -1.700{col 33}     1.700{col 51}{txt}Randomization = {res}{ralign 12: fixed margins}
+
+{txt}Outcome: {res}mort_related_post{txt}. Running variable: {res}povrate60{txt}.
+{hline 18}{c TT}{hline 61}
+{col 19}{c |}{col 34}Finite sample{col 60}Large sample
+{col 19}{c |}{col 33}{hline 15}{col 50}{hline 31}
+{ralign 18:Statistic}{c |}{col 20}      T{col 36}  P>|T|{col 50}  P>|T|{col 60}Power vs d = {res}    4.64
+{txt}{hline 18}{c +}{hline 61}
+{ralign 18:Diff. in means}{c |}{col 22}{res}   -2.656{col 36}  0.017{col 51}  0.037{col 74}  0.953
+{txt}{ralign 18:Kolmogorov-Smirnov}{c |}{col 22}{res}    0.195{col 36}  0.070{col 51}  0.278{col 74}      .
+{txt}{ralign 18:Rank sum z-stat}{c |}{col 22}{res}    1.887{col 36}  0.054{col 51}  0.059{col 74}  0.891
+{txt}{hline 18}{c BT}{hline 61}
+
+{com}. 
+{txt}end of do-file
+
+{com}. exit, clear

@@ -1,5 +1,17 @@
+---
+title: "pset 6 675"
+output: pdf_document
+theme: journal
+self_contained: TRUE
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
 
 
+
+```{r , eval=FALSE, echo=TRUE, warning = FALSE, message = FALSE}
 #=======================#
 # ==== PS 6 Metrics ====
 #=======================#
@@ -55,23 +67,52 @@ hs
   #=================#
 
     # Evenly-spaced bins, IMSE optimal
-    rdplot(hs[,mort_related_pre], hs[,povrate60], c =0, p=4, binselect = "es", x.label="povrate60", y.label="mort_related_pre", title="Evenly-spaced bins, IMSE optimal")
+    rdplot(hs[,mort_related_pre],
+           hs[,povrate60],
+           c =0,
+           p=1,
+           binselect = "es",
+          x.label="povrate60",
+          y.label="mort_related_pre",
+          title="Evenly-spaced bins, IMSE optimal")
+
     # I guess do this because this since I can't make ggplots with this function 
     dev.copy(pdf, paste0(f_out, 'plot_211ia.pdf'))
     dev.off()
     
     # Evenly-spaced bins, mimicking variance 
-    rdplot(hs[,mort_related_pre],hs[,povrate60],p=4, binselect = "esmv",x.label="povrate60",y.label="mort_related_pre",title="Evenly-spaced bins, mimicking variance ")
+    rdplot(hs[,mort_related_pre],
+           hs[,povrate60],
+           p=1,
+           binselect = "esmv",
+           x.label="povrate60",
+           y.label="mort_related_pre",
+           title="Evenly-spaced bins, mimicking variance ")
+    
     dev.copy(pdf, paste0(f_out, 'plot_211ib.pdf'))
     dev.off()
     
     # Quantile-spaced bins, IMSE optimal
-    rdplot(hs[,mort_related_pre],hs[,povrate60],p=4, binselect = "qs",x.label="povrate60",y.label="mort_related_pre",title="Quantile-spaced bins, IMSE optimal")
+    rdplot(hs[,mort_related_pre],
+           hs[,povrate60],
+           p=1,
+           binselect = "qs",
+           x.label="povrate60",
+           y.label="mort_related_pre",
+           title="Quantile-spaced bins, IMSE optimal")
+    
     dev.copy(pdf, paste0(f_out, 'plot_211iia.pdf'))
     dev.off()
     
     # Quantile-spaced bins, mimicking variance
-    rdplot(hs[,mort_related_pre],hs[,povrate60],p=4, binselect = "qsmv", x.label="povrate60", y.label="mort_related_pre", title="Quantile-spaced bins, mimicking variance")
+    rdplot(hs[,mort_related_pre],
+           hs[,povrate60],
+           p=1,
+           binselect = "qsmv",
+           x.label="povrate60",
+           y.label="mort_related_pre",
+           title="Quantile-spaced bins, mimicking variance")
+    
     dev.copy(pdf, paste0(f_out, 'plot_211iib.pdf'))
     dev.off()
     
@@ -87,7 +128,8 @@ hs
     # make a histogram before and after cutoff 
     plot_2.1.2.i <- ggplot(hs, aes(povrate60)) + 
                     geom_histogram(aes(fill = f_cut), breaks = seq(-50,25,2)) + 
-                    xlab("60 - Poverty rate") + ylab("Count") + ggtitle("Histogram of Running Variable") + 
+                    xlab("60 - Poverty rate") + 
+                    ylab("Count") + ggtitle("Histogram of Running Variable") + 
                     scale_fill_discrete(name = "RD Group")
     # check it out 
     plot_2.1.2.i
@@ -100,23 +142,29 @@ hs
   bi_test <- data.table(bandwidth = seq(.4,4,.2))
   
   # get number above and below cutoff for each bandwidth 
-  bi_test[, below_c := nrow(hs[abs(povrate60) <= bandwidth/2 & f_cut == "Below Cutoff"]), bandwidth] 
-  bi_test[, above_c := nrow(hs[abs(povrate60) <= bandwidth/2 & f_cut == "Above Cutoff"]), bandwidth] 
-  bi_test[, total := below_c + above_c]
+  bi_test[,below_c := nrow(hs[abs(povrate60) <= bandwidth/2 & f_cut == "Below Cutoff"]), bandwidth] 
+  bi_test[,above_c := nrow(hs[abs(povrate60) <= bandwidth/2 & f_cut == "Above Cutoff"]), bandwidth] 
+  bi_test[,total := below_c + above_c]
   
   # do binomial tests 
   bi_test[, bin_test := binom.test(below_c, total, .5)$p.value, bandwidth]  
     
   # make this table for hw 
   table_2.1.2.ii <- bi_test[, -c("total")]
-  colnames(table_2.1.2.ii) <- c("Bandwidth", "Number Below Cutoff", "Number Above Cutoff", "binomial P Valu")
+  colnames(table_2.1.2.ii) <- c("Bandwidth",
+                                "Number Below Cutoff",
+                                "Number Above Cutoff",
+                                "binomial P Valu")
 
   ## iii continuity in design tests 
   ## Continuity in density tests (defaults are triangular kernel, jackknife SEs)
   cdt <- rddensity(hs$povrate60)
 
   # save plot 
-  png(paste0(f_out, "plot_212i.png"), height = 400, width = 800, type = "cairo")
+  png(paste0(f_out, "plot_212i.png"),
+      height = 400,
+      width = 800,
+      type = "cairo")
   print(plot_2.1.2.i)
   dev.off()
   
@@ -149,7 +197,11 @@ hs
   for(poly_n in 3:6){
     
     # get x variables we need, there is a better way to do this out this works fine 
-    x_vars <- c("povrate60", "treatment", grep(paste(as.character(c(1:poly_n)), collapse = "|"), colnames(hs), value = TRUE))
+    x_vars <- c("povrate60",
+                "treatment",
+                grep(paste(as.character(c(1:poly_n)), collapse = "|"),
+                     colnames(hs),
+                     value = TRUE))
     
     # make formula 
     reg_form <- as.formula(paste0("mort_related_post ~", paste(x_vars, collapse = " + ")))
@@ -165,18 +217,38 @@ hs
     
     # get fitted values and data
     temp.rd = rdplot(hs[,mort_related_post], hs[,povrate60] ,hide=TRUE)
-    temp.rd_dt <- data.table(rdplot_mean_x = temp.rd$vars_bins$rdplot_mean_x, rdplot_mean_y =  temp.rd$vars_bins$rdplot_mean_y)
+    
+    temp.rd_dt <- data.table(rdplot_mean_x = temp.rd$vars_bins$rdplot_mean_x,
+                             rdplot_mean_y =  temp.rd$vars_bins$rdplot_mean_y)
+    
     fitted_dt <- data.table(x = hs$povrate60, y = reg_o1$fitted.values)
     
     # make plot 
-    t_plot <- ggplot() + geom_point(data = temp.rd_dt, aes(x = rdplot_mean_x, y = rdplot_mean_y, color = "Binned Values"))
-    t_plot <- t_plot + geom_point(data = fitted_dt, aes(x = x, y = y, color = "Fitted Values")) + geom_vline(xintercept = 0)
-    t_plot <- t_plot + xlab("60 - Poverty rate") + ylab("HS Related Mortality") + scale_color_manual(values = c("black", "blue")) + theme(legend.title=element_blank())
-    t_plot <- t_plot + ggtitle(paste0("Fitted Values for Polynomial of degree ", poly_n)) + plot_attributes
+    t_plot <- ggplot() + geom_point(data = temp.rd_dt,
+                                    aes(x = rdplot_mean_x, y = rdplot_mean_y, color = "Binned Values"))
+    
+    t_plot <- t_plot + geom_point(data = fitted_dt,
+                                  aes(x = x, y = y, color = "Fitted Values")) +
+              geom_vline(xintercept = 0)
+    
+    t_plot <- t_plot + xlab("60 - Poverty rate") +
+              ylab("HS Related Mortality") +
+              scale_color_manual(values = c("black", "blue")) + 
+              theme(legend.title=element_blank())
+    
+    t_plot <- t_plot + ggtitle(paste0("Fitted Values for Polynomial of degree ", poly_n)) + 
+              plot_attributes
     t_plot
     
     # save plot 
-    png(paste0(f_out, "plot_221_poly_", poly_n, ".png"), height = 400, width = 800, type = "cairo")
+    png(paste0(f_out,
+               "plot_221_poly_",
+               poly_n,
+               ".png"),
+        height = 400,
+        width = 800,
+        type = "cairo")
+    
     print(t_plot)
     dev.off()
     
@@ -202,7 +274,11 @@ hs
     for(poly_n in 3:6){
       
       # get x variables we need, there is a better way to do this out this works fine 
-      x_vars <- c("povrate60", "treatment", grep(paste(as.character(c(1:poly_n)), collapse = "|"), colnames(hs), value = TRUE))
+      x_vars <- c("povrate60",
+                  "treatment",
+                  grep(paste(as.character(c(1:poly_n)), collapse = "|"),
+                       colnames(hs),
+                       value = TRUE))
       
       # make formula 
       reg_form <- as.formula(paste0("mort_related_post ~", paste(x_vars, collapse = " + ")))
@@ -218,18 +294,40 @@ hs
       
       # get fitted values and data
       temp.rd = rdplot(hs[,mort_related_post], hs[,povrate60] ,hide=TRUE)
-      temp.rd_dt <- data.table(rdplot_mean_x = temp.rd$vars_bins$rdplot_mean_x, rdplot_mean_y =  temp.rd$vars_bins$rdplot_mean_y)
+      temp.rd_dt <- data.table(rdplot_mean_x = temp.rd$vars_bins$rdplot_mean_x,
+                               rdplot_mean_y =  temp.rd$vars_bins$rdplot_mean_y)
       fitted_dt <- data.table(x = hs$povrate60, y = reg_o1$fitted.values)
       
       # make plot 
-      t_plot <- ggplot() + geom_point(data = temp.rd_dt, aes(x = rdplot_mean_x, y = rdplot_mean_y, color = "Binned Values"))
-      t_plot <- t_plot + geom_point(data = fitted_dt, aes(x = x, y = y, color = "Fitted Values")) + geom_vline(xintercept = 0)
-      t_plot <- t_plot + xlab("60 - Poverty rate") + ylab("HS Related Mortality") + scale_color_manual(values = c("black", "blue")) + theme(legend.title=element_blank())
-      t_plot <- t_plot + ggtitle(paste0("Fitted Values for Polynomial of degree ", poly_n, " With Interactions")) + plot_attributes
+      t_plot <- ggplot() + geom_point(data = temp.rd_dt,
+                                      aes(x = rdplot_mean_x,
+                                          y = rdplot_mean_y,
+                                          color = "Binned Values"))
+      
+      t_plot <- t_plot + geom_point(data = fitted_dt,
+                                    aes(x = x,
+                                        y = y,
+                                        color = "Fitted Values")) + geom_vline(xintercept = 0)
+      
+      t_plot <- t_plot + xlab("60 - Poverty rate") + 
+        ylab("HS Related Mortality") + scale_color_manual(values = c("black", "blue")) + 
+        theme(legend.title=element_blank())
+      
+      t_plot <- t_plot + 
+        ggtitle(paste0("Fitted Values for Polynomial of degree ", poly_n, " With Interactions")) + 
+        plot_attributes
+      
       t_plot
       
       # save plot 
-      png(paste0(f_out, "plot_222_poly_", poly_n, ".png"), height = 400, width = 800, type = "cairo")
+      png(paste0(f_out,
+                 "plot_222_poly_",
+                 poly_n,
+                 ".png"),
+          height = 400,
+          width = 800,
+          type = "cairo")
+      
       print(t_plot)
       dev.off()
       
@@ -240,14 +338,22 @@ hs
   #=================#
       
     # drop the interaction terms 
-    hs <- hs[, grep( "treat_poly", colnames(hs), invert = TRUE, value = TRUE), with = FALSE]
+    hs <- hs[,
+             grep( "treat_poly", 
+                   colnames(hs),
+                   invert = TRUE, 
+                   value = TRUE),
+             with = FALSE]
     
     
     in_dt <- hs
     F_223 <- function(p, bw, in_dt = hs){
       
       # get x variables we need, there is a better way to do this out this works fine 
-      x_vars <- c("povrate60", "treatment", grep(paste(as.character(c(1:p)), collapse = "|"), colnames(hs), value = TRUE))
+      x_vars <- c("povrate60",
+                  "treatment",
+                  grep(paste(as.character(c(1:p)), collapse = "|"),
+                       colnames(hs), value = TRUE))
       
       # subset data down to appropriate binwidth
       w_dt <- in_dt[abs(povrate60) <= bw]
@@ -266,7 +372,8 @@ hs
       
       # get fitted values and data
       temp.rd = rdplot(w_dt[,mort_related_post], w_dt[,povrate60] ,hide=TRUE)
-      temp.rd_dt <- data.table(rdplot_mean_x = temp.rd$vars_bins$rdplot_mean_x, rdplot_mean_y =  temp.rd$vars_bins$rdplot_mean_y)
+      temp.rd_dt <- data.table(rdplot_mean_x = temp.rd$vars_bins$rdplot_mean_x,
+                               rdplot_mean_y =  temp.rd$vars_bins$rdplot_mean_y)
       fitted_dt <- data.table(x = w_dt$povrate60, y = reg_o1$fitted.values)
       
       # make plot 
@@ -316,7 +423,12 @@ hs
     rd_regs <- lapply(0:2, function(i) rdrobust(y = hs[,mort_related_post], x = hs[,povrate60], p = i))
 
     # grab out results we need 
-    tables_231 <- lapply(1:3, function(i) data.table(Reduce( function(x,y) cbind(x,y) ,list(rd_regs[[i]]$coef, rd_regs[[i]]$se, rd_regs[[i]]$ci)), keep.rownames = TRUE))
+    tables_231 <- lapply(1:3,
+                         function(i) data.table(Reduce( function(x,y) cbind(x,y) ,
+                                                        list(rd_regs[[i]]$coef,
+                                                             rd_regs[[i]]$se, 
+                                                             rd_regs[[i]]$ci)), 
+                                                keep.rownames = TRUE))
   
     # rename rn and add in polynomial 
     fun_231 <- function(i, in_dt){
@@ -419,8 +531,12 @@ hs
       }
     
     # run it on 1-10
-    table_2.3.2c <- data.table( l = c(1:10), est = unlist(lapply(1:10, do_hole)), "# obs dropped" = "estimate")
-    table_2.3.2c <- dcast.data.table(table_2.3.2c, `# obs dropped`~l, value.var = "est")
+    table_2.3.2c <- data.table( l = c(1:10),
+                                est = unlist(lapply(1:10, do_hole)),
+                                "# obs dropped" = "estimate")
+    table_2.3.2c <- dcast.data.table(table_2.3.2c,
+                                     `# obs dropped`~l,
+                                     value.var = "est")
     
     # Save it 
     print(xtable(table_2.3.2c, type = "latex"), 
@@ -438,7 +554,8 @@ hs
     c_fun <-  function(c_i){
       
     res <-  rdrobust(hs[, mort_related_post], hs[,povrate60], p = 1, c= c_i)
-    out_t <- data.table(Statistic = c("Estimate", "p Value"), temp = c(res$coef[[2]], res$pv[[2]]))
+    out_t <- data.table(Statistic = c("Estimate", "p Value"),
+                        temp = c(res$coef[[2]], res$pv[[2]]))
     setnames(out_t, "temp", paste0("c = ", c_i))
     
     }
@@ -474,7 +591,8 @@ hs
       
       # put in table 
         tab_i <- data.table(Statistic = c("Estimate", "Std Error", "P-Value"),
-                            w = as.numeric(reg_t[term == "povrate60", c("estimate", "std.error", "p.value")]))
+                            w = as.numeric(reg_t[term == "povrate60",
+                                                 c("estimate", "std.error", "p.value")]))
         setnames(tab_i, "w", paste0("w = ", wind_i))
         
       # return it 
@@ -506,15 +624,6 @@ hs
         include.rownames = FALSE,
         floating = FALSE)
   
-  
-  #=====================================#
-  # ==== run markdown to print code ====
-  #=====================================#
-  
-  rmarkdown::render(input =  "C:/Users/Nmath_000/Documents/Code/courses/econ 675/PS_6_code/ps6_675_R_markdown.Rmd",
-                    output_format = "pdf_document",
-                    output_file = paste0("C:/Users/Nmath_000/Documents/Code/courses/econ 675/PS_6_tex/assignment_6_r_code_pdf.pdf")) 
-  
-  
-  
-  
+
+```
+

@@ -55,7 +55,7 @@
 \title{Econ 675 Assignment 6} % The article title
 
 
-\author{Nathan Mather\thanks{Shouts out to Ani for the help with question 1 }}  % The article author(s) 
+\author{Nathan Mather\thanks{Shouts out to Ani for the help with question 1 and some help on Q2, Thank you to Tyler for help with STATA. All credit goes to Tyler for STATA because my brain does not understand STATA, and the Thanks to R for being infinitely better than STATA }}  % The article author(s) 
 
 \date{\today} % An optional date to appear under the author(s)
 
@@ -77,14 +77,46 @@
 % Question 1 
 %-------------------------------------------------------------
 
-\section{Q1}
+\section{Q1 continuity-Based Identification in SRD Designs}
 
-TO DO
+\subsection{Q1.1}
+$$ \tau_{SRD} = \lim\limits_{\epsilon \rightarrow 0^+} \E[Y_i| \tilde{X}_i = \epsilon] - \lim\limits_{\epsilon \rightarrow 0^+}\E[Y_i| \tilde{X}_i = -\epsilon] 
+$$
+
+Using definition of x tilde and the given assumption we get: 
+
+$$ \tau_{SRD} = \lim\limits_{\epsilon \rightarrow 0^+} \E[Y_i| X_i = c + \epsilon] - \lim\limits_{\epsilon \rightarrow 0^+}\E[Y_i| X_i = c - \epsilon] = \lim\limits_{\epsilon \rightarrow 0^+} \E[Y_{1i}(c)| X_i = c + \epsilon] - \lim\limits_{\epsilon \rightarrow 0^+}\E[Y_{0i}(c)| X_i = c - \epsilon]
+$$
+
+$$ 
+= \E[[Y_{1i}(c) - [Y_{0i}(c)| X_i = c]
+$$
+
+\subsection{Q1.2}
+
+$$  \lim\limits_{\epsilon \rightarrow 0^+}\E[Y_i| \tilde{X}_i = \epsilon] = \E[Y_{1i}(C_i)| X_i = C_i] 
+$$
+Where the last equality follows similar calculation to part 1. 
+
+$$
+= \sum_{c \in C}^{} \E[Y_{1i}(C_i)| X_i = c, C_i =c]  \mathrm{P}[X_i = c, C_i = c]
+= \sum_{c \in C}^{} \E[Y_{1i}(C_i)| X_i = c, C_i =c] \frac{ f_{X|C}(C|C) \mathrm{P}[C_i =c]   }{ \sum_{c \in C}^{} f_{X|C}(C|C) \mathrm{P}[C_i =c] }
+$$
+
+A similar calculation gives us the other term and combining them gives us the desired result. This is just the weighted average of the treatment effects and each cutoff which makes a lot of sense. 
+
+\subsection{Q1.3}
+If I understand this set up correctly it is just that now the treatment effect not only varies across cutoffs but now varies depending on my individual characteristics like race or gender. I can't quite get the math figured out but I think the result is intuitive. We are now averaging over the different cutoffs and integrating over the individual characteristics. So we are essentially getting the weighted average treatment across cutoffs and characteristics. 
+
+
+
 %-------------------------------------------------------------
 % Question 2 
 %-------------------------------------------------------------
 
 \section{Question 2: The Effect of Head Start on Child Mortality}
+
+I didn't include the duplicate STATA plots and tables because there is already a lot going on, but the code is in the appendix. Results were generally the same except where I used robust standard errors in Stata and not in R. 
 
 \subsection{Q2.1 RD Plots and Falsification Tests}
 
@@ -108,6 +140,7 @@ TO DO
 	
 \end{figure}
 
+Since we are using pre treatment variables we shouldn't see much of a jump at the cutoff and we generally don't. The global polynomial is giving some illusion of a jump but this could mostly be because of what Matias talked about in class. How Polynomials tend to get less accurate towards the edges. 
 \subsubsection{Q2.1.2}
 \begin{center}
 	\includegraphics[width=.8\linewidth]{plot_212i.png}
@@ -120,7 +153,7 @@ TO DO
 		\input{table_212ii.tex}
 	}
 \end{center}
-
+The histogram suggests people were not selecting accross the cutoff. If they were we would expect to see bunching or large spike in the number of people on one side of the cutoff. The local binomial tests continue to support this idea. 
 
 \subsection{Q2.2 Global and Flexible Parametric Methods}
 \subsubsection{Q2.2.1}
@@ -145,6 +178,8 @@ TO DO
 \includegraphics[width=.8\linewidth]{plot_221_poly_6.png}
 
 
+The results suggest there is an effect, i.e. a drop in mortality. The results should not be trusted though because global estimation in general is not reliable. We are stretching the assumptions of the RD design be assuming here that people on either side of the cutoff are roughly identical along the entire support of the data. It is likely true just around the cutoff but becomes less plausible as the bandwidth expands to the full support. 
+
 \subsubsection{Q2.2.2}
 
 
@@ -167,6 +202,9 @@ TO DO
 \includegraphics[width=.8\linewidth]{plot_222_poly_6.png}
 
 
+Again these global estimates are generally not reliable. The interaction terms make the predicted values pretty crazy and does not seem plausible. 
+
+
 \subsubsection{Q2.2.3}
 
 % bw 1 
@@ -187,6 +225,7 @@ TO DO
 \includegraphics[width=.8\linewidth]{plot_223_poly_2_bw_1.png}
 \\ \\
 \includegraphics[width=.8\linewidth]{plot_223_poly_3_bw_1.png}
+
 
 % bw 5 
 
@@ -251,6 +290,9 @@ TO DO
 \\ \\
 \includegraphics[width=.8\linewidth]{plot_223_poly_3_bw_18.png}
 
+
+While one of these binwidths and polynomials could be a reasonable estimate there and ad-hoc estimate will not reliably pick the correct one. Graphing them all first and picking the one that fits the best is essentially p hacking and isn't a good idea either. So, while one of these may be legitimate, we need a way to systematically determine which one that is. A similar problem exists with picking what degree of polynomial to use, not just the bandwidth. 
+
 \subsubsection{Q2.2.4}
 
 
@@ -286,6 +328,8 @@ TO DO
 		\input{table_231_poly_2.tex}
 	}
 \end{center}
+
+These results also suggest a negative relationship but the data driven approach to selecting a bandwidth and the nonparametric approach have solved the problem I outlined above. We have picked a bandwidth and a model in a systematic way so we are conducting one test that best fits the data and not p-hacking. 
 
 \subsubsection{Q2.3.2}
 (a)
@@ -336,8 +380,12 @@ TO DO
 \end{center}
 \subsubsection{Q2.3.3}
 
+The placebo tests all return statistically insignificant results. The robustness checks all for different bandwidths and kernaals return negative coefficients which supports our data driven model. Similarily the donut hole approach reports negative estimates. Finally, the placebo cutoff test is not consistently reporting significant negative effects for other cut points. The cutpoint of 8 might be of some concern if the others weren't so supportive.  \par 
+Overall the results suggest a robust and significant negative relationship at the cut point. 
+
 \subsection{Q 2.4 Local Randomization Methods }
 
+I am choosing 1.8 as my hypothesized bandwidth. It is reported in the table below along with other bandwidths as a robustness check. RD plots for this are done above. 
 
 \begin{center}
 	\centering
@@ -347,9 +395,29 @@ TO DO
 	}
 \end{center}
 
+Similarly to the RD methods this is supporting the finding of a negative relationship. We find this for most of the bandwidths I have selected above in addition to the single bandwidth I chose as My hypothesis. 
+
+
+%------------------------------------------------
+% APPENDIX
+%------------------------------------------------
+
+
+
+\section{Appendix}
+\subsection{R Code}
+
+\includepdf[page=-]{assignment_6_r_code_pdf}
+
+\subsection{STATA Code}
+\includepdf[page=-]{ps_6_stata_code_pdf.pdf}
+
+
+
 
 %------------------------------------------------
 % end doc
 %------------------------------------------------
+
 \end{document}
 
