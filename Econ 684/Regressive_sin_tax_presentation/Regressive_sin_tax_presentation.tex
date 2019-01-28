@@ -1,0 +1,763 @@
+%-----------------------------------------------------------------------------------
+%	PACKAGES AND OTHER DOCUMENT CONFIGURATIONS
+%----------------------------------------------------------------------------------
+
+\documentclass{beamer}
+
+
+\newcommand{\Var}{\mathrm{Var}}
+
+\newcommand{\Cov}{\mathrm{Cov}}
+
+\newcommand{\plim}{\rightarrow_{p}}
+
+\usepackage{apacite}
+
+\usepackage{amsmath, amsfonts}
+\usepackage{graphicx}
+\usepackage{pdfpages}
+\usepackage{bm}
+\usepackage{listings}
+\usepackage{multirow,array}
+\usepackage{enumerate}
+\usepackage{bbm}
+\usepackage{subfig}
+\usepackage{bbm}
+\usepackage{multirow}
+
+
+
+\usepackage{amssymb}
+
+\usepackage{mathrsfs}
+\usepackage{float}
+\usepackage{booktabs}
+\usepackage{color}
+\usepackage{rotating}
+\usepackage{amsthm}
+\usepackage{multirow,array}
+\usepackage{caption}
+\usepackage{url}
+
+
+
+\DeclareMathOperator*{\argmax}{arg\,max}
+\DeclareMathOperator*{\argmin}{arg\,min}
+
+
+
+% Expectation symbol
+\newcommand{\E}{\mathrm{E}}
+\newcommand{\V}{\mathrm{V}}
+\newcommand{\N}{\mathcal{N}}
+\newcommand{\R}{\mathbb{R}} 
+
+
+
+%-----------------------------
+% title stuff 
+%-------------------------
+
+\usepackage[utf8]{inputenc}
+
+
+%Information to be included in the title page:
+\title{Regressive Sin Taxes by Lockwood and Taubinsky: A Critical Review}
+\author{Nathan Mather}
+\institute{University of Michigan}
+\date{2019}
+
+
+
+
+%------------------------------------------------------------------------------
+%	begin doc
+%------------------------------------------------------------------------------
+
+\begin{document}
+	
+	
+	
+	\frame{\titlepage}
+	
+\section{Introduction}
+	
+	\begin{frame}
+	\frametitle{Introduction}
+
+\textbf{Two conflicting forces at play when considering sin taxes }
+\begin{itemize}
+	\item People make bad decisions
+	\begin{itemize}
+		\item Correcting this can potentially increase welfare
+		\item Similar logic to Pigouvian tax
+	\end{itemize}
+	\item Sin taxes can be regressive 
+	\begin{itemize}
+		\item Cigarettes and sugary drinks consumed disproportionately by the poor
+		\item High efficiency subsidies disproportionately taken by rich
+	\end{itemize}
+\end{itemize}
+
+
+\end{frame}
+
+
+	\begin{frame}
+\frametitle{Goal of Model}
+
+\begin{itemize}
+
+\item A model that addresses both of these concerns  \\~\\
+
+\item Includes variable income tax. \\~\\
+
+\item Consumers have heterogeneous earnings, abilities, and tastes, and can choose labor supply and consumption bundles\\~\\
+
+\item Policy makers choose linear commodity tax and non-linear income tax. \\~\\
+
+\item Policy maker and consumers disagree about what is best for them.
+
+	
+\end{itemize} 
+\end{frame}
+
+
+
+
+\begin{frame}
+\frametitle{The Model}
+\framesubtitle{The Environment}
+
+
+\begin{itemize}
+ \item Variable definitions
+
+
+\begin{center}
+\resizebox{.8\linewidth}{!}{\begin{tabular}{||c | c||} 
+		\hline
+		Variable & Meaning  \\ [0.5ex] 
+		\hline\hline
+		$\theta$ & Consumer Type \\ 
+		\hline 
+		$\mu(\theta)$ & Distribution of Type\\ 
+		\hline
+		$z$ & Earnings \\
+		\hline
+		$T(z)$ & nonlinear income tax \\
+		\hline
+		$c_2$ & Sin Good\\
+		\hline
+		$t$ &  Linear Commodit tax on $c_2$ \\ 
+		\hline
+		
+		$c_1$ &  Numeraire good  \\ 
+		\hline
+		$p$ & Price of $c_2$ \\
+		\hline
+		$U(c_1, c_2.z;\theta)$ & Decision Utility\\
+		\hline
+		$V(c_1, c_2.z;\theta)$ & Policymaker ``correct" utility \\	\hline
+		$\alpha(\theta)$ & Pareto Weights\\[1ex] 
+		\hline
+	\end{tabular}
+}
+\end{center}
+
+
+
+	\item Functional form assumptions 
+	\begin{itemize}
+		\item $U$ is increasing and weakly concave in $c_1$ and $c_2$ and decreasing and strictly concave in $z$
+	\end{itemize}
+\end{itemize}
+
+\end{frame}
+
+
+
+
+
+\begin{frame}
+\frametitle{The Model}
+\framesubtitle{Policymaker's Problem}
+
+\begin{itemize}
+	\item Policymaker wants to maximize experienced utility $V$
+	\begin{itemize}
+		\item Weight consumers by Pareto weights 
+		\item Can choose $T(\cdot)$ and $t$ to do this
+		\item Subject to budget constraint
+		\item Subject to individuals doing what they want
+		
+	\end{itemize}
+
+$$  \max\limits_{T,t} \int \alpha(\theta) V(c_1(\theta), c_2(\theta), z(\theta); \theta)\mu(\theta)
+$$
+
+Subject to the budget constraint 
+
+$$ \int (tc_2(\theta) + T(z(\theta)))\mu(\theta) = 0$$
+
+and individual maximization 
+$$ \{c_1(\theta),c_2\theta, z(\theta) \} = \argmax \limits_{c_1, c_2, z} U(c_1, c_2, z; \theta) $$
+$$ s.t. \quad \ c_1 + (1+t)c_2 < z-T(z)\quad \forall\quad \theta$$
+ 
+	
+\end{itemize}
+	
+\end{frame}
+
+
+\begin{frame}
+\frametitle{The Model}
+\framesubtitle{Difference between U and V}
+
+\begin{itemize}
+	\item Incorrect beliefs 
+	\begin{itemize}
+		\item Calorie content of food
+		\item Health costs of food or drugs
+		\item Energy efficiency of products
+	\end{itemize}
+
+	\item Limited attention or salience bias 
+		\begin{itemize}
+		\item People think "fat free" ice cream is healthy 
+		\end{itemize}
+	\item Present Bias/ Time Inconsistency
+		\begin{itemize}
+		\item Hyperbolic discounting ($\beta-\delta$ discounting)
+		\item The model can treat $\beta$ as a bias.
+		\item Policy maker could also weight present and future selves arbitrarily
+		\end{itemize}
+
+\end{itemize}
+
+\end{frame}
+
+
+
+\begin{frame}
+\frametitle{The Model}
+\framesubtitle{A Price Metric for Consumer Bias}
+
+
+
+\begin{center}
+
+\resizebox{1\linewidth}{!}{\begin{tabular}{||c | c||} 
+		\hline
+		Variable & Meaning  \\ [0.5ex] 
+		\hline\hline
+		$y $ & $z-T(z)$ \\ 
+		\hline 
+		$c_2(\theta, y, p, t, T)$ & Consumption chosen by individual of type $\theta$ given constraints  \\
+		\hline
+		$c_2^V(\theta, y, p, t, T)$  & What individual would choose if maximizing over V \\
+		\hline
+		$\gamma(\theta, z,t,T)$ or "Bias" & $\gamma$   s.t.   $c_2(\theta, y, p, t, T) = c_2^V(\theta , y - c_2\gamma, p-\gamma ,t, T)$ \\[1ex] 
+		\hline
+	\end{tabular} }
+\end{center}
+
+\begin{itemize}
+	\item This is the compensated price change that produces the same effect on demand as the bias does
+	\item In some cases this can be measure directly 
+	\begin{itemize}
+		\item Chetty et al. (2009)
+		\begin{itemize}
+			\item  Tax salience
+			\item $\Delta$ price that alters demand as much as tax-inclusive price
+		\end{itemize}  
+	\end{itemize}
+\end{itemize}
+
+
+\end{frame}
+
+
+
+
+
+
+
+
+
+
+\begin{frame}
+\frametitle{The Model}
+\framesubtitle{Redistributive Motives}
+\begin{itemize}
+	\item Marginal Social welfare weights 
+	\begin{itemize}
+		\item Marginal social welfare generated by a marginal unit of consumption of $c_1$ for a given individual 
+		\item Formally, $g(\theta) = \alpha(\theta)V_1/\lambda$
+		\item $\bar{g} = \int_{\Theta}^{}g(\theta)d\mu(\theta)$
+		\item If there are no income effects on consumption and labor
+		supply, then $\bar{g} =1$ by construction.
+	\end{itemize}
+\item Formulas for optimal taxes will thus depend on the policymaker’s (or society’s) preferences for wealth equality
+	
+\end{itemize}
+
+\end{frame}
+
+
+
+
+
+
+\begin{frame}
+\frametitle{Optimal Tax With Discrete Types}
+
+\begin{itemize}
+	\item $\theta \in {L,H}$
+	\item $w_L < w_H$
+	\item Internality  is harmful $\gamma(\theta) > 0$
+	\item $L$ consumes more $c_2$ than $H$
+	\item Normalize $c_2$ so $p=1$
+	\item $c_1^*(\theta) = z^*(\theta) - T_{\theta} - (1+t)c_2^*(\theta)$
+	
+\end{itemize}
+
+\end{frame}
+
+
+
+
+
+
+\begin{frame}
+\frametitle{Eample 1: Regressivity Caused by Heterogeneous Preferences   }
+
+\textbf{Functional Form Assumptions}
+
+$$ U(c_1, c_2,z;\theta) = G(c_1 + v(c_2, \theta) - \Psi(z/w_{\theta}) $$
+$$ V(c_1, c_2,z;\theta) = G(c_1 + v(c_2, \theta) - \gamma(\theta)c_2 - \Psi(z/w_{\theta})
+$$
+\begin{itemize}
+	\item $c_2^*(H) < c_2^*(L)$
+	\item G is concave
+	\item No income effects for choice of $c_2$ or labor supply 
+\end{itemize}
+\end{frame}
+	
+	
+	
+	
+\begin{frame}
+\frametitle{Eample 1: Regressivity Caused by Heterogeneous Preferences }
+\framesubtitle{Policy Maker's problem}
+
+Policymaker solves 
+$$\max\limits_{t, T_L, T_H} \sum_{\theta}^{} V(c_1^*(\theta), c_2^*(\theta, z^*(\theta);\theta)\mu(\theta)  $$
+
+S.T. 
+$$ \frac{1}{2} \sum_{\theta}^{}(T_{\theta} + tc_2^*(\theta)) \geq 0 $$
+
+and 
+
+$$ (c_1^*(\theta), c_2^*(\theta), z^*(\theta)) \quad \text{Maximizes } U(c_1,c_2,z;\theta) \quad \text{given cnstraints}$$
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Eample 1: Regressivity Caused by Heterogeneous Preferences }
+\framesubtitle{result}
+$$
+t^* = \underbrace{ \frac{\sum_{\theta}^{} g(\theta)\gamma(\theta)\frac{dc_2^*(\theta}{dt}}{\sum_{\theta}\frac{dc_2^*(\theta)}{dt}}}_{ \text{corrective benefits}}
+-
+\underbrace{\frac{\sum_{\theta}c_2^*(\theta)(g(\theta) -1)}{\sum_{\theta}\frac{dc_2^*(\theta)}{dt}}}_{\text{Regressivity Costs}}
+$$
+
+\begin{itemize}
+
+
+	\item  *NOTE: in the paper they incorrectly have $1-g(\theta)$ in the second term \\~\\
+
+	\item  Correction is more valuable with greater bias $\gamma(\theta)$ and higher welfare weight $g(\theta)$ \\~\\ 
+
+	\item  Regressivity cost reduces optimal tax since $g(L) >1$, $g(H) < 1 $, and $c_2^*(H) < c_2^*(L)$ 
+
+\end{itemize}
+
+
+\end{frame}
+
+
+
+
+\begin{frame}
+\frametitle{Example 2: Regressivity Caused by Income Effects }
+
+\textbf{Functional Form Assumptions}
+$$ U(c_1, c_2,z;\theta) = G(c_1 + v(c_2, c_1) - \Psi(z/w_{\theta}) $$
+$$ V(c_1, c_2,z;\theta) = G(c_1 + v(c_2, c_1) - \gamma(\theta)c_2 - \Psi(z/w_{\theta})
+$$
+
+\textbf{Perturbation argument}
+Raise commodity tax and adjust income tax to neutralize effect on wealth. At the optimum, this has zero first oder effect on welfare. Giving 
+$$ \underbrace{ t\left( \sum_{\theta} \frac{dc_2^*(\theta)}{dt} \biggr\rvert_{u} \right)}_{ \text{Effect on Gvernment Revenue}} - 
+\underbrace{ \sum_{\theta} \left( g(\theta) \gamma \frac{dc_2^*(\theta)}{dt} \biggr\rvert_{u} \right)}_{ \text{Effect on Consumer Welfare}} =0
+$$ 
+
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Example 2: Regressivity Caused by Income Effects }
+
+\textbf{Result}
+$$
+t^* =  \frac{\sum_{\theta}^{} \left( g(\theta)\gamma\frac{dc_2^*(\theta)}{dt} \biggr\rvert_{u} \right)}{\sum_{\theta}\frac{dc_2^*(\theta}{dt} \biggr\rvert_{u}}
+$$
+
+\begin{itemize}
+
+\item No Regressivity costs in this case
+\item  Income tax reform can perfectly neutralize the effects of the commodity tax on income
+
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Understanding The Difference}
+
+\begin{itemize}
+	\item Progressive taxes make people work less
+	\item Heterogeneous Preferences 
+	\begin{itemize}
+		\item Changing income will not alter consumption 
+		\item $c_2$ tax is regressive from societal standpoint 
+		\item Not regressive for individual.
+		\begin{itemize}
+			\item Doesn't alter $z$
+		\end{itemize} 
+		\item Progressive income tax lowers $z$
+	\end{itemize}
+	\item Income Effects 
+	\begin{itemize}
+		\item $c_2$ good is inferior
+		\item $c_2$ tax is regressive from societal standpoint 
+		\item $c_2$ tax is also regressive for individual
+		\begin{itemize}
+			\item If I work more, I can buy less $c_2$ and avoid the tax 
+			\item leads to higher $z$
+		\end{itemize}
+	
+		\item Progressive income tax lowers $z$
+		\begin{itemize}
+			\item $z$ effects offset, total output unchanged 
+		\end{itemize}
+	\end{itemize}
+
+\end{itemize}
+
+
+\end{frame}
+
+
+
+
+\begin{frame}
+\frametitle{A General Formula for The Optimal Commodity Tax}
+\framesubtitle{Assumptions and elasticity concepts}
+
+\textbf{assumptions}
+\begin{itemize}
+	\item No Labor supply mis-optimization
+	\item Constant Marginal Social Welfare weights conditional on income 
+	\item U and V are smooth, strictly concave in $c_1, c_2, z$ and $\mu$ is differentiable with full support 
+	\item $T(\cdot)$ is twice differentiable and each consumer's choice of income $z$ admits a unique global optimum
+	
+\end{itemize}
+
+\end{frame}
+
+
+
+
+\begin{frame}
+\frametitle{A General Formula for The Optimal Commodity Tax}
+\framesubtitle{Assumptions and elasticity concepts}
+
+\textbf{Parameters}
+\begin{itemize}
+	\item $\zeta(\theta,t,T)$: Price elasticity of demand for $c_2$ of type $\theta$
+	\item  $\zeta^c(\theta,t,T)$: Compensated price elasticity of demand for $c_2$
+	\item $\eta(\theta, t,T)$: The income effect on $c_2$ Equal to $\zeta -\zeta^c $
+	\item  $\zeta^c_z(\theta,t,T)$: The compensated elasticity of taxable income with respect to the marginal income tax rate 
+	\item $\eta_z(\theta, t,T)$: Income effect on labor supply
+	
+\end{itemize}
+
+\end{frame}
+
+
+
+
+
+
+\begin{frame}
+\frametitle{A General Formula for The Optimal Commodity Tax}
+\framesubtitle{Assumptions and elasticity concepts}
+
+
+\begin{itemize}
+	\item $\bar{X}(z)$ is the average of Variable X for given income z 
+	\item $C_2$ is $\int_{\Theta}^{}1{z(\theta ) \leq z}d\mu(\theta)$
+	\item 	$H(z)$ is the income Distribution 
+	\item $\phi(z)$ is how much $c_2$ an average z-earner would consume if all variation in $c_2$ was explained solely by income effects. 
+	\item Let $\tilde{\phi}(z) := \frac{\bar{c}_2(z) - \phi(z)}{C_2}$ \\~\\ 
+	
+	\begin{itemize}
+		\item This measures how much difference between $\bar{c}_2(z)$ and $\bar{c}_2(0)$ is explained by preference heterogeneity. (normalize by average $c_2$)
+	\end{itemize}
+	
+\end{itemize}
+
+\end{frame}
+
+
+
+\begin{frame}
+\frametitle{A General Formula for The Optimal Commodity Tax}
+\framesubtitle{An expression for the optimal commodity tax 1}
+
+\textbf{Average Marginal Bias}
+$$ \bar{\gamma}(t,T) = \frac{\int_{\Theta}\gamma(\theta,t,T) \left( \frac{dc_2(\theta,t,T)}{dt}  \biggr\rvert_{u} \right)d\mu(\theta)}{\int_{\Theta}\left( \frac{dc_2(\theta,t,T)}{dt}  \biggr\rvert_{u} \right)d\mu(\theta)}$$
+
+\textbf{Average Marginal Bias Given z}
+$$ \bar{\gamma}(z,t,T) = \frac{\int_{\Theta}\gamma(\theta,t,T) \left( \frac{dc_2(\theta,t,T)}{dt}  \biggr\rvert_{u} \right) 1 \{ z(\theta,t,T) = z \} d \mu(\theta)  }    {\int_{\Theta}\left( \frac{dc_2(\theta,t,T)}{dt}  \biggr\rvert_{u} \right) 1 \{ z(\theta,t,T) = z \} d\mu(\theta)}$$
+
+
+This is the marginal bias weighted by individuals marginal responses to a compensated change in t.
+
+
+\end{frame}
+
+\begin{frame}
+\frametitle{A General Formula for The Optimal Commodity Tax}
+\framesubtitle{An expression for the optimal commodity tax 1}
+
+\textbf{ Covariance of welfare weight with consumption-weighted bias and elasticity}
+
+$$ \sigma := \Cov_H \left[ g(z), \frac{\bar{\gamma(z)}}{\bar{\gamma}} \frac{\bar{\zeta^c}(z)}{\bar{\zeta^c}}
+\frac{\bar{c}_2(z)}{C_2 }  \right] $$
+
+This captures the extent to which bias correction is concentrated on the low-end of the income distribution
+
+\end{frame}
+
+
+
+\begin{frame}
+\frametitle{A General Formula for The Optimal Commodity Tax}
+\framesubtitle{An expression for the optimal commodity tax 1}
+
+\begin{itemize}
+	\item Start by using social marginal utility of income  $\hat{g}(z)$ rather than social marginal welfare weights.
+	\item Average welfare effect of marginally increasing the incomes of consumers currently earning income
+	z.
+	\item rather than marginally increasing numeraire consumption $c_1$
+	\item This accounts for fiscal externalities resulting from income effects, and for the fact that some of this additional consumption will be mis-spent due to bias.
+\end{itemize} 
+
+\end{frame}
+
+
+
+\begin{frame}
+\frametitle{A General Formula for The Optimal Commodity Tax}
+\framesubtitle{An expression for the optimal commodity tax 1}
+
+\textbf{Proposition 1} 
+
+\begin{align}
+t &= \bar{\gamma}(\bar{g} + \sigma) - \frac{p+t}{\bar{\zeta}^c} \Cov \left[\hat{g}(z), \tilde{\phi}(z) \right] \\
+&= \frac{\bar{\zeta}^c \bar{\gamma} (\bar{g}  + \sigma) - p\Cov \left[ \hat{g}(z),\tilde{\phi}(z) \right]}{\bar{\zeta}^c + \Cov \left[\hat{g}(z), \tilde{\phi}(z) \right]}
+\end{align}
+
+
+\begin{itemize}
+
+\item Corrective benefit is increase in 
+	\begin{itemize}
+	 \item Average marginal bias $\bar{\gamma}$
+	 \item  Average social welfare weight $\bar{g}$
+	 \item Extent to which bias correction is concentrated with low income consumers $\sigma$
+	\end{itemize}
+\item $\Cov \left[ \hat{g}(z), \tilde{\phi}(z) \right]$ is roughly regressivity cost that cannot be offset by progressive income taxes. 
+\begin{itemize}
+	\item Depends on extent to which $c_2$ differential is due to preference heterogeneity or income effects. 
+\end{itemize}
+\end{itemize}
+
+\end{frame}
+
+
+
+
+\begin{frame}
+\frametitle{A General Formula for The Optimal Commodity Tax}
+\framesubtitle{An expression for the optimal commodity tax 2}
+
+\textbf{Lemma 2} Let $\chi(z) := \phi(z) - \int_{0}^{z} w(x,z) \frac{\eta_z}{\zeta_z^c x}(c_2(x) - \phi(x))dx$, where $w(x,z) = e^{\int_{z'=x}^{x'=z}\frac{\eta_z}{\zeta_z^c z}}dx'$. Then increasing the commodity tax by dt and decreasing the income tax by $\chi(z)dt$ leaves the average labor supply of z-earners unchanged. \\~\\ 
+
+$\chi(z) := \phi(z)$ when $\eta_z = 0$. i.e. when there are no labor supply income effects. \\~\\ 
+
+Define $\tilde{\chi}(z) := \frac{\bar{c}_2(z) - \chi(z)}{C_2}$
+ 
+\end{frame}
+
+
+\begin{frame}[shrink=6]
+\frametitle{A General Formula for The Optimal Commodity Tax}
+\framesubtitle{An expression for the optimal commodity tax 2}
+
+\textbf{Proposition 2} The optimal commodity tax t satisfies. 
+
+$$ t = \underbrace{ \bar{\gamma}(\bar{g} + \sigma)}_\text{corrective benefits} + 
+\underbrace{ \frac{p + t}{\bar{\zeta}^c} \E[(g(z)-1) \tilde{\chi}(z)] }_\text{regressivity costs}  - 
+\underbrace{ \frac{1}{\bar{\zeta}^c} \int \tilde{\chi}(z) \eta (z) (t-g(z) \bar{\gamma}(z))}_\text{additional impact from income effect}$$
+
+\textbf{In the absence of income effects} 
+
+$$ t = \bar{\gamma}(\bar{g} + \sigma) -  \frac{p + t}{\bar{\zeta}^c} \Cov \left[ g(z), \tilde{\phi}(z)  \right] $$
+	 
+\end{frame}
+
+
+
+
+
+
+
+\begin{frame}
+\frametitle{Interpretations and Implication}
+\framesubtitle{Optimal taxes in the Absence of Redistributive Concerns}
+
+\textbf{Corollary 2} suppose that either\\
+ 1) $z(\theta)$ is constant in $\theta$ or\\
+  2) $g(\theta) = 1$ $\forall$ $\theta$ \\
+  Then $t^* = \bar{\gamma}$ (From Proposition 1). \\~\\
+
+\begin{itemize}
+\item Optimal commodity tax exactly offsets the average marginal bias. 
+\end{itemize}
+
+\end{frame}
+
+
+
+\begin{frame}
+\frametitle{Interpretations and Implication}
+\framesubtitle{Optimal taxes in the Absence of corrective Concerns}
+
+\textbf{When there are no corrective concerns}
+$$ t = -\frac{p\Cov \left[ \hat{g}(z),\tilde{\phi}(z) \right]}{\bar{\zeta}^c + \Cov \left[\hat{g}(z), \tilde{\phi}(z) \right]} $$ 
+
+\begin{itemize}
+\item The Atkinson-Stiglitz theorem itself obtains as a special case of (6) when all variation
+in $c_2$ consumption is driven by income effects, which then implies that t = 0
+\end{itemize}
+\end{frame}
+
+
+
+\begin{frame}
+\frametitle{Interpretations and Implication}
+\framesubtitle{ Optimal Taxes When Income Effects do not Affect $c_2$ consumption}
+
+\textbf{Corollary 3} Suppose that there are no income effects: $\eta \equiv 0$ and $\eta_z \equiv 0 $ then 
+
+$$ t = \underbrace{\bar{\gamma}(\bar{g} + \sigma)}_\text{Corrective Benefits} -  \underbrace{\frac{p + t}{\bar{\zeta}^c} \Cov \left[ g(z), \tilde{\phi}(z)  \right]}_\text{Regressivity Costs} $$
+
+\begin{itemize}
+	\item Generalizes the result in Example 1
+	\item First term now depends of $\sigma$ (concentration of corrective benefits among low income)
+	\item Second term persists because progressive income tax. Fiscal externalities outweigh re-distributive benefit 
+	\item As consumption of $c_2$ becomes inelastic, t become a sin subsidy. 
+\end{itemize}
+\end{frame}
+
+
+
+
+
+
+\begin{frame}
+\frametitle{Interpretations and Implication}
+\framesubtitle{Optimal taxes when all differences in $c_2$ consumption are due to income effects }
+
+\textbf{Corolalry 4} Suppose that $U_2(c_1,c_2, \theta, z) / U_1(c_1,c_2, \theta, z)$ is constant in $\theta$ for each $z$. Then 
+
+$$ t^* = \bar{\gamma}(\bar{g} + \sigma)$$
+
+\begin{itemize}
+	\item Generalizes Example 2 
+	\item higher $\sigma$ implies higher benefit to bias correction
+	\item Policymaker will spend more that \$1 to eliminate \$1 mistake made by poor consumers. 
+\end{itemize}
+\end{frame}
+
+
+
+
+
+
+\begin{frame}
+\frametitle{extensions} 
+\begin{itemize}
+	\item Tax salience on the labor supply margin 
+	\begin{itemize}
+		\item Effect of commodity taxes on labor supply my be minimal 
+		\item If people don't consider commodity taxes in in labor supply, moves us closer to preference heterogeneity case.
+	\end{itemize}
+	\item N $>$ 2 Dimension of Consumption 
+	\begin{itemize}
+		\item Considers substitutability of goods
+	\end{itemize}
+	\item Externalities 
+	\begin{itemize}
+		\item Special case of this framework 
+	\end{itemize}
+	\item Without te First-order approach
+	\item labor supply misoptimization 
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Conclusion} 
+
+\begin{itemize}
+	\item reconciles the role for corrective taxes with the concern that such taxes may be regressive
+	\item Clarifies that the optimal policy depends on a number of statistics. 
+	\begin{itemize}
+		\item Preference heterogeneity vs. Income effects 
+		\item Bias of both rich and poor 
+		\item Elasticity of demand and how it varies across income
+		\item salience of commodity taxes on labor supply margin 
+	\end{itemize}
+
+\end{itemize}
+
+\end{frame}
+	
+	
+	\begin{frame}
+	\frametitle{Citation} 
+	
+	B. Lockwood and D. Taubinsky, “Regressive Sin Taxes,” NBER WP No. 23085, March 2017.
+	
+	\end{frame}
+	
+	
+%------------------------------------------------
+% end doc
+%------------------------------------------------
+\end{document}
+	
