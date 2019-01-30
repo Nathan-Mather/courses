@@ -1,0 +1,125 @@
+
+
+
+
+
+%-----------------------------------------------------------------------------------
+%	PACKAGES AND OTHER DOCUMENT CONFIGURATIONS
+%----------------------------------------------------------------------------------
+
+\documentclass[11pt]{article}
+
+\usepackage[top=2cm, bottom=3cm, left=2cm, right=2cm]{geometry}
+\setlength{\parskip}{1em}
+\setlength{\parindent}{4em}
+\linespread{1.25}
+
+\newcommand{\Var}{\mathrm{Var}}
+
+\newcommand{\Cov}{\mathrm{Cov}}
+
+\newcommand{\plim}{\rightarrow_{p}}
+
+\usepackage{apacite}
+
+\usepackage{amsmath, amsfonts}
+\usepackage{graphicx}
+\usepackage{pdfpages}
+\usepackage{bm}
+\usepackage{listings}
+\usepackage{multirow,array}
+\usepackage{enumerate}
+\usepackage{bbm}
+\usepackage{subfig}
+
+
+\usepackage[latin1]{inputenc}
+
+\usepackage{amssymb}
+
+\usepackage{mathrsfs}
+\usepackage{float}
+\usepackage{booktabs}
+\usepackage{color}
+\usepackage{rotating}
+\usepackage{amsthm}
+\usepackage{multirow,array}
+\usepackage{caption}
+\usepackage{url}
+
+
+
+\DeclareMathOperator*{\argmax}{arg\,max}
+\DeclareMathOperator*{\argmin}{arg\,min}
+
+
+
+% Expectation symbol
+\newcommand{\E}{\mathrm{E}}
+\newcommand{\V}{\mathrm{V}}
+\newcommand{\N}{\mathcal{N}}
+\newcommand{\R}{\mathbb{R}} 
+
+%----------------------------------------------------------------------------------
+%	TITLE AND AUTHOR(S)
+%----------------------------------------------------------------------------------
+
+\title{Write Up 3} % The article title
+
+\author{Nathan Mather} % The article author(s) 
+
+\date{\today} % An optional date to appear under the author(s)
+
+\renewcommand{\contentsname}{Table of Contents}
+%----------------------------------------------------------------------------------
+\begin{document}
+	
+	
+	%------------------------------------------------------------------------------
+	%	TABLE OF CONTENTS
+	%------------------------------------------------------------------------------
+	\maketitle % Print the title/author/date block
+	
+
+%------------------------------------------------------------------------------
+%Q1 
+%------------------------------------------------------------------------------
+\section{State the additivity property}
+The additivity property says that, when facing an atmospheric externality, optimal commodity taxation con be achieved in the following way. First, do optimal Pigouvian taxes given no required revenue amount. Then, apply the Ramsey rule to raise the rest of the required revenue. The additivity property obtains when the externality is ``atmospheric", meaning that the externality is created by the total consumption of a good.
+
+\section{ What other kinds of externalities can you think of? Will the externality principle likely apply, or fail, in these other settings? Why?} 
+Externalities could also depend on how much each individual consumes and not the collective amount. For example fast food. If everyone eats a small amount of fast food there will be significant total consumption but minimal to no health costs. If, however, a small fraction of people consume a lot of fast food, total consumption may be the same, but with significant health cost externalities. \par 
+
+If the tax structure was perfectly flexible, I don't see why the principle would not apply. Correct the externalities first and then collect revenue optimally. The difficulty is applying the Pigouvian tax optimally in the face of heterogeneity so as to discourage, for example, copious amounts of fast food, but not moderate amounts. This seems to be a difficulty for the concept of Pigouvian taxes generally though, not just the additivity principle. Likely the best policy would seek to correct te average marginal externality. In which case the additivity principle might still apply.   
+ 
+\section{ Consider the case in which consumption of a particular good requires resources to be expended by the government, say to enforce and collect this tax. How does the optimal tax pattern now change, and does this fit the Sandmo-type model of an atmospheric externality?}
+
+ 
+An example of this would be air travel. TSA is partially funded through general taxpayer money and so consuming air travel requires that the government expend resources on TSA. I think this case is exactly analogous to a negative atmospheric externality. The cost to the government is a function of the total consumption of air travel. That cost to the government is borne by all consumers through taxes. Since taxes are a function of total air travel, total air travel enters the utility function of consumers indirectly through the tax. I set up a basic example below. \par 
+
+\textbf{Model Outline} \\ \\
+Let there be N different consumers. They consume air travel $a_i$ and a numaraire good $c_i$, and have exogenous income $y_i$. The government can set lump sum taxes $T_i$ on every individual and maximizes the sum of utilities. They must, however, pay $\alpha$ of all air travel $A$ to fund TSA. \par 
+
+Government's problem 
+$$ \max \limits_{T_i} \sum_{i = 1}^{n} U(c_i, a_i) $$
+
+S.T.
+$$  \sum_{i = 1}^{n} T_i = \alpha A$$
+
+Consumer i's problem 
+$$ \max U(c_i, a_i) $$ 
+
+S.T.
+$$ c_i + Pa_i = y_i - T_i$$
+
+Or, plugging in government revenue constraint
+$$ c_i + Pa_i = y_i - \alpha A + \sum_{j \neq i}^{} T_i$$ 
+
+Now substitute the constraint into the individual's problem 
+
+$$ \max U(y_i - \alpha A + \sum_{j \neq i}^{} T_i - Pa_i, a_i) $$ 
+
+Total Air travel A enters the consumer's utility function as an exogenous parameter just like an atmospheric externality. Thus the additivity principle would still apply. 
+
+
+\end{document}
