@@ -1,0 +1,14 @@
+@article{10.2307/2586986,
+ ISSN = {00335533, 15314650},
+ URL = {http://www.jstor.org/stable/2586986},
+ abstract = {This paper offers a theory of training whereby workers do not pay for the general training they receive. The superior information of the current employer regarding its employees' abilities relative to other firms creates ex post monopsony power, and encourages this employer to provide and pay for training, even if these skills are general. The model can lead to multiple equlibria. In one equilibrium quits are endogenously high, and as a result employers have limited monopsony power and provide little training, while in another equilibrium quits are low and training is high. Using microdata on German apprentices, we show that the predictions of our model receive some support from the data.},
+ author = {Daron Acemoglu and Jorn-Steffen Pischke},
+ journal = {The Quarterly Journal of Economics},
+ number = {1},
+ pages = {79--119},
+ publisher = {Oxford University Press},
+ title = {Why Do Firms Train? Theory and Evidence},
+ volume = {113},
+ year = {1998}
+}
+

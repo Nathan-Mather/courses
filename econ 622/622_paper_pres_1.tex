@@ -1,0 +1,444 @@
+%-----------------------------------------------------------------------------------
+%	PACKAGES AND OTHER DOCUMENT CONFIGURATIONS
+%----------------------------------------------------------------------------------
+
+\documentclass{beamer}
+
+
+\newcommand{\Var}{\mathrm{Var}}
+
+\newcommand{\Cov}{\mathrm{Cov}}
+
+\newcommand{\plim}{\rightarrow_{p}}
+
+\usepackage{apacite}
+
+\usepackage{amsmath, amsfonts}
+\usepackage{graphicx}
+\usepackage{pdfpages}
+\usepackage{bm}
+\usepackage{listings}
+\usepackage{multirow,array}
+\usepackage{enumerate}
+\usepackage{bbm}
+\usepackage{subfig}
+\usepackage{bbm}
+\usepackage{multirow}
+
+
+
+\usepackage{amssymb}
+
+\usepackage{mathrsfs}
+\usepackage{float}
+\usepackage{booktabs}
+\usepackage{color}
+\usepackage{rotating}
+\usepackage{amsthm}
+\usepackage{multirow,array}
+\usepackage{caption}
+\usepackage{url}
+
+
+
+\DeclareMathOperator*{\argmax}{arg\,max}
+\DeclareMathOperator*{\argmin}{arg\,min}
+
+
+
+% Expectation symbol
+\newcommand{\E}{\mathrm{E}}
+\newcommand{\V}{\mathrm{V}}
+\newcommand{\N}{\mathcal{N}}
+\newcommand{\R}{\mathbb{R}} 
+
+
+
+%-----------------------------
+% title stuff 
+%-------------------------
+
+\usepackage[utf8]{inputenc}
+
+
+
+%Information to be included in the title page:
+\title{Asymmetric Learning Model of Resume Building With Wage Rigidity and Costly Firings}
+\author{Nathan Mather}
+\institute{University of Michigan}
+\date{2019}
+
+
+
+
+
+%------------------------------------------------------------------------------
+%	begin doc
+%------------------------------------------------------------------------------
+
+\begin{document}
+	
+	
+	
+	\frame{\titlepage}
+	
+	\section{Introduction}
+	
+	\begin{frame}
+	\frametitle{Introduction}
+	
+	\framesubtitle{Current Asymmetric Leaning Models}
+	\begin{itemize}
+		\setlength{\itemsep}{3mm}
+		\item Asymmetric Learning seems to match intuition for labor market
+		\item Current models' set up seems odd 
+		\item Schönberg (2007)
+		\begin{itemize}
+			\item Employer learns workers true ability 
+			\item Outside firms receive noisy signal about each specific workers ability 
+		\end{itemize}
+	\end{itemize}
+\end{frame}
+
+
+
+
+
+\begin{frame}
+\frametitle{Model Environment}
+\framesubtitle{My Model}
+\begin{itemize}
+	\setlength{\itemsep}{1mm}
+	\item Workers have ability $\theta \in [0,1]$ 
+	\begin{itemize}
+		\setlength{\itemsep}{1mm}
+		\item Produce $\theta$ per period 		
+	\end{itemize}
+\item Workers supply labor inelastically
+\item Employers receive a good signal $g$ w.p. $\theta$ and a bad signal $b$ w.p. $1-\theta$
+\item Employers offer wages each period (no long term contracts).
+\item Outside firms see length of employment (resume)
+\begin{itemize}
+	\setlength{\itemsep}{1mm}
+	\item i.e. receive a signal $e$ or $f$ 
+\end{itemize}
+	\item There are many identical firms
+	\begin{itemize}
+		\item Zero profit condition
+	\end{itemize} 
+	\item Downward wage rigidity 
+	\item Fixed cost to fire employee
+
+\end{itemize}
+\end{frame}
+
+
+
+
+\begin{frame}
+\frametitle{Variable Definitions}
+
+\begin{center}
+	\resizebox{.75\linewidth}{!}{\begin{tabular}{||c | c||} 
+			\hline
+			Variable & Meaning  \\ [0.5ex] 
+			\hline\hline
+			$\theta$ & Ability \\ 
+			\hline 
+			$g$ & Good Signal\\ 
+			\hline
+			$b$ & Bad Signal \\
+			\hline
+			$e$ & Employed Signal\\
+			\hline
+			$f$ & Fired Signal\\
+			\hline
+			$F_C$ &  Fixed Cost to Firing \\ 
+			\hline
+			
+			$w_1$ &  Period 1 Wage \\ 
+			\hline
+			$w_g$ & Wage After Good Signal \\
+			\hline
+			$w_b$ & Wage After Bad Signal \\
+			\hline
+			$w_f$ & Wage for Fired Worker\\	\hline
+			$\pi$ & Profits\\[1ex] 
+			\hline
+		\end{tabular}
+	}
+\end{center}
+
+\end{frame}
+
+
+
+\begin{frame}
+\frametitle{Time Line}
+
+
+	\begin{itemize}
+			\setlength{\itemsep}{3mm}
+		\item period 1 wage offers
+		\item Workers produce output
+		\item Workers send signal of ability 
+		\item Employers decide who to fire
+		\item Employers offer period 2 wages conditional on signals 
+		\item Outside Firms offer wages conditional on resume 
+		\item Workers take the best offer and work for one more period 
+		\item Workers retire 
+	\end{itemize}
+
+\end{frame}
+
+
+
+\begin{frame}
+\frametitle{Outline}
+\begin{itemize}
+	\setlength{\itemsep}{10mm}
+	\item Start simple and build up model
+	\item First consider two period model with flexible wages 
+	\item Second, add in wage rigidity, but with high fixed costs to firing
+	\item Finally, solve the complete model with wage rigidity and moderate firing costs 
+
+\end{itemize}
+
+\end{frame}
+
+
+
+\begin{frame}
+\frametitle{Two Period Flexible Wage Model}
+\framesubtitle{Optimal Second Period Wage Offers}
+
+\begin{itemize}
+	\setlength{\itemsep}{3mm}
+	\item With flexible wages there is no reason to fire workers
+	\item Outside firms will not offer more than expected output given 1 year of employment $\E[ \theta | e] = p(g)\E[\theta | g] + p(b)\E[ \theta | b] = E[\theta]$
+	\begin{itemize}
+		\item Employers can pay their good signal employees $w_g = \E[\theta]$
+	\end{itemize}
+	\item An outside offer below $w_g$ would only attract bad signal employees 
+	
+	\begin{itemize}
+		\item Employer can offer $ w_b = \E[\theta |b]$ 
+	\end{itemize}
+
+	\item In equilibrium workers stay where they are
+
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Two Period Flexible Wage Model}
+\framesubtitle{Optimal First Period Wage Offers}
+
+\begin{itemize}
+	\setlength{\itemsep}{3mm}
+	\item Zero profit condition means that first period wages should give expected profit of zero
+	\item In other words, pay period 1 worker their expected profits
+	
+	$$w_1 = \E[\theta] + p(g)(\E[\theta|g] - w_g) + p(b)(\E[\theta | b] - w_b) 
+	$$
+
+	or 
+	$$ w_1 = \E[\theta] + p(g)(\E[\theta | g] - \E[\theta]) $$
+\end{itemize}
+
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Two Period Flexible Wage Model}
+\framesubtitle{Result}
+
+\begin{itemize}
+	\setlength{\itemsep}{10mm}
+	\item $w_1 > w_g > w_b$
+	\item Employers pay a premium for period 1 workers so that they can earn a profit with inside knowledge in period 2. 
+	\item This does not seem to reflect reality
+\end{itemize}
+
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Two Period Sticky Wage, High Firing Cost}
+
+\begin{itemize}
+	\setlength{\itemsep}{10mm}
+	\item Next introduce wage rigidity 
+	\item For now, assume the fixed cost of firing is so high it is never optimal to fire
+\end{itemize}
+
+\end{frame}
+
+
+
+\begin{frame}
+\frametitle{Two Period Sticky Wage, High Firing Cost}
+\framesubtitle{Lemma 1}
+
+\textbf{Lemma 1:} \text{With sticky wages $w_1 \in (\E[\theta|b], \E[\theta | g])$} \\~\\
+
+\textbf{Proof:} If $w_1 \geq \E[\theta | g] $ employers will make negative profits. If  $w_1 \leq \E[\theta | b] $ employers make positive profits. \\~\\
+
+\textbf{Corollary} $w_b = w_1$ because $w_b$ will be "stuck"
+\end{frame}
+
+
+
+\begin{frame}
+\frametitle{Two Period Sticky Wage, High Firing Cost}
+\framesubtitle{Equilibrium wages }
+
+\begin{itemize}
+	\setlength{\itemsep}{3mm}
+	\item Given Lemma 1, $w_b = w_1$
+	\item By the same logic as in the flexible model we get $w_g = \E[\theta|e] = \E[\theta]$
+
+	\item The period one wage to give zero profits is $w_1 = \E[\theta] + p(g)(\E[\theta|g] - \E[\theta]) + p(b)(\E[\theta|b] - w_1)$
+	\item Solving this gives $w_1 = \E[\theta]$ 
+	\item $w_1 = w_g = w_b = \E[\theta]$
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Two Period Sticky Wages}
+\framesubtitle{Not firing is not an equilibrium}
+\begin{itemize}
+	\setlength{\itemsep}{3mm}
+	\item Let the fixed cost $F_C < \E[\theta] - \E[\theta |b]$
+	\item NOT firing workers is NOT an equilibrium. 
+	\item If a firm unilaterally deviates and fires workers after a bad signal they receive positive profits 
+	$$ \pi = p(g) (\E[\theta|g] - \E[\theta]) - p(b)F_C $$
+	$$ > p(g)( \E[\theta|g] - E[\theta]) + p(b)(E[\theta|b] - E[\theta]) = 0 $$
+	\item Given this, all firms have an incentive to deviate and fire bad signal employees 
+\end{itemize}
+
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Two Period Sticky Wages}
+\framesubtitle{When is firing bad workers an equilibrium }
+\begin{itemize}
+	\setlength{\itemsep}{3mm}
+	\item If all firms are firing, I could try to unilaterally deviate and keep bad signal employees
+	\item Need to pay them at least $w_1$ 
+	\item Bad signal workers accept $w_1$ since leaving to another firm would expose them as bad signal worker
+	\item Unilaterally keeping low wage workers would change profits by 
+	$$ \Delta \pi = p(b)(F_C + \E[\theta|b] - w_1)$$
+	\item If $F_C < w_1 - \E[\theta|b]$ firing bad signal employees is an equilibrium outcome
+	
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Two Period Sticky Wages}
+\framesubtitle{Equilibrium Wages}
+\begin{itemize}
+	\setlength{\itemsep}{3mm}
+		\item Assume $F_C < w_1 - \E[\theta|b]$ so all employers fire low signal workers
+		\item Since only good signal workers are employed $w_g = \E[\theta |e] = \E[\theta|g]$
+		\item  Need to offer a period one wage to get zero profits 
+		$$w_1 = \E[\theta] + p(g)(\E[\theta|g] - \E[\theta|g]) - p(b) F_C   $$
+		or 
+		$$= \E[\theta] - p(b) F_C$$
+		\item Fired workers are identified as low signal so they get re-hired for $w_f = \E[\theta |b]$
+		\item So we get $wf_f < w_1 < \E[\theta] < w_g$ 
+	
+\end{itemize}
+
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Two Period Sticky Wages}
+\framesubtitle{Equilibria}
+
+\begin{itemize}
+	\setlength{\itemsep}{3mm}
+	\item If $F_C > \E[\theta] - \E[\theta |b]$ 
+	\begin{itemize}
+		\item No one is fired \\~\\
+	\end{itemize} 
+
+	\item If  $F_C <\E[\theta] - p(b) F_C - \E[\theta |b] \implies F_C < \frac{\E[\theta] - \E[\theta|b]}{1+p(b)}$ 
+	\begin{itemize}
+		\item Bad signal employees are fired \\~\\
+	\end{itemize}
+
+	\item If $F_C \in \left( \frac{\E[\theta] - \E[\theta|b]}{1+p(b)}, \E[\theta] - \E[\theta |b] \right)$
+	\begin{itemize}
+		\item I believe there will be a mixed equilibrium where some bad signal workers are fired. 
+		\item Not proven yet
+	\end{itemize}
+	
+\end{itemize}
+
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Numerical Example}
+
+\begin{itemize}
+		\setlength{\itemsep}{2mm}
+	\item $\theta \in \{0,\frac{1}{3}, \frac{2}{3}, 1\}$ with equal probability
+	\item $F_C = 0.1$ 
+	\item $\E[\theta] = \frac{1}{2}$
+	\item $\E[ \theta | g] = \frac{7}{9}$
+	\item $\E[ \theta | b] = \frac{2}{9}$
+	\item Flexible wages 
+	\begin{itemize}
+			\setlength{\itemsep}{1mm}
+		\item $w_1 = 0.6388$
+		\item $w_b = \frac{2}{9}$
+		\item $w_g = \frac{1}{2}$
+	\end{itemize}
+\item Sticky wages 
+	\begin{itemize}
+		\setlength{\itemsep}{1mm}
+		\item $w_1 = 0.407$
+		\item $w_f = \frac{2}{9}$
+		\item $w_g = \frac{7}{9}$
+	\end{itemize}
+\end{itemize}
+
+\end{frame}
+
+
+\begin{frame}
+\frametitle{What Next}
+\begin{itemize}
+	\setlength{\itemsep}{5mm}
+	\item Three period version 
+	\item Promotions
+	\item Initial education signal correlated with ability 
+	\item Exogenous separations 
+	\item An Acemoglu and Pischke type utility shock 
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Questions and Concerns }
+\begin{itemize}
+	\setlength{\itemsep}{5mm}
+	\item How to apply model to data?
+	\item What aspects of labor market should it explain? 
+	\item Are the assumptions reasonable? 
+	\item Is game theory approach useful? 
+	
+\end{itemize}
+\end{frame}
+
+
+%------------------------------------------------
+% end doc
+%------------------------------------------------
+\end{document}
+

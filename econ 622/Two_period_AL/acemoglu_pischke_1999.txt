@@ -1,0 +1,14 @@
+@article{10.1086/250071,
+ ISSN = {00223808, 1537534X},
+ URL = {http://www.jstor.org/stable/10.1086/250071},
+ abstract = {In the human capital model with perfect labor markets, firms never invest in general skills and all cost of general training are borne by workers. When lobor market frictions compress the structure of wages, firms may pay for these investments. The distortion in the wage structure turns “technologically” general skills into de facto “specific ” skills. Credit market imperfections are neither neccessary nor sufficient for firm‐sponsored training. Since labor market frictions and insititutions shape the wage structure, they may have an important impact on the financing and amount of human capital investments and account for some international differences in training practices.},
+ author = {Daron Acemoglu and Jörn‐Steffen Pischke},
+ journal = {Journal of Political Economy},
+ number = {3},
+ pages = {539--572},
+ publisher = {The University of Chicago Press},
+ title = {The Structure of Wages and Investment in General Training},
+ volume = {107},
+ year = {1999}
+}
+
