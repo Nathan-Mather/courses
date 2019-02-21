@@ -1,0 +1,25 @@
+{
+\def\sym#1{\ifmmode^{#1}\else\(^{#1}\)\fi}
+\begin{tabular}{l*{7}{c}}
+\hline\hline
+            &\multicolumn{1}{c}{(1)}&\multicolumn{1}{c}{(2)}&\multicolumn{1}{c}{(2)a}&\multicolumn{1}{c}{(2)b}&\multicolumn{1}{c}{(3)}&\multicolumn{1}{c}{(4)}&\multicolumn{1}{c}{(5)}\\
+\hline
+engdiff     &      0.0588\sym{*}  &     -0.0105\sym{*}  &      0.0641\sym{*}  &     -0.0174\sym{**} &                     &                     &                     \\
+            &    (0.0275)         &   (0.00521)         &    (0.0290)         &   (0.00532)         &                     &                     &                     \\
+[1em]
+engdiff\_02  &                     &                     &                     &                     &    -0.00437         &    -0.00426\sym{*}  &    -0.00426\sym{*}  \\
+            &                     &                     &                     &                     &   (0.00402)         &   (0.00203)         &   (0.00203)         \\
+[1em]
+engdiff\_3plus&                     &                     &                     &                     &     -0.0171\sym{*}  &     -0.0111\sym{**} &     -0.0111\sym{**} \\
+            &                     &                     &                     &                     &   (0.00730)         &   (0.00392)         &   (0.00392)         \\
+[1em]
+\_cons      &      0.0789\sym{***}&      0.0455\sym{***}&      0.0953\sym{***}&      0.0353\sym{***}&      0.0452\sym{***}&      0.0449\sym{***}&      0.0582\sym{***}\\
+            &   (0.00864)         &   (0.00190)         &    (0.0102)         &  (2.85e-16)         &   (0.00190)         &   (0.00203)         &   (0.00203)         \\
+\hline
+\(N\)       &        2698         &        2698         &        2698         &        2698         &        2698         &        2304         &        2304         \\
+\(R^{2}\)   &       0.027         &       0.979         &       0.033         &       0.977         &       0.979         &       0.978         &       0.978         \\
+\hline\hline
+\multicolumn{8}{l}{\footnotesize Standard errors in parentheses}\\
+\multicolumn{8}{l}{\footnotesize \sym{*} \(p<0.05\), \sym{**} \(p<0.01\), \sym{***} \(p<0.001\)}\\
+\end{tabular}
+}

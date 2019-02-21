@@ -1,0 +1,199 @@
+
+%-----------------------------------------------------------------------------------
+%	PACKAGES AND OTHER DOCUMENT CONFIGURATIONS
+%----------------------------------------------------------------------------------
+
+
+
+\documentclass[11pt]{article}
+
+\usepackage[top=2cm, bottom=3cm, left=2cm, right=2cm]{geometry}
+
+\usepackage{apacite}
+\setlength{\parindent}{0in}
+
+\newcommand{\Var}{\mathrm{Var}}
+
+\newcommand{\Cov}{\mathrm{Cov}}
+
+\newcommand{\plim}{\rightarrow_{p}}
+
+\usepackage{amsmath, amsfonts}
+\usepackage{graphicx}
+\usepackage{pdfpages}
+\usepackage{bm}
+\usepackage{listings}
+
+% Expectation symbol
+\newcommand{\E}{\mathrm{E}}
+\newcommand{\V}{\mathrm{V}}
+
+%----------------------------------------------------------------------------------
+%	TITLE AND AUTHOR(S)
+%----------------------------------------------------------------------------------
+
+\title{PubPol 713 Assignment 2} % The article title
+
+
+\author{Nathan Mather} % The article author(s) 
+
+\date{\today} % An optional date to appear under the author(s)
+
+
+%----------------------------------------------------------------------------------
+\begin{document}
+	
+%------------------------------------------------------------------------------
+%	TABLE OF CONTENTS & LISTS OF FIGURES AND TABLES
+%------------------------------------------------------------------------------
+\maketitle % Print the title/author/date block
+
+\setcounter{tocdepth}{2} % Set the depth of the table of contents to show sections and subsections only
+
+%\tableofcontents % Print the table of contents
+
+%-------------------------------------------------------------
+% Question 1 
+%-------------------------------------------------------------
+\section{ Question 1}
+
+I generated the variables for a b and c. This is shown in my code in the appendix 
+
+
+%-------------------------------------------------------------
+% Question 2
+%-------------------------------------------------------------
+\section{ Question 2}
+
+\subsection{A}
+I can't seem to figure out how to save tabulate output as a tex file. However, 230,653 individuals are pre-selected and 244,512 are not. Of those scoring below the 475 cutoff, 60.05 are pre-selected, 39.95 are not.  Of those scoring above the cutoff, 43.92 are not pre-selected and 56.08 are pre-Selected. 
+
+The results are summarized in the tables below. 
+
+\begin{center}
+	\begin{tabular}{||c | c||} 
+		\hline		
+		\input{tab2a.tex}
+		\hline
+		
+	\end{tabular}
+\end{center}
+
+
+\begin{center}
+	\begin{tabular}{||c | c | c| c||} 
+		\hline
+		
+		\input{tab2aii.tex}
+		\hline
+		
+	\end{tabular}
+\end{center}
+
+\subsection{B} 
+The normalized score (with a PSU score of 475 equal to 0) has a minimum of -314.5, a max of 375, and a mean of 14.6. The distribution does not seem to show any bunching. A histogram is shown below. 
+
+
+\begin{center}
+	
+	\centering
+	\textbf{Normalized Test Score period 1 }\par\medskip
+	\includegraphics[width=1\linewidth]{2b_hist.png}
+\end{center}
+
+\subsection{C } 
+
+The results are summarized in the tables below 
+
+ \begin{center}
+ 	\begin{tabular}{c | c | c|c} 
+ 		\hline
+ 		\input{tab2ci.tex}
+ 		\hline
+ 		
+ 	\end{tabular}
+ \end{center}
+ 
+
+ \begin{center}
+	\begin{tabular}{c | c | c|c} 
+		\hline
+		\input{tab2cii.tex}
+		\hline
+		
+	\end{tabular}
+\end{center}
+
+
+\subsection{D } 
+
+The results are summarized in the tables below 
+
+\begin{center}
+	\begin{tabular}{c | c | c|c} 
+		\hline
+		\input{tab2di.tex}
+		\hline
+		
+	\end{tabular}
+\end{center}
+
+
+\begin{center}
+	\begin{tabular}{c | c | c|c} 
+		\hline
+		\input{tab2dii.tex}
+		\hline
+		
+	\end{tabular}
+\end{center}
+
+
+
+
+%-------------------------------------------------------------
+% Question 3
+%-------------------------------------------------------------
+\section{ Question 3}
+
+Below is a table showing the distribution of PSU scores by income quantile. There is also a verticle line at zero indicating the point to look for discontinuities. The distributions all appear to change smoothly across zero. 
+
+
+ 	\includegraphics[width=1\linewidth]{3_plot.png}
+
+
+%-------------------------------------------------------------
+% Question 4
+%-------------------------------------------------------------
+\section{ Question 4}
+
+Below I have the results from table three of the paper replicated. I used the same regression equation and bandwidth of 44. The main coefficient of interest here is the ``PSU score Above 475". In column 1 this coefficient shows that, for pre-selected students, being above the cutoff implies an increase of 17.5 percentage points in the probability of enrolling in college immediately after the test. One potential threat to interpreting this relationship as causal is that passing the 475 threshold may provide some benefit other than loan eligibility. An example discussed in the paper is higher probability of acceptance to schools if students score above 475. Column two tests this possibility with a placebo test on non-selected students. Here be find no significant effect for being above the 475 mark. This is what we would expect since these students are not eligible for loans anyway. 
+
+\begin{center}
+	\textbf{Table 3 Replication}\par\medskip
+		\input{ps2_table_4.tex}
+
+\end{center}
+
+
+In addition to the straight replication, I also ran these regressions using an updated bandwidth selection technique and local linear regression  \cite{matias_14}. The results are similar and can be found in the table below. ``RD\_Estimate" is comparable to ``PSU Score Above 475" in the table above. 
+
+
+\begin{center}
+		\textbf{Table 3 with updated methods}\par\medskip
+	\input{ps2_table_4ii.tex}
+	
+\end{center}
+%------------------------------------------------------------------------------
+% bib
+%------------------------------------------------------------------------------
+\bibliographystyle{apacite}
+\bibliography{References}
+
+
+%-----------------------------------------------
+% end doc
+%------------------------------------------------
+\end{document}
+
+
