@@ -66,7 +66,7 @@ tab pre_sel
 * save it for latex 
 tabout pre_sel using "$outdir\tab2a.tex", ///
 replace ///
-style(tex) font(bold)
+style(tex) font(bold)  cells(freq col)
 
 * proportiion above and below cutoff that are preselectd 
 tab pass_1 pre_sel, r nof
@@ -198,14 +198,21 @@ estadd scalar Bandwidth = e(h_l)
 esttab using "$outdir\ps2_table_4ii.tex", /// 
 mtitles("(1b)" "(2b)") nonumbers replace label stats(Bandwidth) se
 
+
+eststo clear
+
+
 ****************
 *5  Replicate IV *
 ****************
 
 * dod table 4 regeressions 
-ivreg everenroll1  (everelig1=pass_1) r_score_1 pass_score_1 if qqt1<=4 & abs(r_score_1)<=44, r first
-reg everenroll1  pass_1 r_score_1 pass_score_1 if pre_sel==0 & abs(r_score_1)<=44, r
+eststo: reg everelig1 pass_1 r_score_1 pass_score_1 if qqt1<=4 & abs(r_score_1)<=44, r
+eststo: ivreg everenroll1  (everelig1=pass_1) r_score_1 pass_score_1 if qqt1<=4 & abs(r_score_1)<=44, r 
+eststo: reg everenroll1  pass_1 r_score_1 pass_score_1 if pre_sel==0 & abs(r_score_1)<=44, r
 
+esttab using "$outdir\ps2_table_5.tex", /// 
+mtitles("(1 FS)" "(1)" "(2)") nonumbers replace label stats(Bandwidth) se
 
 
 ****************
@@ -214,8 +221,15 @@ reg everenroll1  pass_1 r_score_1 pass_score_1 if pre_sel==0 & abs(r_score_1)<=4
 
 
 
-rdplot enrolt1 psut1 if qqt1<=4 , c(475) shade ci(95) binselect(espr)
-rdplot enrolt1 psut1 if pre_sel==0, c(475) shade ci(95) binselect(espr)
+rdplot enrolt1 psut1 if qqt1<=4 , c(475) shade ci(95) binselect(espr) graph_options(title(RD Plot Pre-Selected))
+
+
+graph export "$outdir\rdplot_1.png" , replace
+
+
+
+rdplot enrolt1 psut1 if pre_sel==0, c(475) shade ci(95) binselect(espr) graph_options(title(RD Plot Not Pre-Selected))
+graph export "$outdir\rdplot_2.png" , replace
 
 
 
@@ -232,8 +246,9 @@ forvalues i = 431/519{
 
 * create variables for regression 
 gen pass_i = (psut1 >= `i' & psut1 != .) 
-gen r_score_i = psut1 - `i'
+gen r_score_i= psut1 - `i'
 gen pass_score_i = pass_i * r_score_i
+
 
 * get matrix position 
 local mat_post = `i' - 430
@@ -245,13 +260,13 @@ matrix Res[`mat_post',1] =  `i'
 reg enrolt1  pass_i r_score_i pass_score_i if qqt1<=4 & abs(r_score_i)<=44, r
 
 * store result in matrix 
-matrix Res[`mat_post',2] = _b[pass_i]
+matrix Res[`mat_post',2] = abs(_b[pass_i])
 
 * run regression b with these vars 
 reg enrolt1  pass_i r_score_i pass_score_i if pre_sel==0 & abs(r_score_i)<=44, r
 
 * store result in other matrix column
-matrix Res[`mat_post',3] = _b[pass_i]
+matrix Res[`mat_post',3] = abs(_b[pass_i])
 
 * drop variables for next iteration 
 drop pass_i
@@ -264,12 +279,22 @@ drop pass_score_i
 drop _all
 svmat float Res
 
+count if Res2 < .175
+count if Res3 < .002727
 * make a histogram of each 
-hist Res2, bin(15) kdens  addplot(pci 0 .175 20 .175, lcolor(black) lwidth(1)) ///
-   legend(order(1 "Density" 2 "Kernal Density" 3 "Coefficient at 475"))
+hist Res2, bin(15) kdens  addplot(pci 0 .175 25 .175, lcolor(black) lwidth(1)) ///
+   legend(order(1 "Density" 2 "Kernal Density" 3 "Coefficient at 475")) freq ///
+   title(Placebo Test Pre-Selected Students) xtitle(Absolute Vlaue of Coefficient for above score i) 
 
-hist Res3, bin(15) kdens  addplot(pci 0 .003 100 .003, lcolor(black) lwidth(1))  ///
-   legend(order(1 "Density" 2 "Kernal Density" 3 "Coefficient at 475"))
+   graph export "$outdir\placebo_1.png" , replace
 
+   
+   
+hist Res3, bin(15) kdens  addplot(pci 0 .003 15 .003, lcolor(black) lwidth(1)) freq  ///
+   legend(order(1 "Density" 2 "Kernal Density" 3 "Coefficient at 475")) ///
+      title(Placebo Test Non Pre-Selected Students) xtitle(Absolute Vlaue of Coefficient for above score i) 
+
+
+   graph export "$outdir\placebo_2.png" , replace
 
 

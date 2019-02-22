@@ -66,12 +66,10 @@ I generated the variables for a b and c. This is shown in my code in the appendi
 \section{ Question 2}
 
 \subsection{A}
-I can't seem to figure out how to save tabulate output as a tex file. However, 230,653 individuals are pre-selected and 244,512 are not. Of those scoring below the 475 cutoff, 60.05 are pre-selected, 39.95 are not.  Of those scoring above the cutoff, 43.92 are not pre-selected and 56.08 are pre-Selected. 
-
-The results are summarized in the tables below. 
+ 230,653 individuals are pre-selected and 244,512 are not. Of those scoring below the 475 cutoff, 60.1\% are pre-selected, 39.95\% are not.  Of those scoring above the cutoff, 43.92\% are not pre-selected and 56.08\% are pre-Selected. The results are summarized in the tables below. 
 
 \begin{center}
-	\begin{tabular}{||c | c||} 
+	\begin{tabular}{||c | c| c||} 
 		\hline		
 		\input{tab2a.tex}
 		\hline
@@ -156,7 +154,7 @@ The results are summarized in the tables below
 %-------------------------------------------------------------
 \section{ Question 3}
 
-Below is a table showing the distribution of PSU scores by income quantile. There is also a verticle line at zero indicating the point to look for discontinuities. The distributions all appear to change smoothly across zero. 
+Below is a table showing the distribution of PSU scores by income quantile. There is also a verticle line at zero indicating the point to look for discontinuities. The distributions all appear to change smoothly across zero. This supports the needed assumptions and RD design used since income does not appear to change discontinuously at the cutoff. 
 
 
  	\includegraphics[width=1\linewidth]{3_plot.png}
@@ -167,7 +165,7 @@ Below is a table showing the distribution of PSU scores by income quantile. Ther
 %-------------------------------------------------------------
 \section{ Question 4}
 
-Below I have the results from table three of the paper replicated. I used the same regression equation and bandwidth of 44. The main coefficient of interest here is the ``PSU score Above 475". In column 1 this coefficient shows that, for pre-selected students, being above the cutoff implies an increase of 17.5 percentage points in the probability of enrolling in college immediately after the test. One potential threat to interpreting this relationship as causal is that passing the 475 threshold may provide some benefit other than loan eligibility. An example discussed in the paper is higher probability of acceptance to schools if students score above 475. Column two tests this possibility with a placebo test on non-selected students. Here be find no significant effect for being above the 475 mark. This is what we would expect since these students are not eligible for loans anyway. 
+Below I have the results from table three of the paper replicated. I used the same regression equation and bandwidth of 44. The main coefficient of interest here is the ``PSU score Above 475". In column 1 this coefficient shows that, for pre-selected students, being above the cutoff implies an increase of 17.5 percentage points in the probability of enrolling in college immediately after the test. One potential threat to interpreting this relationship as causal is that passing the 475 threshold may provide some benefit other than loan eligibility. An example discussed in the paper is higher probability of acceptance to schools if students score above 475. Column two tests this possibility with a placebo test on non-selected students. Non selected students are never eligible for the loans and so any observed effect of passing 475 would have to be from something other than loan eligibility. Here be find no significant effect for being above the 475 mark. This is what we would expect since these students are not eligible for loans anyway and it supports the interpretation of the first result as causal. 
 
 \begin{center}
 	\textbf{Table 3 Replication}\par\medskip
@@ -180,10 +178,62 @@ In addition to the straight replication, I also ran these regressions using an u
 
 
 \begin{center}
-		\textbf{Table 3 with updated methods}\par\medskip
+		\textbf{Table 3 With Alternative Methods}\par\medskip
 	\input{ps2_table_4ii.tex}
 	
 \end{center}
+
+
+
+%-------------------------------------------------------------
+% Question 5
+%-------------------------------------------------------------
+\section{ Question 5}
+
+
+The results of the 2SLS estimates are consistent with what we found in question 4. Column (1) shows that the probability of ever going to college increase 16 percentage points when a student is ever eligible for the loan program holding other variables constant.  Column 2 shows that even in a first stage regression, among non-preselected high income students, ever passing the 475 mark does not significantly predict college enrollment holding other variables constant. 
+
+\begin{center}
+	\textbf{Table 4 Replication}\par\medskip
+	\input{ps2_table_5.tex}
+	
+\end{center}
+
+
+
+%-------------------------------------------------------------
+% Question 6
+%-------------------------------------------------------------
+\section{ Question 6}
+
+
+
+% put in plots 
+ 	\includegraphics[width=1\linewidth]{rdplot_1.png} \\~\\
+ 	\includegraphics[width=1\linewidth]{rdplot_2.png}
+
+
+
+%-------------------------------------------------------------
+% Question 7
+%-------------------------------------------------------------
+\section{ Question 7}
+
+None of the placebo effects are larger than the true effect for the pre-selected students. For non-Preselected students, the coefficient at the 475 cutoff is greater in magnitude than only 22 of the 88 placebo cut points. These two points together suggest these results are legitimate. \\~\\
+
+
+ 	\includegraphics[width=1\linewidth]{placebo_1.png}
+\includegraphics[width=1\linewidth]{placebo_2.png}
+
+
+
+%-------------------------------------------------------------
+% Appendix 
+%-------------------------------------------------------------
+\section{Appendix}
+\subsection{Stata Code}
+\includepdf[page=-]{stata_code_pp713_ps2.pdf}
+
 %------------------------------------------------------------------------------
 % bib
 %------------------------------------------------------------------------------
