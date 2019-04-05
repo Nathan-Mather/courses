@@ -15,7 +15,7 @@ library(tabulizer)
 library(data.table)
 
 # have you done the shiny app?
-shiny_app_done <- TRUE
+shiny_app_done <- FALSE
 
 # get path base 
 path_pdf <- "C:/Users/Nmath_000/Documents/MI_school/Second Year/PP 713/research_project/digest_of_ed_2016.pdf"
