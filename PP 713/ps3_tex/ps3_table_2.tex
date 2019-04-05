@@ -1,0 +1,15 @@
+{
+\def\sym#1{\ifmmode^{#1}\else\(^{#1}\)\fi}
+\begin{tabular}{l*{10}{c}}
+\hline\hline
+                    &\multicolumn{1}{c}{sex}&\multicolumn{1}{c}{race}&\multicolumn{1}{c}{age}&\multicolumn{1}{c}{totch18}&\multicolumn{1}{c}{child\_miss}&\multicolumn{1}{c}{bfeduca}&\multicolumn{1}{c}{ed\_miss}&\multicolumn{1}{c}{bfyrearn}&\multicolumn{1}{c}{earn\_miss}&\multicolumn{1}{c}{est10}\\
+\hline
+Treatment indicator &     -0.0114         &     0.00853         &      -0.226         &    0.000434         &    0.000703         &       0.125\sym{**} &    -0.00767\sym{***}&      -39.51         &     0.00185         &     -0.0282         \\
+                    &   (0.00965)         &    (0.0159)         &     (0.206)         &    (0.0273)         &   (0.00556)         &    (0.0433)         &   (0.00231)         &     (72.07)         &   (0.00741)         &    (0.0955)         \\
+\hline
+Observations        &       10812         &       10812         &       10812         &       10812         &       10812         &       10812         &       10812         &       10812         &       10812         &       10812         \\
+\hline\hline
+\multicolumn{11}{l}{\footnotesize Standard errors in parentheses}\\
+\multicolumn{11}{l}{\footnotesize \sym{*} \(p<0.05\), \sym{**} \(p<0.01\), \sym{***} \(p<0.001\)}\\
+\end{tabular}
+}

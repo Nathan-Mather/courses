@@ -90,7 +90,7 @@
 
 	The results of the model so far suggest that in an otherwise frictionless market, asymmetric information of this type will tend to lower wages and increase wage dispersion with tenure. A market with asymmetric information and sticky wages, but with high fixed costs to firing, will see relatively constant and even wages over tenure. Finally, a market with wage rigidity but moderate costs to firing will see wage growth with tenure and wage cuts for fired workers. 
 
-	\section{Model}
+	\section{ Two period Model}
 	\subsection{outline}
 	
 	I will start by discussing a model without wage rigidity. I then consider what happens to this model if we introduce wage rigidity, but let the cost to firing by extremely high. Finally, I consider what happens as the cost to firing is lowered. The Final model is the most interesting. However, considering the simpler versions in turn is crucial for solving the final model and makes the implications of each additional assumption more apparent.  
@@ -271,6 +271,57 @@ $$ w_1 = E[\theta] + p(g) \left( E[\theta | g]  - w_g(\delta) \right) - p(b) F_C
 Using these equations we can get a closed form solution for the fraction of bad signal workers fired $\delta$. 
 
 $$ \delta = 1- \frac{p(g) \left[ E[\theta] - (1 + p(b))F_C - E[\theta|b] \right]}{p(b) \left[ -E[\theta] + (1+p(b))F_C + (1+p(g))E[\theta|b] - p(g)E[\theta|g] \right]}$$
+
+
+\section{Three Period Model}
+
+Now we will extend the model to three periods. Following the notation above $w_xy$ refers to wages after sending signals of $x$ and $y$ to an employer in period 1 and 2 respectively. 
+
+\subsection{Flexible Wages}
+
+\subsubsection{Period 3 wages }
+
+With completely flexible wages the logic follows that of the two period model. We start from the final period. Given that Everyone is employed, outside firms has essentially no information about individual employees and so employing firms need only pay the expected output of the average worker to their best employees. 
+
+$$ w_{gg} = \E[\theta|ee] = \E[\theta]$$
+
+For workers who have sent a good and a bad signal, employers must offer a wage equal to the average output of workers at least as good. That is, 
+
+$$w_{gb} = w_{bg} = \E[\theta| ee, s_1 s_2 \notin gg] = \frac{2 \cdot p(gb)\E[\theta|gb] + p(bb) \E[\theta|bb]}{2 \cdot p(gb) + p(bb)} $$
+
+The worst signal employees will receive just their expected output 
+
+$$ w_{bb} = \E[\theta|bb]$$
+
+\subsubsection{Period 2 wages }
+
+In period 1, to retain good signal workers, employers need to offer the expected profit of an average period 1 worker. Outside Firms will obtain a worker with ability $\E[\theta]$ and receive 1 signal before retirement. Thus, the value of this average worker is identical to the value of new hire in the two period model. Thus 
+
+$$ w_g = \E[\pi|e] = \E[\theta|e] + p(g|e)(\E[\theta|eg] - E[\theta|e])$$
+
+Given that no one is fired, being employed for a period tells the outside firm nothing. So this is equivalent to 
+
+$$ w_g = \E[\theta] + p(g)(\E[\theta|g] - E[\theta]) $$
+
+Low signal workers, for the same logic as throughout the model, are paid their expected profits. 
+
+$$ w_b = \E[\pi|b] = \E[\theta|b] + p(g|b)(\E[\theta|gb] - w_{gb}) + p(b|g)(\E[\theta|bb] - w_{bb
+
+
+})$$
+
+
+\subsubsection{Period 1 wages }
+
+Now period 1 wages are the wages that satisfy the zero profit condition 
+
+$$w_1 = \E[\theta] + p(g) (\E[\theta|g] - w_g) + p(gg)(\E[\theta|gg] - w_{gg}) + 2\cdot p(gb)(\E[\theta|gb] - w_{gb})$$
+
+
+\subsection{Finding Equilibrium cutoffs}
+
+
+
 %------------------------------------------------------------------------------
 % bib
 %------------------------------------------------------------------------------

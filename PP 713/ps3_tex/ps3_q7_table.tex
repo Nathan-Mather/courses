@@ -1,0 +1,16 @@
+{
+\def\sym#1{\ifmmode^{#1}\else\(^{#1}\)\fi}
+\begin{tabular}{l*{2}{c}}
+\hline\hline
+                    &\multicolumn{1}{c}{Propensity score matching}&\multicolumn{1}{c}{Nearest Neighbor match}\\
+\hline
+ATET                &                     &                     \\
+r1vs0.Treatment indicator&       469.8\sym{*}  &       414.9         \\
+                    &     (231.8)         &     (221.0)         \\
+\hline
+Observations        &       10812         &        9764         \\
+\hline\hline
+\multicolumn{3}{l}{\footnotesize Standard errors in parentheses}\\
+\multicolumn{3}{l}{\footnotesize \sym{*} \(p<0.05\), \sym{**} \(p<0.01\), \sym{***} \(p<0.001\)}\\
+\end{tabular}
+}
