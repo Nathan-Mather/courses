@@ -1,0 +1,581 @@
+%-----------------------------------------------------------------------------------
+%	PACKAGES AND OTHER DOCUMENT CONFIGURATIONS
+%----------------------------------------------------------------------------------
+
+\documentclass{beamer}
+
+
+\newcommand{\Var}{\mathrm{Var}}
+
+\newcommand{\Cov}{\mathrm{Cov}}
+
+\newcommand{\plim}{\rightarrow_{p}}
+
+\usepackage{apacite}
+
+\usepackage{amsmath, amsfonts}
+\usepackage{graphicx}
+\usepackage{pdfpages}
+\usepackage{bm}
+\usepackage{listings}
+\usepackage{multirow,array}
+\usepackage{enumerate}
+\usepackage{bbm}
+\usepackage{subfig}
+\usepackage{bbm}
+\usepackage{multirow}
+
+
+
+\usepackage{amssymb}
+
+\usepackage{mathrsfs}
+\usepackage{float}
+\usepackage{booktabs}
+\usepackage{color}
+\usepackage{rotating}
+\usepackage{amsthm}
+\usepackage{multirow,array}
+\usepackage{caption}
+\usepackage{url}
+
+
+
+\DeclareMathOperator*{\argmax}{arg\,max}
+\DeclareMathOperator*{\argmin}{arg\,min}
+
+
+
+% Expectation symbol
+\newcommand{\E}{\mathrm{E}}
+\newcommand{\V}{\mathrm{V}}
+\newcommand{\N}{\mathcal{N}}
+\newcommand{\R}{\mathbb{R}} 
+
+\setbeamertemplate{navigation symbols}{}
+ 
+\addtobeamertemplate{navigation symbols}{}{%
+	\usebeamerfont{footline}%
+	\usebeamercolor[blue]{footline}%
+	\hspace{1em}%
+	\insertframenumber/\inserttotalframenumber
+}
+
+
+
+%-----------------------------
+% title stuff 
+%-------------------------
+
+\usepackage[utf8]{inputenc}
+
+
+
+%Information to be included in the title page:
+\title{Asymmetric Learning Model With Wage Rigidity and Costly Firings}
+\author{Nathan Mather}
+\institute{University of Michigan}
+\date{2019}
+
+
+
+
+
+%------------------------------------------------------------------------------
+%	begin doc
+%------------------------------------------------------------------------------
+
+\begin{document}
+	
+
+	
+	\frame{\titlepage}
+	
+\section{Introduction}
+
+%------------------------------------------------------------------------------
+%	frame 
+%------------------------------------------------------------------------------
+\begin{frame}
+	\frametitle{Introduction}
+	\begin{itemize}
+		\setlength{\itemsep}{3mm}
+		\item Analyze an asymmetric learning model as it relates to wages and tenure 
+		\item Incorporate sticky wages 
+		\item Incorporate fixed firing costs 
+		\item Basic model set up is similar to Acemoglu and Pischke
+		\item Scaled back to focus on wage evolution 
+		\item Simplifying in certain ways allows adding other unexplored complexity 
+	\end{itemize}
+\end{frame}
+
+
+%------------------------------------------------------------------------------
+%	frame 
+%------------------------------------------------------------------------------
+\begin{frame}
+\frametitle{Outline}
+\begin{itemize}
+	\setlength{\itemsep}{3mm}
+	\item Outline of basic model structure 
+	\item Equilibrium under flexible wages 
+	\item Equilibrium under sticky wages
+	\item Equilibrium under sticky wages and various firing costs
+	\item Implications 
+	\item Thoughts moving forward 
+\end{itemize}
+\end{frame}
+
+%------------------------------------------------------------------------------
+%	frame 
+%------------------------------------------------------------------------------
+\begin{frame}
+\frametitle{Model Environment}
+\framesubtitle{My Model}
+\begin{itemize}
+	\setlength{\itemsep}{1mm}
+	\item Workers have ability $\theta \in [0,1]$ 
+	\begin{itemize}
+		\setlength{\itemsep}{1mm}
+		\item Produce $\theta$ per period 		
+	\end{itemize}
+	\item Workers supply labor inelastically
+	\item exogenously separate at rate $\delta$ 
+	\item Employers receive a good signal $g$ w.p. $\theta$ and a bad signal $b$ w.p. $1-\theta$
+	\item Employers offer wages each period (no long term contracts).
+	\begin{itemize}
+		\item All firms can condition on employment status 
+		\item Current employer can also condition wage on signal
+	\end{itemize}
+	\item Outside firms see employment status and history (resume)
+	\item There are many identical firms
+	\begin{itemize}
+		\item Zero profit condition
+	\end{itemize} 
+	\item Downward wage rigidity 
+	\item Fixed cost to fire employee
+	
+\end{itemize}
+\end{frame}
+
+
+
+%------------------------------------------------------------------------------
+%	frame 
+%------------------------------------------------------------------------------
+\begin{frame}
+\frametitle{Variable Definitions}
+
+\begin{center}
+	\resizebox{.75\linewidth}{!}{\begin{tabular}{||c | c||} 
+			\hline
+			Variable & Meaning  \\ [0.5ex] 
+			\hline\hline
+			$\theta$ & Ability \\ 
+			\hline 
+			$g$ & Good Signal\\ 
+			\hline
+			$b$ & Bad Signal \\
+			\hline
+			$e$ & Employed Signal\\
+			\hline
+			$f$ & Fired Signal\\
+			\hline
+			$F_C$ &  Fixed Cost to Firing \\ 
+			\hline
+			$\delta$ & Exogenous separation rate \\ 
+			\hline
+			$w_1$ &  Period 1 Wage \\ 
+			\hline
+			$w_g$ & Wage After Good Signal \\
+			\hline
+			$w_b$ & Wage After Bad Signal \\
+			\hline
+			$w_u$ & Wage for unemployed worker\\	\hline
+			$\pi$ & Profits\\[1ex] 
+			\hline
+		\end{tabular}
+	}
+\end{center}
+
+\end{frame}
+
+
+%------------------------------------------------------------------------------
+%	frame 
+%------------------------------------------------------------------------------
+\begin{frame}
+\frametitle{Time Line}
+
+
+	\begin{itemize}
+			\setlength{\itemsep}{3mm}
+		\item period 1 wage offers
+		\item Workers produce output
+		\item workers exogenously separate
+		\item Workers send signal of ability 
+		\item Employers decide who to fire
+		\item Employers offer period 2 wages conditional on signals 
+		\item Outside Firms offer wages conditional on resume 
+		\item Workers take the best offer and work for one more period 
+		\item Workers retire 
+	\end{itemize}
+
+\end{frame}
+
+
+
+
+
+%------------------------------------------------------------------------------
+%	frame 
+%------------------------------------------------------------------------------
+\begin{frame}
+\frametitle{Flexible Wages}
+\framesubtitle{}
+
+\begin{itemize}
+	\setlength{\itemsep}{3mm}
+	\item Let $Q$ denote the fraction of workers that don't separate but then quit.  
+	
+	$$ w_u(Q) = (\delta \E[\theta] + Q \E[\theta | \text{worker quit}])/(\delta + Q)$$
+	
+	\item Employers will not pay more than the expected output of a worker, giving
+	
+	$$ w_b = \E[\theta | b] $$
+	
+	\item This implies that all bad signal employees quit since if $\delta > 0$ 
+	
+	$$ \E[\theta|b] < \frac{ \delta \E[\theta] + (1-\delta)p(b)( \E[\theta | b])}{\delta + (1-\delta)p(b)} = \min w_u(Q) $$
+	
+	\item Where the Right hand side is the lowest possible $w_u$ since here $ Q = (1-\delta)p(b)$
+\end{itemize}
+\end{frame}
+
+
+%------------------------------------------------------------------------------
+%	frame 
+%------------------------------------------------------------------------------
+\begin{frame}
+\frametitle{Flexible Wages}
+\framesubtitle{}
+
+\begin{itemize}
+	\setlength{\itemsep}{3mm}
+	\item If all bad signal employees quit than anyone still employed is identified as high ability. Giving
+	
+	$$ w_g = \E[\theta|g]$$
+	
+	\item This gives 
+	
+	$$ w_u =  \frac{ \delta \E[\theta] + (1-\delta)p(b)( \E[\theta | b])}{\delta + (1-\delta)p(b)}$$
+	
+	\item And a first period wage 
+	
+	$$w_1 = \E[\theta]$$
+
+\end{itemize}
+\end{frame}
+
+
+%------------------------------------------------------------------------------
+%	frame 
+%------------------------------------------------------------------------------
+\begin{frame}
+\frametitle{Sticky Wages}
+
+\begin{itemize}
+	\setlength{\itemsep}{5mm}
+	\item Now employers can't cut their low signal worker's wages. 
+	\item We know $w_1 > \E[\theta|b]$ because if it weren't profits would be positive
+	\item This implies employers fire bad signal workers 
+	\item Wage outcomes are identical to flexible model but with workers fired rather than quitting 
+	
+\end{itemize}
+
+\end{frame}
+
+
+%------------------------------------------------------------------------------
+%	frame 
+%------------------------------------------------------------------------------
+\begin{frame}
+\frametitle{Sticky Wages and fixed firing costs}
+
+\framesubtitle{Low firing costs}
+
+\begin{itemize}
+	\setlength{\itemsep}{3mm}
+	\item A low firing cost will not alter firms decision to fire bad signal employees 
+	\item  Now that hiring an employee means I may have to pay a cost to fire them, their marginal benefit is decreased and so their wage offer is lower
+	
+	$$ w_1 = \E[\theta] + (1- \delta)p(b)F_C$$
+	
+	\item Firms continue to do this as long as
+	
+	$$ w_1 - \E[\theta|b] > F_C$$
+	
+$$ \implies  \E[\theta] + (1- \delta)p(b)F_C -  \E[\theta|b] > F_C $$
+
+$$ \implies f_C < \frac{\E[\theta] -  \E[\theta|b]}{1 + p(b)(1-\delta)} $$
+	
+\end{itemize}
+
+\end{frame}
+
+
+
+%------------------------------------------------------------------------------
+%	frame 
+%------------------------------------------------------------------------------
+\begin{frame}
+\frametitle{Clarifying Equilibrium wages}
+\framesubtitle{An Aside}
+
+\textbf{To clarify the wage offers in the next section, first consider this numerical example: }
+
+\begin{itemize}
+	\item $w_u = 1 $
+\end{itemize}
+
+\begin{center}
+	\begin{tabular}{||c | c||} 
+		\hline
+		$\E[\theta]$ & EQ Wage offer  \\ [0.5ex] 
+		\hline\hline
+		3 & 2.5 \\ 
+		\hline 
+		2 & 2\\[1ex] 
+		\hline
+	\end{tabular}
+	
+\end{center}
+
+\begin{itemize}
+	
+	\item If the "raiding" firm offers $w = 2 + \epsilon$ to all  employed workers, they get only those with $E[\theta] = 2$ for a loss 
+	
+	\item If they offer $ w = 2.5 + \epsilon$ they get workers with average $\E[\theta] = 2.5$ for a loss
+	
+	\item These are the lowest wages the firm can offer and still retain their employees
+	
+	\item In general, it means employers pay a worker the expected ability of all workers less than and equal to their own ability
+	
+\end{itemize}
+\end{frame}
+
+
+
+
+%------------------------------------------------------------------------------
+%	frame 
+%------------------------------------------------------------------------------
+\begin{frame}
+\frametitle{Sticky Wages and fixed firing costs}
+
+\framesubtitle{High firing costs}
+
+\begin{itemize}
+	\setlength{\itemsep}{3mm}
+	\item If the fixed costs become sufficiently large, it is clear that firms will not fire any employees
+	
+	\item Firms must pay their employees enough to keep them from getting "raided"
+	
+	$$ w_g = E[\theta | e] =\E[\theta]$$
+	
+	$$ w_b = w_1$$ 
+	
+	\item Unemployed workers get their expected output 
+	
+	$$ w_u = E[\theta] $$
+	
+\end{itemize}
+
+\end{frame}
+
+%------------------------------------------------------------------------------
+%	frame 
+%------------------------------------------------------------------------------
+\begin{frame}
+\frametitle{Sticky Wages and fixed firing costs}
+
+\framesubtitle{High firing costs}
+
+\begin{itemize}
+	\setlength{\itemsep}{3mm}
+	\item This gives a first period wage through the zero profit condition 
+	$$w_1 = \E[\theta] + (1-\delta)(p(g)(\E[\theta|g] - \E[\theta]) + p(b)(\E[\theta|b] - w_1))$$
+	\item using the following fact: $p(g)\E[\theta|g] + p(b)\E[\theta|b] = \E[\theta]$
+	$$ \implies w_1 = \E[\theta] +  (1-\delta)(\E[\theta] - p(g)\E[\theta] - p(b)w_1)$$
+	\item Next, using 
+	$$ \E[\theta] - p(g)\E[\theta] = p(b)\E[\theta]$$
+	$$ \implies  w_1 = \E[\theta] +  (1-\delta)p(b)(\E[\theta] - w_1) $$
+	$$ \implies w_1 +(1-\delta)p(b)w_1 = \E[\theta] + (1-\delta)p(b)\E[\theta]$$
+	$$ \implies w_1 = \E[\theta]$$
+	\item all workers get paid $\E[\theta]$
+	
+	
+\end{itemize}
+
+\end{frame}
+
+%------------------------------------------------------------------------------
+%	frame 
+%------------------------------------------------------------------------------
+
+
+\begin{frame}
+\frametitle{Sticky Wages and fixed firing costs}
+
+\framesubtitle{High firing costs: stability}
+
+
+\begin{large}
+	\textbf{This equilibrium will be stable whenever it is more costly to fire an employee then to keep them at this wage.}
+\end{large}
+
+
+$$ F_C >  w_1 - \E[\theta|b] = \E[\theta] - \E[\theta|b]$$
+
+
+
+\end{frame}
+
+
+%------------------------------------------------------------------------------
+%	frame 
+%------------------------------------------------------------------------------
+
+\begin{frame}
+
+\frametitle{Sticky Wages and fixed firing costs}
+
+\framesubtitle{Mixed Equilibrium}
+
+\begin{itemize}
+	\setlength{\itemsep}{3mm}
+	\item Now consider the case between the two extremes.
+	
+	$$ F_C \in \left[  \frac{\E[\theta] - \E[\theta|b]}{1 + p(b)(1-\delta)} , \E[\theta] - \E[\theta|b] \right] $$
+	
+	\item In this case employers will fire a fraction of their bad signal workers $\delta_F$ until they are indifferent between firing and keeping them 
+	
+	$$  F_C = w_1 - E[\theta|b]$$ 
+	
+	\item Good signal employees need to be paid the expected output of an average worker employee in period 2 
+	
+	$$ w_g(\delta_F) = \frac{p(g)\E[\theta|g] + p(b)(1-\delta_F) \E[\theta|b] }{p(g) + p(b)(1-\delta_F)} $$
+	
+
+\end{itemize}
+\end{frame}
+
+%------------------------------------------------------------------------------
+%	frame 
+%------------------------------------------------------------------------------
+
+
+\begin{frame}
+
+\frametitle{Sticky Wages and fixed firing costs}
+
+\framesubtitle{Mixed Equilibrium}
+
+\begin{itemize}
+	\setlength{\itemsep}{3mm}
+
+	\item bad signal employees are paid the lowest wage possible $ w_b = w_1$ and unemployed get their expected output 
+	
+	$$ w_u = \frac{ \delta\E[\theta] + (1-\delta)\delta_F\E[\theta | b]}{  \delta + (1-\delta)\delta_F} $$
+	
+	\item by the zero profit condition we get the first period wages 
+	
+	$$w_1 = \E[\theta] + (1-\delta)  \bigg( p(g) \Big(\E[\theta|g] - w_g(\delta_F)  \Big) - p(b)F_C  \bigg) $$
+	
+\end{itemize}
+\end{frame}
+
+
+%------------------------------------------------------------------------------
+%	frame 
+%------------------------------------------------------------------------------
+
+
+\begin{frame}
+
+\frametitle{Sticky Wages and fixed firing costs}
+
+\framesubtitle{Mixed Equilibrium}
+
+\begin{itemize}
+	\setlength{\itemsep}{3mm}
+	
+	\item We have two equations for $w_1$ with the only unknown being $\delta_F$
+	
+	\item I have solved for it, but it not very intuitive or generally helpful. Can use it to solve numeric examples.
+	
+	\newcommand{\TA}{\frac{\E[\theta] - F_C - (1-\delta)p(b)F_C - \E[\theta|b]}{(1-\delta)p(g)} + \E[\theta|g]}
+	
+	\newcommand{\TAMEG}{\frac{\E[\theta] - F_C - (1-\delta)p(b)F_C - \E[\theta|b]}{(1-\delta)p(g)}}
+	
+	$$ \delta_F = \frac{p(g) \left[\TAMEG \right]}{ p(b) \left[ \E[\theta | b] - \TA \right] } $$
+	
+\end{itemize}
+\end{frame}
+
+%------------------------------------------------------------------------------
+%	frame 
+%------------------------------------------------------------------------------
+
+\begin{frame}
+\frametitle{What Next}
+\begin{itemize}
+	\setlength{\itemsep}{5mm}
+	\item Three period version is not intuitive. 
+	\begin{itemize}
+		\item I have made progress solving general numeric examples, but unsure how useful this is
+	\end{itemize}
+	\item More than two signal levels seems promising
+	\begin{itemize}
+		\item  I expect I will also need to resort to numeric examples 
+	\end{itemize} 
+	\item A continuous signal or just employers fully learning workers continuous ability measure 
+	\begin{itemize}
+		\item I started this and do not think there is a general solution. (Depends on $\theta$ distribution)
+	\end{itemize}
+	\item Promotions
+	\item An Acemoglu and Pischke type utility shock 
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Questions and Concerns }
+\begin{itemize}
+	\setlength{\itemsep}{5mm}
+	\item How to apply model to data?
+	\item Are numerical examples and graphs useful?
+	\item Trouble fitting this into literature 
+	\item Are the assumptions reasonable? 
+	
+\end{itemize}
+\end{frame}
+
+
+
+\begin{frame}
+
+\frametitle{The End }
+
+\begin{center}
+	
+\begin{Huge}
+\textbf{Thank You}
+\end{Huge}
+\end{center}
+\end{frame}
+
+%------------------------------------------------
+% end doc
+%------------------------------------------------
+\end{document}
+

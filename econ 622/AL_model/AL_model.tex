@@ -90,6 +90,13 @@
 
 	The results of the model so far suggest that in an otherwise frictionless market, asymmetric information of this type will tend to lower wages and increase wage dispersion with tenure. A market with asymmetric information and sticky wages, but with high fixed costs to firing, will see relatively constant and even wages over tenure. Finally, a market with wage rigidity but moderate costs to firing will see wage growth with tenure and wage cuts for fired workers. 
 
+
+
+%----------------------------------------------------------------------------------
+% Two period Model Basics 
+%----------------------------------------------------------------------------------
+
+
 	\section{ Two period Model}
 	\subsection{outline}
 	
@@ -202,7 +209,7 @@ using the fact that $p(g)\E[\theta|g] + p(b)\E[\theta|b] = \E[\theta]$ we get
 $$ w_1 = \E[\theta] + \E[\theta] - p(g)\E[\theta] - p(b)w_1$$
 
 using the fact that $ \E[\theta] - p(g)\E[\theta] = p(b)\E[\theta]$
-$$ \implies w_1 +p(g)w_1 = \E[\theta] + p(b)\E[\theta]
+$$ \implies w_1 +p(b)w_1 = \E[\theta] + p(b)\E[\theta]
 $$
 
 $$ \implies w_1 = \E[\theta]$$
@@ -252,25 +259,168 @@ This equilibrium implies $w_f < w_1 < \E[\theta] < w_g$. The intuition here is t
  
 \subsection{Mixed Equilibrium}
 
-If the fixed cost is $F_C \in \left( \frac{\E[\theta] - \E[\theta|b]}{1+p(b)}, \E[\theta] - \E[\theta |b] \right)$ than we will have a mixed equilibrium where firms fire a fraction $\delta$ of their bad signal employees.\par 
+If the fixed cost is $F_C \in \left( \frac{\E[\theta] - \E[\theta|b]}{1+p(b)}, \E[\theta] - \E[\theta |b] \right)$ than we will have a mixed equilibrium where firms fire a fraction $\delta_F$ of their bad signal employees.\par 
 
 Note that in a mixed equilibrium firms would need to be indifferent between firing and keeping employees after a bad signal. This implies that the fixed cost to firing must be equivalent to the loss from holding on to a low signal worker. That is 
 
 $$ F_C = w_1 - E[\theta|b]$$
 
-Given that $\delta$ of the bad signal employees are fired, the wages required to keep a good signal employee are 
+Given that $\delta_F$ of the bad signal employees are fired, the wages required to keep a good signal employee are 
 
-$$ w_g(\delta) = \frac{p(g) E[\theta|g] + p(g) (1-\delta) E[\theta|b] }{ p(g) +p(b)(1-\delta) } $$
+$$ w_g(\delta_F) = \frac{p(g) E[\theta|g] + p(g) (1-\delta_F) E[\theta|b] }{ p(g) +p(b)(1-\delta_F) } $$
 
 This is just the expected output of a worker who is not fired. That is the only information a worker can prove to an outside employer and so this is the highest offer they could receive. Given that they are being offered this by their current employers, no good signal workers would leave for any outside offer and so low wage workers receive their "stuck" wage of $w_1$. \par 
 
 Now given those period 2 wages the period 1 wages will satisfy the zero profit condition. 
 
-$$ w_1 = E[\theta] + p(g) \left( E[\theta | g]  - w_g(\delta) \right) - p(b) F_C$$
+$$ w_1 = E[\theta] + p(g) \left( E[\theta | g]  - w_g(\delta_F) \right) - p(b) F_C$$
 
-Using these equations we can get a closed form solution for the fraction of bad signal workers fired $\delta$. 
+Using these equations we can get a closed form solution for the fraction of bad signal workers fired $\delta_F$. 
 
-$$ \delta = 1- \frac{p(g) \left[ E[\theta] - (1 + p(b))F_C - E[\theta|b] \right]}{p(b) \left[ -E[\theta] + (1+p(b))F_C + (1+p(g))E[\theta|b] - p(g)E[\theta|g] \right]}$$
+$$ \delta_F = 1- \frac{p(g) \left[ E[\theta] - (1 + p(b))F_C - E[\theta|b] \right]}{p(b) \left[ -E[\theta] + (1+p(b))F_C + (1+p(g))E[\theta|b] - p(g)E[\theta|g] \right]}$$
+
+
+
+
+
+%----------------------------------------------------------------------------------
+% 2 period model with eogenous seperation. 
+%----------------------------------------------------------------------------------
+
+% I am going to try this outlined in the order that I think is better for presentation 
+% can maybe go back and change the first section to match later 
+
+\section{Two Period Model With Exogenous separation }
+
+Now lets assume that a fraction $\delta$ of workers just exogenously separate after period one. We assume that employers cannot distinguish between someone who was fired or exogenously separate. This means there is only one wage offer for all unemployed workers in period 2. Employers can still offer different wages to current employees of other firms. 
+
+\subsection{Flexible wages}
+
+In the unrestricted model of asymmetric information exogenous separation significantly changes the interpretation of the result. Let $Q$ denote the fraction of workers that don't separate and quit. The wage offer to an unemployed worker is   
+
+$$ w_u = (\delta \E[\theta] + Q \E[\theta | \text{worker quit}])/(\delta + Q)$$
+
+We also know that employers will not pay more than the expected output of a worker, so 
+
+$$ w_b = \E[\theta | b] $$
+
+This implies that all bad signal employees quit since if $\delta > 0$ 
+
+$$ \E[\theta|b] < \frac{ \delta \E[\theta] + (1-\delta)p(b)( \E[\theta | b])}{\delta + (1-\delta)p(b)}$$
+
+where the Right hand side is the lowest possible $w_u$. If all bad signal employees quite than anyone still employed is identified as high ability and so we get a high signal wage 
+
+$$ w_g = \E[\theta|g]$$
+
+and an unemployed wage offer of  
+
+$$ w_u =  \frac{ \delta \E[\theta] + (1-\delta)p(b)( \E[\theta | b])}{\delta + (1-\delta)p(b)}$$
+
+and all bad signal employees quit. 
+
+This gives a first period wage offer of 
+
+$$w_1 = \E[\theta]$$
+
+
+
+\subsection{sticky wages}
+
+The outcome above seems unrealistic because large real wage cuts don't typically happen. Moreover, if an employer is dissatisfied with an employee they are likely to fire them, not cut their wage an induce them to quit.In fact, in the above model no one is ever fired, and with the logic there firings don't really make sense. To correct this I first introduce sticky wages. Now employers can't cut wages but they can fire their employees.\par 
+
+by the same logic as without exogenous separation we know $w_1 > \E[\theta | b]$ so employers will fire bad signal workers. This actually gives us the same outcome as the flexible wage model but now all bad signal employees are fired rather than quitting. 
+
+\subsection{fixed cost to firing}
+
+\subsubsection{All bad signal workers fired}
+
+The sticky wage result of all bad signal workers being fired at lest acknowledges the existence of firing, but it may not be completely satisfactory either. Certainly employers don't fire employees as soon as their expected output drops just below their wage? Firing employees and creating turnover can be difficult. \par 
+
+next we incorporate a fixed cost to firing employees. If the fixed cost is very low, it will not alter the employer's behavior in period two. They simply pay the fixed cost and fire their bad signal employees. However, this does alter the period one wage offer. Now that hiring an employee means I may have to pay a cost to fire them, their marginal benefit is decreased and so their wage offer is lower. Specifically we get
+
+$$ w_1 = \E[\theta] + (1- /delta)p(b)F_C$$
+
+firms continue to do this as long as the fixed cost to firing is less than the loss from holding onto a bad signal worker. Since they can't lower their wage, keeping a bad signal employee would cost $\E[\theta|b] - w_1$. Thus, paying the fixed cost and firing all bad signal workers is stable as long as 
+
+$$ w_1 - \E[\theta|b] > F_C$$
+
+$$ \implies  \E[\theta] + (1- \delta)p(b)F_C -  \E[\theta|b] > F_C $$
+
+$$ \implies f_C < \frac{\E[\theta] -  \E[\theta|b]}{1 + p(b)(1-\delta)} $$
+
+\subsubsection{No workers fired} 
+If the fixed costs become sufficiently large, it is clear that firms will not fire any employees. In this case firms must pay their good signal employees enough to keep them from getting poached. 
+
+$$ w_g = E[\theta | e] =\E[\theta]$$
+
+They will pay their bad signal employees as little as possible 
+$$ w_b = w_1$$ 
+
+unemployed workers get their expected output 
+$$ w_u = E[\theta] $$
+
+this gives a first period wage through the zero profit condition 
+$$w_1 = \E[\theta] + (1-\delta)(p(g)(\E[\theta|g] - \E[\theta]) + p(b)(\E[\theta|b] - w_1))$$
+
+
+using the fact that $p(g)\E[\theta|g] + p(b)\E[\theta|b] = \E[\theta]$ we get 
+
+$$ w_1 = \E[\theta] +  (1-\delta)(\E[\theta] - p(g)\E[\theta] - p(b)w_1)$$
+
+using the fact that $ \E[\theta] - p(g)\E[\theta] = p(b)\E[\theta]$
+
+$$ \implies  w_1 = \E[\theta] +  (1-\delta)p(b)(\E[\theta] - w_1) $$
+$$ \implies w_1 +(1-\delta)p(b)w_1 = \E[\theta] + (1-\delta)p(b)\E[\theta]$$
+
+$$ \implies w_1 = \E[\theta]$$
+
+So all workers get paid $\E[theta]$ no one is fired and also no workers are induced to quit since quiting gets them the same wage. Firms have inside information but they are too restricted to do anything with it. They can't lower their bad employees wages or fire them. \par 
+
+This equilibrium will be stable whenever it is more costly to fire an employee then to keep them at this wage. That is when 
+
+$$ F_C >  w_1 - \E[\theta|b] = \E[\theta] - \E[\theta|b]$$
+
+
+\subsubsection{mixed equilibrium}
+
+Now consider the case between the two extremes. when 
+
+$$ F_C \in \left[  \frac{\E[\theta] - \E[\theta]}{1 + p(b)(1-\delta)} , \E[\theta] - \E[\theta|b] \right] $$
+
+In this case employers will fire a fraction of their bad signal workers $\delta_F$ until they are indifferent between firing and keeping them 
+$$  F_C = w_1 - E[\theta|b]$$ 
+
+Good signal employees need to be paid the expected output of an average worker employee in period 2 
+
+$$ w_g(\delta_F) = \frac{p(g)\E[\theta|g] + p(b)(1-\delta_F) \E[\theta|b] }{p(g) + p(b)(1-\delta_F)} $$
+
+bad signal employees are paid the lowest wage possible $ w_b = w_1$ and unemployed get their expected output 
+
+$$ w_u = \delta\E[\theta] + (1-\delta)\delta_F\E[\theta | b]$$
+
+by the zero profit condition we get the first period wages 
+
+$$w_1 = \E[\theta] + (1-\delta)  \bigg( p(g) \Big(\E[\theta|g] - w_g(\delta_F)  \Big) - p(b)F_C  \bigg) $$
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+%----------------------------------------------------------------------------------
+% Three Period Model
+%----------------------------------------------------------------------------------
 
 
 \section{Three Period Model}
@@ -305,10 +455,7 @@ $$ w_g = \E[\theta] + p(g)(\E[\theta|g] - E[\theta]) $$
 
 Low signal workers, for the same logic as throughout the model, are paid their expected profits. 
 
-$$ w_b = \E[\pi|b] = \E[\theta|b] + p(g|b)(\E[\theta|gb] - w_{gb}) + p(b|g)(\E[\theta|bb] - w_{bb
-
-
-})$$
+$$ w_b = \E[\pi|b] = \E[\theta|b] + p(g|b)(\E[\theta|gb] - w_{gb}) + p(b|g)(\E[\theta|bb] - w_{bb})$$
 
 
 \subsubsection{Period 1 wages }

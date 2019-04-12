@@ -1,0 +1,92 @@
+
+
+%-----------------------------------------------------------------------------------
+%	PACKAGES AND OTHER DOCUMENT CONFIGURATIONS
+%----------------------------------------------------------------------------------
+
+
+
+\documentclass[11pt]{article}
+
+\usepackage[top=2cm, bottom=3cm, left=2cm, right=2cm]{geometry}
+
+
+\setlength{\parindent}{0in}
+
+\newcommand{\Var}{\mathrm{Var}}
+
+\newcommand{\Cov}{\mathrm{Cov}}
+
+\newcommand{\plim}{\rightarrow_{p}}
+
+\usepackage{amsmath, amsfonts}
+\usepackage{graphicx}
+\usepackage{pdfpages}
+\usepackage{bm}
+\usepackage{listings}
+
+% Expectation symbol
+\newcommand{\E}{\mathrm{E}}
+\newcommand{\V}{\mathrm{V}}
+
+%----------------------------------------------------------------------------------
+%	TITLE AND AUTHOR(S)
+%----------------------------------------------------------------------------------
+
+\title{PubPol 713 reading questions} % The article title
+
+
+\author{Nathan Mather} % The article author(s) 
+
+\date{\today} % An optional date to appear under the author(s)
+
+
+%----------------------------------------------------------------------------------
+\begin{document}
+	
+	%------------------------------------------------------------------------------
+	%	TABLE OF CONTENTS & LISTS OF FIGURES AND TABLES
+	%------------------------------------------------------------------------------
+	\maketitle % Print the title/author/date block
+	
+	\setcounter{tocdepth}{2} % Set the depth of the table of contents to show sections and subsections only
+	
+	%\tableofcontents % Print the table of contents
+	
+	
+\section{Question 1}	
+They did this because published tuition is not the price that many students pay. Tuition is often discounted for many students. This allows the institutions to price discriminate based on willingness to pay. The posted tuition rate could remain the same while institutions ramp up price discrimination strategies and actually increase total revenue collected from students.
+
+\section{Question 2}
+It would be fairly straightforward to at lest check the validity of these mechanisms with observational data. For example, to check if colleges “shift the composition of the student body toward one comprised of students with a higher willingness to pay.” We could see if institutions that are passing costs on to students are increasing enrollment of out of state and international students. We could use the same instrument to see if an increase in out of state and international students is caused by divestment.  
+
+\section{Question 3}
+I added a few years and added a link to some R code for scraping data from pdf files 
+
+\section{Question 4}
+To extend this to an event study all we need to do is, rather than having a single dummy variable for the event in question, we have dummies for being K year’s away from the treatment. This way we can look at the trend in coefficients around the expected treatment. 
+
+
+
+$$
+EDUC_{iscy} = \sum_{k=-3}^{k=4^+} \gamma_k (DROPAGE_{s,c,y+k} > 16) +  \delta_s +  \delta_c  +  \delta_y +  \epsilon_{iscy}    $$	
+	
+Oreopoulos uses age 16 so that is what I did here, but with could be changed to 17 or 18 to match the Michigan law change. 
+	
+	
+	%------------------------------------------------
+	% end doc
+	%------------------------------------------------
+\end{document}
+
+
+
+
+
+
+
+
+
+
+
+
