@@ -35,7 +35,7 @@ tempfile temp_data
  save "`temp_data'"
 
 * load in comp school age 
-import delim "C:\Users\Nmath_000\Documents\data\pp713\Dropout_Age_for_Testing.csv", clear
+import delim "C:\Users\Nmath_000\Documents\data\pp713\Dropout_Age_final.csv", clear
 
 local year = 2000
 
@@ -86,6 +86,7 @@ replace educ_dum = 1 if school == 2 | educ > 5
 * set up a matrix for the results 
 matrix coefs = J(1,7,.)
 matrix SE = J(1,7,.)
+svyset  [pweight = perwt]
 
 forvalues i = 14/20{
 
@@ -95,7 +96,7 @@ local mat_post = `i' - 13
 
 * run regression 
 * limit to those above 16 since those are who we expect a change for 
-reg educ_dum dropage_gr_16 i.census_region if age == `i'
+svy: reg educ_dum dropage_gr_16 i.census_region if age == `i'
 
 * store result in matrix 
 matrix coefs[1,`mat_post'] = _b[dropage_gr_16]
