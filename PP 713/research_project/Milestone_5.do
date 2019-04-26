@@ -118,8 +118,9 @@ coefplot matrix(coefs), se(SE)  vertical
 cd 
 graph export "$outdir\coef_plot.png" , replace
 
+gen school_dum = school - 1
 
-graph bar educ_dum, over(age) label
+graph bar school_dum, over(age) label
 
 
 graph export "$outdir\bar_plot.png" , replace
