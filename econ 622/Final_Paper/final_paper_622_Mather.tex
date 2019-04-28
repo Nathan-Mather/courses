@@ -90,22 +90,16 @@
 
 	\section{Introduction}
 	
-	Labor market models seek to strike a balance between including realistic aspects of the labor market while remaining parsimonious and understandable. Asymmetric learning models incorporate the realistic assumption that current employers will know more about their own employees than competing firms.  Acemoglu and Picshke lay out an extensive model of asymmetric information and show how it can explain employers paying for general training \cite{AP_1998} \cite{AP_1999}. While this work showed how a the reasonable assumption of assymetric information could explain the puzzle of employers paying for training, their work did not actually confirm empirically that asymmetric information is prevalent in labor markets. Uta Schönberg developed a strategy for empirically estimating to what extent this asymmetry exists in the market \cite{Sch_2007}. Surprisingly, Schönberg finds little evidence of asymmetric information in the labor market; however, the logic and anecdotal evidence supporting this assumption seems strong enough to warrant additional investigation. Rather than working to empirically measure the level of asymmetric information again, I build out a model of asymmetric information with additional realistic assumptions about labor markets. The goal is to create a more realistic model and identify what implications these additional factors have for wages in various markets.
+	Labor market models seek to strike a balance between including realistic aspects of the labor market while remaining parsimonious and understandable. Asymmetric learning models incorporate the realistic assumption that current employers will know more about their own employees than competing firms.  Acemoglu and Picshke lay out an extensive model of asymmetric information and show how it can explain employers paying for general training \cite{AP_1998} \cite{AP_1999}. While this work showed how a the reasonable assumption of assymetric information could explain the puzzle of employers paying for training, their work did not actually confirm empirically that asymmetric information is prevalent in labor markets. Uta Schönberg developed a strategy for empirically estimating to what extent this asymmetry exists in the market \cite{Sch_2007}. Surprisingly, Schönberg finds little evidence of asymmetric information in the labor market; however, the logic and anecdotal evidence supporting this assumption seems strong enough to warrant additional investigation. \par 
 	
+	Rather than working to empirically measure the level of asymmetric information again, I build out a model of asymmetric information with additional realistic assumptions about labor markets. The goal is to create a more realistic model and identify what implications these additional factors have for wages in various markets. The main idea and focus of my model is to investigate how wages are impacted by asymmetric information in an environment where outside firms only observe a resume like signal and are subject to sticky wages and various fixed firing costs. The model has a lot in common with the two period Acemoglu and Picshke model of asymmetric learning and general training, but is simplified in certain ways in order to focus on new assumptions and aspects of the Labor market \cite{AP_1998}.  \par
 	
-	The main idea and focus of my model is to investigate how wages are impacted by asymmetric information in an environment where outside firms only observe a resume like signal. The two period version of my model has a lot in common with the two period Acemoglu and Picshke model of asymmetric learning and general training \cite{AP_1998}. I, however, am not focusing on training, and differ from there set up in some key ways. \par
+	Some of the key way my model differs is that employers in my model will only observe a noisy signal of worker ability. A firm that receives a good signal will consider that worker to have a high \textit{expected} ability rather than simply knowing they have high ability. I believe this departure will have more significant implications in a 3 period or more model. The second difference from the Acemoglu and Picshke model is that I assume outside firms can observe an employees resume. That is,  they can tell after period one if a worker was fired or separated from their firm, or if the firm decided to keep them. This has implications for the two period model, and will allow for a more realistic framework for labor force signals in 3 or more periods. Finally, I consider the impact of sticky wages and costly firings.  \par 
 	
-
-	NEED EDITING 
-	Employers in my model will only observe a noisy signal of worker ability. A firm that receives a good signal will consider that worker to have a high \textit{expected} ability rather than simply knowing they have high ability. I believe this departure will have more significant implications in a 3 period or more model. The second difference from the Acemoglu and Picshke model is that I assume outside firms can observe an employees resume. That is,  they can tell after period one if a worker was fired or separated from their firm, or if the firm decided to keep them. This has implications for the two period model, and will allow for a more realistic framework for labor force signals in 3 or more periods. Finally, I consider the impact of sticky wages and costly firings.  \par 
-
+	The results of the model so far suggest that in an otherwise frictionless market, asymmetric information of this type will tend to lower wages and increase wage dispersion with tenure. A market with asymmetric information and sticky wages, but with high fixed costs to firing, will see relatively constant and even wages over tenure. \par
 	
-	NEED EDITING 
-	The results of the model so far suggest that in an otherwise frictionless market, asymmetric information of this type will tend to lower wages and increase wage dispersion with tenure. A market with asymmetric information and sticky wages, but with high fixed costs to firing, will see relatively constant and even wages over tenure. Finally, a market with wage rigidity but moderate costs to firing will see wage growth with tenure and wage cuts for fired workers. 
-
-NEED EDITING 	
-In section 2.1 ee start by laying out the basic structure of the model. In section 2.2 we find the equilibrium outcome in a market with no fixed costs to firing and completely flexible wages. We then consider what happens to this model if we introduce wage rigidity, but have no firing costs. Finally, we consider what happens as the cost to firing is increased. While the initial model without wage rigidity or firing costs closely matches a simplified version of the  Acemoglu and Picshke mode, explicitly laying out the implications of the model in this setting makes the impact of wage rigidity and firing costs more clear \cite{AP_1998} \cite{AP_1999}.
-
+	In section 2.1 We start by laying out the basic structure of the model. In section 2.2 we find the equilibrium outcome in a market with no fixed costs to firing and completely flexible wages. While the initial model without wage rigidity or firing costs closely matches a simplified version of the  Acemoglu and Picshke mode, explicitly laying out the implications of the model in this setting makes the impact of wage rigidity and firing costs more clear \cite{AP_1998} \cite{AP_1999}. In section 2.3, we then consider what happens to this model if we introduce wage rigidity, but have no firing costs. Finally, in section 2.4, we consider what happens as for various firing costs. In section 3 we simulate results for various parameters to better understand the implications of the model. In section 4 we consider what the model is missing and where to expand it in the future. 
+	
 %----------------------------------------------------------------------------------
 % Two period Model Basics 
 %----------------------------------------------------------------------------------
@@ -117,18 +111,17 @@ In section 2.1 ee start by laying out the basic structure of the model. In secti
 	\subsection{Environment}
 	
 
-	The model lasts for two periods. In the first period no firm has information about any individual workers. While it is a bit of a stretch to think that firms have zero information about a potential worker, consider two new entrants to the workforce with similar skills and resumes. Firms have very little ability to gain information to distinguish between the two. While interviews could potentially help, there is some evidence that they may actually lead to less informed decision maker \cite{interview_2013}. This model abstracts away from observable differences in things like education to consider the wages of workers who are similar on paper. \par
-	
+	The model lasts for two periods. In the first period no firm has information about any individual workers. While it is a bit of a stretch to think that firms have zero information about a potential worker, consider two new entrants to the workforce with similar skills and resumes. Firms have very little ability to gain information to distinguish between the two. While interviews could potentially help, there is some evidence that they may actually lead to less informed decision making \cite{interview_2013}. This model abstracts away from observable differences in things like education to consider the wages of workers who are similar on paper. \par
+
 	While firms have no information about individual workers, firms do have knowledge about the workforce as a whole. Firm know workers have ability $\theta \in [0,1]$ which is  distributed over $f(\theta)$. Workers produce $\theta$ per period and supply labor inelastically. They take the highest wage offer they receive, and in the event of a tie stay with their current employer or pick randomly if unemployed.\par
 	
 	After working for one period a fraction $\delta$ of workers exogenously separate from their firm. Employers cannot distinguish between someone who was fired or exogenously separated. This implies firms offer a single wage to all unemployed workers in period 2 since, to employers, they all have the same resume and are identical \footnote{that is they have one year experience and are currently unemployed}. Employers can offer a different wage to workers who have not been fired or separated. These workers are distinguishable from the unemployed \footnote{they have a year of experience and are currently employed on their resume} and likely have different average characteristics. \par
 	
-	
-	For these workers that do not separate, their current employers receive a noisy signal about their ability. Workers with ability $\theta$ send a good signal with probability $\theta$ and a bad signal with probability $1-\theta$. This exact specification is not important, we just need that higher ability implies a higher probability of sending a good signal. After receiving this signal employers choose if they want to fire employees for a fixed cost $F_C$. Employers then offer wages to their employees for period 2 conditional on this signal. After Employers offer wages to their own employees, firms can then offer wages to outside workers conditional on employment history. Workers decide where to work and produce for one more period before retiring. There are many competitive firms, so this implies a zero profit condition on all firms. \par 
-	
-
-	The variables I will be using are summarized in the table below. 
-	
+	For the workers that do not separate, their current employers receive a noisy signal about their ability. Workers with ability $\theta$ send a good signal with probability $\theta$ and a bad signal with probability $1-\theta$. This exact specification is not crucial, we just need that higher ability implies a higher probability of sending a good signal. After receiving this signal employers choose if they want to fire employees for a fixed cost $F_C$. Employers then offer wages to their employees for period 2 conditional on this signal. After Employers offer wages to their own employees, firms can then offer wages to outside workers conditional on employment history. Workers decide where to work and produce for one more period before retiring. There are many competitive firms, so this implies a zero profit condition on all firms. The variables I will be using are summarized in table 1 below. The time line is also laid out more concisely below.\par 
+ 
+	\begin{center}
+		\textbf{{\Large Table 1}  }
+	\end{center}
 	\begin{center}
 		\resizebox{.75\linewidth}{!}{\begin{tabular}{||c | c||} 
 				\hline
@@ -163,8 +156,9 @@ In section 2.1 ee start by laying out the basic structure of the model. In secti
 		}
 	\end{center}
 	
-The time-line is also laid out more concisely below
-
+\begin{center}
+	\textbf{{\Large Time line}  }
+\end{center}
 	\begin{enumerate}
 	\setlength{\itemsep}{1mm}
 	\item period 1 wage offers
@@ -177,6 +171,8 @@ The time-line is also laid out more concisely below
 	\item Workers take the best offer and work for one more period 
 	\item Workers retire 
 \end{enumerate}
+
+
 
 
 
@@ -250,7 +246,7 @@ Lemma 2 implies $w_b = w_1$ because $w_b$ will be ``stuck". So, since firing is 
  \subsection{sticky wages and firing costs }
  
  	 
- The sticky wage result least acknowledges the existence of firing, but it may not be completely satisfactory either. Employers likely don't fire employees as soon as their expected output drops just below their wage. Firing employees and creating turnover can be difficult and costly for firms.  Some firms may face extremely high fixed costs to firing through legal risk, difficulty building a case for firing workers, difficulty getting managers to fire employees, or strong unions. This gives firms an incentive to hang on to some employees even if their marginal productivity is less than their wage. We incorporate this logic into the model by introducing a fixed cost to firing employees \par 
+ The sticky wage result at least acknowledges the existence of firing, but it may not be completely satisfactory either. Employers likely do not fire employees as soon as their expected output drops just below their wage. Firing employees and creating turnover can be difficult and costly for firms.  Some firms may face extremely high fixed costs to firing through legal risk, difficulty building a case for firing workers, difficulty getting managers to fire employees, or strong unions. This gives firms an incentive to hang on to some employees even if their marginal productivity is less than their wage. We incorporate this logic into the model by introducing a fixed cost to firing employees \par 
  
 	%----------------------------------------------------------------------------------
 	% low firing costs 
@@ -258,11 +254,10 @@ Lemma 2 implies $w_b = w_1$ because $w_b$ will be ``stuck". So, since firing is 
  
 	 \subsubsection{Low firing costs}
 	 
-	 If the fixed cost is very low, it will not alter the employer's behavior in period two compared to the model above with zero firing costs. Later we determine how low exactly this needs to be,  but for now simply consider a ``small enough? fixed cost. Firms will simply pay the fixed cost and fire their bad signal employees. While this does not alter period 2 decisions, it does alter the period one wage offer. This is because now when a firm hires an employee, they will have difficulty getting rid of them if they are bad. Wages are sticky so the worker cannot be induced to quit, and if the firm wants to fire the worker they need to pay a fixed cost. Together, this implies the marginal benefit of a newly hired worker has decreased due to this fixed cost. So, the wage offer in period one is lower. Specifically, we get
+	 First we consider the case of very low firing costs. This situation could apply to markets like low wage retail jobs without unions. There are likely some fixed administrative costs to firing employees, but the large risks of legal repercussions are likely much smaller than in other markets. If the fixed cost is very low, it will not alter the employer's behavior in period two compared to the model above with zero firing costs. Later we determine how low exactly this needs to be,  but for now simply consider a ``small enough" fixed cost. Firms will simply pay the fixed cost and fire their bad signal employees. While this does not alter period 2 decisions, it does alter the period one wage offer. This is because now when a firm hires an employee, they will have difficulty getting rid of them if they are bad. Wages are sticky so the worker cannot be induced to quit, and if the firm wants to fire the worker they need to pay a fixed cost. Together, this implies the marginal benefit of a newly hired worker has decreased due to this fixed cost. So, the wage offer in period one is lower. Specifically, we get
 	 
 	 $$ w_1 = \E[\theta] - (1- \delta)p(b)F_C$$
-	 Firms may have difficulty getting rid of bad employees, but will employees ever quit on their own? If so, this would lead to a different outcome than the one outlined above. Bad employees will not ever quit on their own because their stuck wage $w_1$ will always be greater than or equal to the unemployed wage $w_u$. I prove that this is true for all fixed costs in this range of this equilibrium in the section on mixed equilibrium. 
-	 Next, we determine for which fixed costs this outcome holds. These wages will be a stable equilibrium whenever firms cannot deviate and receive positive profits. If a firm deviates and keeps their bad signal employees they will have to pay them $w_1$ (because of sticky wages). These workers will not leave for another firm because $w_1 \geq w_u$. Therefore, keeping bad signal employees gives 
+	 Firms may have difficulty getting rid of bad employees, but will employees ever quit on their own? If so, this would lead to a different outcome than the one outlined above. Bad employees will not ever quit on their own because their stuck wage $w_1$ will always be greater than or equal to the unemployed wage $w_u$. I prove that this is true for all fixed costs that lead to this equilibrium in the section on mixed equilibrium. Next, we determine for which fixed costs this outcome holds. These wages will be a stable equilibrium whenever firms cannot deviate and receive positive profits. If a firm deviates and keeps their bad signal employees they will have to pay them $w_1$ (because of sticky wages). These workers will not leave for another firm because $w_1 \geq w_u$. Therefore, keeping bad signal employees gives 
 	 
 	 $$\pi_{keep} = \E[\theta] - w1 + (1-\delta) \Big(p(g)(\E[\theta|g] - w_g) + p(b)(\E[\theta|b] - w_1 )\Big) = \E[\theta] - w_1 +  (1-\delta) \Big( p(b)(\E[\theta|b] - w_1) \Big) $$
 	 
@@ -279,7 +274,7 @@ Lemma 2 implies $w_b = w_1$ because $w_b$ will be ``stuck". So, since firing is 
 	 
 	 
 	 
-	 This equilibrium implies $w_u < w_1 < \E[\theta] < w_g$. The intuition here is that in period two firms either make 0 expected profits on good signal workers or have to pay to fire bad signal workers. Given this, workers in the first period are paid below their expected first period output. While this leads to the odd conclusion that firms would be happy if their entire labor force left in the second period, this is an artifact of only having two signals for simplicity. With two signals, Employers are taking losses on firing bad employees and then just breaking even on good employees. If they had middle employees, the would retain some inside information about their workforce even after firing all bad worker. In this case they would not want their good employees to quit \footnote{This discussion of results under more signals should be taken with the caveat that I have not completely solved the model for this case, and am relying only on intuition and some preliminary efforts}.
+	 This equilibrium implies $w_u < w_1 < \E[\theta] < w_g$. The intuition here is that in period two firms either make 0 expected profits on good signal workers or have to pay to fire bad signal workers. Given this, workers in the first period are paid below their expected first period output. While this leads to the odd conclusion that firms would be happy if their entire labor force left in the second period, this is an artifact of only having two signals for simplicity. With two signals, Employers are taking losses on firing bad employees and then just breaking even on good employees. If they had middle signal employees, they would retain some inside information about their workforce even after firing all bad worker. In this case they would not want their good employees to quit.\footnote{This discussion of results under more signals should be taken with the caveat that I have not completely solved the model for this case, and am relying only on intuition and some preliminary efforts}
 	 
 	 %----------------------------------------------------------------------------------
 	 % Wage rigidity with High firing Costs 
@@ -287,7 +282,7 @@ Lemma 2 implies $w_b = w_1$ because $w_b$ will be ``stuck". So, since firing is 
 		 
 	 \subsubsection{High firing Costs  }
 	 
-	While in many cases the fixed costs to firing may be small, as in the case above, in other markets the costs may be extremely high. For example, markets with extremely strong unions may make it very costly to fire a worker. Even incredibly strong worker solidarity without unions may mean the firm incurs costs through lower productivity of current workers. Another possibility is that a firm may be under strict legal rules about firing workers. It may be that firing workers risks paying out large legal fees. If the fixed costs become sufficiently large, it is clear that firms will not fire any employees. We now explore this extreme case below. \par
+	While in many cases the fixed costs to firing may be small, as as we outlines above above, in other markets the costs may be extremely high. For example, markets with extremely strong unions may make it very costly to fire a worker. Even in the absence of unions, strong worker solidarity or reputation effects may mean the firm incurs costs through lower productivity of current workers or lower quality future applicants. Another possibility is that a firm may be under strict legal rules about firing workers. It may be that firing workers risks paying out large legal fees. If the fixed costs become sufficiently large, it is clear that firms will not fire any employees. We will determine how large is "sufficiently large", but for now simply consider an extreme case.\par
 	
 	Given that no employees are fired, we now need to determine what equilibrium wages will be when firms retain both high and low signal workers. It is also clear from the above work that $w_b = w_1$ since those wages are stuck. This also implies $w_b \leq w_g$. 
 	
@@ -322,13 +317,13 @@ Lemma 2 implies $w_b = w_1$ because $w_b$ will be ``stuck". So, since firing is 
 	
 	$$ \implies w_1 = \E[\theta]$$
 	
-	So all workers get paid $\E[theta]$ no one is fired and also no workers are induced to quit since quitting gets them the same wage. Firms have inside information, but they are too restricted to do anything with it. They can't lower their bad employee's wages or fire them. \par 
+	So all workers get paid $\E[\theta]$ no one is fired and also no workers are induced to quit since quitting gets them the same wage. Firms have inside information, but they are too restricted to do anything with it. They can not lower their bad employee's wages or fire them. \par 
 	
 	This equilibrium will be stable whenever it is more costly to fire an employee then to keep them at this wage \footnote{ 	While I find this story fairly conniving, there is some aspect of firm behavior that still doesn't seem quite right to me. Specifically, wages are treated exogenously in the stability condition. In a later section we explore the possibility of an extension to the model that allows wage offers specific to each firm that would make wages endogenous to firm's decisions about firing employees. This extension would clear up much of the logic above and make the model more accurate, albeit much more complicated.}. That is when 
 	
 	$$ F_C >  w_1 - \E[\theta|b] = \E[\theta] - \E[\theta|b]$$
 	
-	The implication of this is that sticky wages make it impossible for firms to capitalize on their inside information in period 2 by cutting worker's wages while the high firing costs are making it impossible to use inside information for strategic firing. Thus, they earn no profits in period two and incur no costs; So, period one wages are not bid up past expected revenue in period 1. This fits the intuition that if unions are strong and firing workers is hard, wages will not disperse over time and will not increase due to employers learning about innate ability \footnote{They would likely increase do to forces outside the model, however, like human capital development. The point is that employer learning will not contribute to wage groeth.}. 
+	The implication of this is that sticky wages make it impossible for firms to capitalize on their inside information in period 2 by cutting worker's wages while the high firing costs are making it impossible to use inside information for strategic firing. Thus, they earn no profits in period two and incur no costs; So, period one wages are not bid up past expected revenue in period 1. This fits the intuition that if unions are strong and firing workers is hard, wages will not disperse over time and will not increase due to employers learning about innate ability \footnote{They would likely increase do to forces outside the model, however, like human capital development. The point is that employer learning will not contribute to wage growth.}. 
 	
 
 		 
@@ -360,12 +355,12 @@ Lemma 2 implies $w_b = w_1$ because $w_b$ will be ``stuck". So, since firing is 
 	$$w_1 = \E[\theta] + (1-\delta)  \bigg( p(g) \Big(\E[\theta|g] - w_g(\delta_F)  \Big) - p(b)F_C  \bigg) $$
 	
 	
-	Given an exogenous separation rate, we can also calculate the fraction of workers fired $delta_f$.  We have two equations for $w_1$ with the only unknown being $\delta_F$. I have solved for it below, but it not very intuitive. We can see that as the fixed cost rises the fraction of workers fall. It can also be used to solve numeric examples.
+	Given an exogenous separation rate, we can also calculate the fraction of workers fired $\delta_f$.  We have two equations for $w_1$ with the only unknown being $\delta_F$. I have solved for it below, but it not very intuitive. We can see that as the fixed cost rises the fraction of workers fall. It can also be used to solve numeric examples.
 	\newcommand{\TAMEG}{\frac{\E[\theta] -  (1+(1-\delta)p(b))F_C - \E[\theta|b]}{(1-\delta)p(g)}}
 	
 	$$ \delta_F = \frac{p(g) \left[\TAMEG \right]}{ p(b) \left[ \E[\theta | b] - \TAMEG - \E[\theta|g] \right] } $$
 	
-	Returning to the question in the low firing cost section, will bad signal workers ever just quit on their own? That is, will we ever have $w_1 \geq w_u$? I show in the appendix 1 that this will never occur in a mixed equilibrium or when all bad signal workers are fired. Thus, the equilibria I outline above are stable.  \par 
+	Returning to the question from the low firing cost section, will bad signal workers ever just quit on their own? That is, will we ever have $w_1 \geq w_u$? I show in the appendix 1 that this will never occur in a mixed equilibrium or when all bad signal workers are fired. That is as long as $F_C \leq \E[\theta] - \E[\theta|b]$.  Thus, the equilibria I outline above are stable.  \par 
 	
 
 %----------------------------------------------------------------------------------
@@ -375,25 +370,27 @@ Lemma 2 implies $w_b = w_1$ because $w_b$ will be ``stuck". So, since firing is 
 \section{Numerical Examples}
 
 
-While the above work characterizes the equilibrium for any set of parameters, in order to visualize the impact that fixed costs and separation rates have on wages we graph a numerical example. Theta is distributed uniformly from 0 to 1 \footnote{This is discretized over 100 points in order to calulate it all in R}. We then plot the wages for each group for 200 fixed costs evenly distributed between 0 and 0.25. We stop at 0.25 because after this all wages are 0.5 and no one is fired. We do this for separation rates $\delta$ of .2, .4, .6, and .8. The results are in figure 3. \par 
+While the above work characterizes the equilibrium for any set of parameters, in order to visualize the impact that fixed costs and separation rates have on wages we graph a numerical example. Theta is distributed uniformly from 0 to 1 \footnote{This is discretized over 100 points in order to calulate it all in R}. We then plot the wages for each group for 200 fixed costs evenly distributed between 0 and 0.25. We stop at 0.25 because after this all wages are 0.5 and no one is fired. We do this for separation rates $\delta$ of .2, .4, .6, and .8. The results are in figure 1. \par 
 
-First we see that wages for unemployed workers start low with a low fixed costs, since the pool of workers is filled with bad signal workers who are fired. After fixed costs reach the point where not all bad signal workers are fired, unemployed wages move up until no one is fired. A higher exogenous seperation rate means higher unemployed wages because there are more average workers to dilute the pool of bad fired workers. \par 
+First we Period 1 wages decline immediately with fixed costs as employers pay the fixed costs to fire bad employees. Eventually, however, employers stop firing all their bad signal employees and thus are paying lower fixed costs and earning profits on high signal workers which raises period one wages until they return to 0.5 where no one is fired. \par 
 
-Period 1 wages decline immediately with fixed costs as employers pay the fixed costs to fire bad employees. Eventually, however, employers stop firing all their bad signal employees and thus are paying lower fixed costs and earning profits on high signal workers which raises period one wages until they return to 0.5 where no one is fired. \par 
+Next we see that wages for unemployed workers start low with a low fixed costs, since the pool of workers is filled with bad signal workers who are fired. After fixed costs reach the point where not all bad signal workers are fired, unemployed wages move up until no one is fired. A higher exogenous separation rate means higher unemployed wages because there are more average workers to dilute the pool of bad fired workers. This effect no longer matters, however, if no one is fired. \par 
 
 Bad signal workers who are  fired simply track unemployed wages until bad signal workers are no longer fired. Bad signal workers who are not fired just track period 1 wages since their wages are stuck. \par 
 
 Finally, good signal wages start out high. Since bad signal workers are fired and so being employed is a signal of high ability. However, as firms start retaining some of their bad signal employees they are able to underpay their good signal employees and take advantage of their inside information. 
 
+It is interesting that the impact of exogenous separation on wages varies depending on the fixed costs. This makes sense given the model, but was not obvious to me ex-ante. This could potentially be one area to explore checking the validity of the model against empirical trends.   
 
 \begin{figure}[H]
 	\centering
-	\LARGE{\textbf{Figure 3}}
-	\subfloat{		
-		\includegraphics[width=.45\linewidth]{Unemployed_Wages_Given_Fixed_Cost.png}
-	}
+	\LARGE{\textbf{Figure 1}}
+	
 	\subfloat{
 		\includegraphics[width=.45\linewidth]{Period_1_Wages_Given_Fixed_Cost.png}
+	}
+	\subfloat{		
+		\includegraphics[width=.45\linewidth]{Unemployed_Wages_Given_Fixed_Cost.png}
 	}
 	\newline
 	\subfloat{
@@ -416,20 +413,18 @@ Finally, good signal wages start out high. Since bad signal workers are fired an
 
 \section{Future work}
 
-While I have learned a lot from working on this project, there are still many aspects of this model to consider more closely and expand upon. The most crucial area to take a closer looks is at my implicit assumption that all firms offer the same wages $w_g$ and $w_b$ after good an bad signals. This leads to a more shaky definition of a mixed equilibrium than I would like. While firms don't have additional information about other firms workers, they do know the composition of good and bad signal workers in their own firm in period two. It does make more sense that firms . While I have not had time to fully work out the math on this realization, my initial investigation is suggesting that this adds significant complexity to the problem. 
+While I have learned a lot from working on this project, there are still many aspects of this model to consider more closely and expand upon. There are some fairly clear ways I have begun to explore for expanding the model. Adding more periods would allow us to consider more carefully how employer learning leads to changes over time. However, in my initial efforts at solving a three period model I had to rely on specific parameterizations and find a solution numerically. The initial solutions I was obtaining were also suggesting significant differences as the market jumped between various equilibria. This exploration led me to realize that perhaps a more fruitful area to expand the model first is by allowing more than two signals of ability. Perhaps even a continuous signal of ability. The Initial work on this has led me to expect the solution is also very much dependent on the distribution of ability.
 
-This introduces another element to the problem in which each firm needs to consider the benefit of holding onto bad signal workers in order to hide information from outside firms and underpay their good workers. 
+ While the above considerations are a clear extension of my work, the most fundamental  area to take a closer looks is at my implicit assumption that all firms offer the same wages $w_g$ and $w_b$ after good an bad signals. This leads to a more shaky definition of a mixed equilibrium than I would like. While firms don't have additional information about other firms workers, they do know the composition of good and bad signal workers in their own firm in period two. Right now wages are essentially determine exogenously to the individual firms decision about firing and are determined by a market wide equilibrium. I think it may actually make more sense if the firm specific wages are endogenous to this decision. This would mean that, when considering weather to fire or not, firms account for the conditions I outline above as well as any impact keeping bad workers would have on firm specific wages. This will add an additional term to the $w_1 - \E[\theta|b] > F_C$ condition that determines when firms fire employees. Something like $ w_{1j}(\delta_{Fj}) - \E[\theta|b] + \frac{\partial w_{1j}(\delta_{Fj})}{\partial \delta_{Fj}} > F_C$. Where $w_{1j}$ is the firm specific wage and $\delta_{Fj}$ is the firm specific fraction of bad employees fired. While this seems manageable and comparable to what I have already done, the new term is dependent on the size of the firm, their distribution of workers, and period 1 wages. While I have not had time to fully work out the math on this realization, my initial investigation is suggesting that this adds significant complexity to the problem. That being said, I think the story makes more sense in this setting and if I continue the project I will start here. \par 
+ 
+ Aside from mechanical extensions to the model, the set up would make investigating discrimination fairly straightforward. We could introduce two groups. Discrimination would show up by considering if employers misread good signals as bad signals with some probability for minority groups. We could also add in training to see if the conclusions of Acemoglu and Picshke hold up with these additional assumptions. 
 
-This is all dependent on the size of the firm and their distribution of workers as well as period 1 wages since their bad employees will need to be paid this wage. 
 
 
 
 \section{Conclusion}
-Overall the model makes generally unsurprising predictions about wages in the . 
+Overall, the model makes generally unsurprising predictions about wages in an asymmetric information setting with sticky wages and fixed costs to firing. That being said, incorporating sticky wages and fixed costs into a model of asymmetric information and confirming the intuition for how we expect these assumptions to interact is a useful exercise. Some interesting predictions are the trend in period one wages as fixed costs rise and the heterogeneous impact of exogenous separation given various fixed costs. While it may be difficult to bring this model convincingly to data in it's current form, there are multiple promising areas of extension to allow this framework to better fit the labor markets that we see in practice. 
 
-Some interesting predicitons are the trend in period one wages as fixe costs rise and the heterogenous impact of exogenous seperation given various fixed costs. 
-
-That being said, there is certainly room for improvident in the formulaton of the model and in how a similar motivation and defining characteristics could be used. 
 
 
 %------------------------------------------------------------------------------
@@ -437,7 +432,12 @@ That being said, there is certainly room for improvident in the formulaton of th
 %------------------------------------------------------------------------------
 
 \section{Appendix}
-	In order to prove that in mixed equilibrium and equilibrium where all bad workers are fired that no bad workers voluntarily quit, We need to show that $ w_1 \geq w_u$. To do this I first derive an alternative expression for $w_1$ using the fact that in a mixed equilibrium $F_C = w_1 - \E[\theta|b]$. plugging this into the original equation for $w_1$ under a mixed equilibrium we get  
+
+
+\ Proof of $w_1 \geq w_u$ when $F_C \leq \E[\theta] - \E[\theta|b]$ :
+
+	
+	In order to prove that in mixed equilibrium and equilibrium where all bad workers are fired that no bad workers voluntarily quit, We need to show that $ w_1 \geq w_u$  when $F_C \leq \E[\theta] - \E[\theta|b]$. To do this I first derive an alternative expression for $w_1$ using the fact that in a mixed equilibrium $F_C = w_1 - \E[\theta|b]$. plugging this into the original equation for $w_1$ under a mixed equilibrium we get  
 	
 	$$ w_1 = \E[\theta] + (1 - \delta) \Big[ p(g) \Big( \E[\theta|g] - w_g(\delta_F) \Big) - p(b) \Big(w_1 - \E[\theta|b] \Big) \Big]
 	$$
@@ -447,7 +447,7 @@ $$
 w_1' = \frac{  \E[\theta] + (1 - \delta) \Big[ p(g) \Big( \E[\theta|g] - w_g(\delta_F) \Big) + p(b)\E[\theta|b] \Big] }{ 1 + (1 - \delta)p(b) }
 $$
 
-Note that this is exactly true for the mixed equilibrium and it is lower than the period one wage if $F_C < w_1 - \E[\theta|b]$ (i.e. in the equilibrium where all bad workers are fired). Thus if we show  Now we need to show $ w_1' \geq w_u$ we will have proved this for all $ F_C \leq w_1 - \E[\theta|b]$, i.e. the Equilibrium where everyone is fired and all mixed equilibrium. So we need to show 
+Note that this is exactly true for the mixed equilibrium and it is lower than the period one wage if $F_C < w_1 - \E[\theta|b]$ (i.e. in the equilibrium where all bad workers are fired). Thus if we show  $ w_1' \geq w_u$ we will have proved this for all $ F_C \leq w_1 - \E[\theta|b]$, i.e. the Equilibrium where everyone is fired and all mixed equilibrium. So we need to show 
 
 $$
 \frac{  \E[\theta] + (1 - \delta) \Big[ p(g) \Big( \E[\theta|g] - w_g(\delta_F) \Big) + p(b)\E[\theta|b] \Big] }{ 1 + (1 - \delta)p(b) } \geq \frac{ \delta\E[\theta] + (1-\delta) p(b) \delta_F \E[\theta | b]}{  \delta + (1-\delta) p(b)\delta_F} 
