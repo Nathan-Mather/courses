@@ -32,21 +32,14 @@ library(stats4)
     
     
     # write log likelihood function 
-    #note I am creating a closure here (function in a function) Because I do not want to code 
-    # the dataset into my function and rely on the lexical scoping of R to find the data in my enviorment 
-    #note I'm doing this because I'm annoying. It'd be easier ro just hardcode q1dt
-    Probit_llf <- function(in_dt ){ 
-      function(th0, th1, th2){
+    Probit_llf <- function(th0, th1, th2){
       
       
-      mu <- in_dt[,  pnorm(th0 + th1*x1 + th2*x2)]
+      mu <- q1dt[,  pnorm(th0 + th1*x1 + th2*x2)]
       
-      -sum(in_dt[, y*log(mu) + (1-y)*log(1-mu)])
+      -sum(q1dt[, y*log(mu) + (1-y)*log(1-mu)])
     }
-    }
-    
-    # fill in arguments that dont vary. #note this is so I don't have to rely on R finding data in global enviorment 
-    Probit_llf_q1 <- Probit_llf(q1dt )
+  
     
     
     # create startign values 
@@ -56,7 +49,7 @@ library(stats4)
     
     
     # run the mle function 
-    probit_res <- mle(Probit_llf_q1, start = prob_start)
+    probit_res <- mle(Probit_llf, start = prob_start)
     
     # get the results I need 
     probit_res <- data.table(summary(probit_res)@coef)
@@ -68,7 +61,7 @@ library(stats4)
     
     # looks good 
     summary(denyprobit)
-    
+    probit_res
   #================#
   # ==== Part3 ====
   #================#
