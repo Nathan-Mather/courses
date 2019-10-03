@@ -55,27 +55,45 @@ library(stats4)
     probit_res <- data.table(summary(probit_res)@coef)
     
     # check my results 
-    denyprobit <- glm( y ~ x1+ x2, 
+    check <- glm( y ~ x1+ x2, 
                       family = binomial(link = "probit"), 
                       data = q1dt)
     
     # looks good 
-    summary(denyprobit)
+    summary(check)
     probit_res
   #================#
   # ==== Part3 ====
   #================#
     
-    
-
-    Probit_llf <- function(in_dt ){ 
-      function(th0, th1, th2){
-        
-        
-        mu <- in_dt[,  pnorm(th0 + th1*x1 + th2*x2)]
-        
-        -sum(in_dt[, y*log(mu) + (1-y)*log(1-mu)])
-      }
+    # define logit log likelihood
+    logit_llf <- function(th0, th1, th2){
+      
+      
+      mu <- q1dt[,  plogis(th0 + th1*x1 + th2*x2)]
+      
+      -sum(q1dt[, y*log(mu) + (1-y)*log(1-mu)])
     }
     
   
+    # create startign values 
+    logit_start <- list(th0 = 0, 
+                       th1 = .01,
+                       th2 = .01)
+    
+    
+    # run the mle function 
+    logit_res <- mle(logit_llf, start = logit_start)
+    
+    # get the results I need 
+    logit_res <- data.table(summary(logit_res)@coef)
+    
+    # check my results 
+    check <- glm( y ~ x1+ x2, 
+                       family = binomial(link = "logit"), 
+                       data = q1dt)
+    
+    # looks good 
+    summary(check)
+    logit_res
+   
