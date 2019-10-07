@@ -55,7 +55,7 @@
 \title{Econ 675 Assignment 6} % The article title
 
 
-\author{Nathan Mather\thanks{Shouts out to Ani for the help with question 1 and some help on Q2, Thank you to Tyler for help with STATA. All credit goes to Tyler for STATA because my brain does not understand STATA, and the Thanks to R for being infinitely better than STATA }}  % The article author(s) 
+\author{Nathan Mather}  % The article author(s) 
 
 \date{\today} % An optional date to appear under the author(s)
 
@@ -80,7 +80,44 @@
 \section{Section 1: Binary choice model}
 
 \subsection{Part 1}
-Here are the reults of my model 
+Here are the results of my model 
+
+
+
+\subsection{Part 6}
+
+
+Let 
+
+$$ m_1 = -\frac{1}{\sigma^2_w} \rho  (x_{2i} - (\theta_3 + \theta_4x_{1i} + \theta_5z_i)) 
+$$
+
+and 
+
+$$  v_1 = 1 - \frac{\rho^2}{\sigma^2_w}
+$$
+
+
+$$ L(\theta) = \sum_{i = 0}^{n} y_i Log(\Phi_{m_1,v_1}(\theta_0 + \theta_1 x_{1i} + \theta_2 x_{2i})) + (1-y_i)log(\Phi_{m_1,v_1}(\theta_0 + \theta1 x_{1i} + \theta_ 2x_{2i})) + log(\phi_{0,\sigma^2_w}(x_{2i} - \theta_3 - \theta_4 x_{1i} - \theta_5 z_i))
+$$ 
+
+
+%-------------------------------------------------------------
+% Question 2
+%-------------------------------------------------------------
+
+\section{Question 2}
+\subsection{Part 1}
+
+$$
+s_j = P(\mu_{ij} \geq  \mu{ij'} \quad \forall \quad j' = 0,..., J | \bm{\beta}, \alpha) 
+=  \frac{exp(\bm x_{jt} \bm \beta - \alpha p_{jct} + \xi_{jct})}{1-\sum_{j'}exp(\bm x_{j't} \bm \beta - \alpha p_{j'ct} + \xi_{j'ct})}
+$$
+
+\subsection{part 2}
+
+$$ \delta_j = log(s_j) - \lambda log(s_0)
+$$
 
 
 %------------------------------------------------

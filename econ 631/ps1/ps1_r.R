@@ -12,7 +12,12 @@ cat("\f")
 # Load packages 
 library(data.table)
 library(stats4)
+library(broom)
+library(AER)
 
+# set save option 
+
+opt_save <- TRUE 
 
 #=====================#
 # ==== Question 1 ====
@@ -110,6 +115,7 @@ setnames(q1dt, colnames(q1dt), c("y", "x1", "x2", "z"))
     
     # define a log likliehood function 
     # not craxy about altering the data.tble within the function but it's fine 
+    # next time maybe create objects rather than columns. Althoguh that may be slower? unsure...
     p6_llf <- function(th0, th1, th2, th3, th4, th5, p, sig){
       
       # define some intermediate terms 
@@ -163,4 +169,77 @@ setnames(q1dt, colnames(q1dt), c("y", "x1", "x2", "z"))
     p6_res_tab
     
     
+    
+    
+#=====================#
+# ==== Question 2 ====
+#=====================#
+    
+  #=================#
+  # ==== part 3 ====
+  #=================#
+
+  
+    # load cereal data 
+    cereal <- data.table(readxl::read_excel("C:/Users/Nmath_000/Documents/MI_school/Third Year/Econ 631/ps1/cereal_data.xlsx"))
+      
+      
+    # get total market share by city year 
+    cereal[, s0 := 1-sum(share), c("city", "year", "quarter" )]
+    
+    
+    # create column for mean utility 
+    cereal[, m_u := log(share) - log(s0)]
+    
+
+    # run ols, tidy it up, make it a data.table 
+    q2_p3_ols <- data.table(tidy(lm(m_u ~ mushy + sugar + price , data = cereal)))
+      
+    # round p value 
+    q2_p3_ols[, p.value := round(p.value, 6)]
+    
+    # create  sugar instroment 
+    cereal[, i1_sugar := (sum(sugar) - sugar)/ (.N-1), c('firm_id', "city", "quarter")]
+
+    # create mush intrument
+    cereal[, i1_mushy := (sum(mushy) - mushy)/(.N-1), c('firm_id', "city", "quarter")]
+      
+    # create price instrument 
+    cereal[, i1_price := (sum(price) - price)/ (.N-1), c('firm_id', "city", "quarter")]
+    
+    # now do 2sls, tidy it up, make it a data.table 
+    q2_p3_iv1 <- data.table(tidy(ivreg(m_u ~ mushy + sugar + price + firm_id - 1 | i1_sugar + i1_mushy + i1_price + firm_id, data = cereal)))
+    
+    q2_p3_iv1[, p.value := round(p.value,6)]
+    
+    # now create second set of instroments 
+    cereal[,  , ]
+    
+    
+#===============================#
+# ==== save output to latex ====
+#===============================#
+  
+  if(opt_save){
+    
+    
+    print(xtable(probit_res, type = "latex"), 
+          file = paste0(f_out, ""),
+          include.rownames = FALSE,
+          floating = FALSE)
+    
+    
+    
+    
+  }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+
    
