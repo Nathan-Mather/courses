@@ -213,9 +213,22 @@ setnames(q1dt, colnames(q1dt), c("y", "x1", "x2", "z"))
     q2_p3_iv1[, p.value := round(p.value,6)]
     
     # now create second set of instroments 
-    cereal[,  , ]
+    # create  sugar instroment
+    # start by getting sum of sugar for firm 
+    cereal[, f_sugar_sum := sum(sugar), c( "city", "quarter", "firm_id")]
     
+    # get number of products by firm 
+    cereal[, f_nprod := .N, c( "city", "quarter", "firm_id")]
     
+    # get sum of sugar in market, subtract off sum of sugar for the firm 
+    # divide by number of products minus the products for this firm that we subtracted off 
+    cereal[, i2_sugar := (sum(sugar) - f_sugar_sum)/ (.N-f_nprod), c("city", "quarter")]
+    
+    # now do the same for the other two things 
+    
+    # run the IV 
+    
+  
 #===============================#
 # ==== save output to latex ====
 #===============================#
