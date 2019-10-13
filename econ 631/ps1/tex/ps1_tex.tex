@@ -82,7 +82,26 @@
 \subsection{Part 1}
 Here are the results of my model 
 
+\begin{center}
+	\centering
+	\textbf{Probit results}\par\medskip
+	\scalebox{1}{
+		\input{q1_p1.tex}
+	}
+\end{center}
 
+\subsection{part 2}
+
+\subsection{part 3}
+Here are the results of my model 
+
+\begin{center}
+	\centering
+	\textbf{Logit results}\par\medskip
+	\scalebox{1}{
+		\input{q1_p3.tex}
+	}
+\end{center}
 
 \subsection{Part 6}
 
@@ -102,6 +121,18 @@ $$ L(\theta) = \sum_{i = 0}^{n} y_i Log(\Phi_{m_1,v_1}(\theta_0 + \theta_1 x_{1i
 $$ 
 
 
+The results of my model are below 
+
+\begin{center}
+	\centering
+	\textbf{Joint MLE results}\par\medskip
+	\scalebox{1}{
+		\input{q1_p6.tex}
+	}
+\end{center}
+
+
+
 %-------------------------------------------------------------
 % Question 2
 %-------------------------------------------------------------
@@ -119,6 +150,65 @@ $$
 $$ \delta_j = log(s_j) - \lambda log(s_0)
 $$
 
+\subsection{part 2}
+\subsubsection{sub part a}
+
+\begin{center}
+	\centering
+	\textbf{OLS Results}\par\medskip
+	\scalebox{1}{
+		\input{q2_p3a.tex}
+	}
+\end{center}
+
+
+\subsubsection{sub part b}
+
+\begin{center}
+	\centering
+	\textbf{First IV Results}\par\medskip
+	\scalebox{1}{
+		\input{q2_p3b.tex}
+	}
+\end{center}
+
+
+\subsubsection{sub part c}
+\begin{center}
+	\centering
+	\textbf{Second IV Results}\par\medskip
+	\scalebox{1}{
+		\input{q2_p3c.tex}
+	}
+\end{center}
+
+
+%-------------------------------------------------------------
+% Question 3
+%-------------------------------------------------------------
+
+\section{Question 3}
+
+\subsection{Part 1}
+
+Market share is 
+
+$$ s_j(\bm p, \bm x, \bm \xi, \theta) = 
+\int \frac{\exp (\bm x_{j} \bm \beta - p_j\alpha + \xi_j + \sum_k \sigma_k x_j v_{ki})}
+{1 + \sum_{j'} \exp(\bm x_{j'} \bm \beta - p'_j \alpha + \xi'_j + \sum_k \sigma_k x_{j'} c_{ki})}
+dF_v(v_{i1}, ..., v_{iK}, v_{\alpha i})
+$$
+
+or 
+$$ s_j(\bm p, \bm x, \bm \delta_j, \theta) = 
+\int \frac{\exp (\bm \delta_j  + \sum_k \sigma_k x_j v_{ki})}
+{1 + \sum_{j'} \exp(\bm \delta_{j'} + \sum_k \sigma_k x_{j'} c_{ki})}
+dF_v(v_{i1}, ..., v_{iK}, v_{\alpha i})
+$$
+
+
+
+\subsection{part 2}
 
 %------------------------------------------------
 % APPENDIX
@@ -129,8 +219,6 @@ $$
 \section{Appendix}
 \subsection{R Code}
 
-
-\subsection{STATA Code}
 
 
 
