@@ -267,66 +267,102 @@ setnames(q1dt, colnames(q1dt), c("y", "x1", "x2", "z"))
 #=====================#
 # ==== Question 3 ====
 #=====================#
+    
+    # make guess for this to work on code 
+    sd_mush <- .1 
+    sd_sug <- .2 
 
     # clear variables we don't need 
     cereal <- cereal[, c(1:10, 12,13), with = FALSE]
     
-    
     #===============================#
-    # ==== Use code tyler found ====
+    # ====  ====
     #===============================#
+    # create a market variale 
+    cereal[, mkt := paste0(city, "_", quarter)]
+    
+    # redo s0 
+    cereal[, s0 := 1-sum(share), c("mkt")]
+    
+    # defint some variables 
+    # this just gives the code some generalizability I guess 
+    share.fld =     "share"
+    prod.id.fld =   "product_id"
+    #note they don't have quarter but I think we should 
+    mkt.id.fld =    "mkt"
+    prc.fld =       "price"
+    x.var.flds =    c("sugar",
+                      "mushy")
+    
+    # order data and get nrows 
+    cereal <- setorder(cereal, "city", "product_id")
+    JM <- nrow(cereal)
+    
+    # make some matrix 
+    X <- as.matrix(cereal[, c(x.var.flds), with = FALSE])
+    K <- ncol(X)
+
+    #market object
+    mkt.id <- cereal[, get(mkt.id.fld)]
+    
+    #shares object
+    s.jm <- as.vector(cereal[, get(share.fld)]);
+    
+    # get s0 object 
+    s.j0 <- cereal[, s0 ]
+
+    ## Matrix of individuals' characteristics ##
+    #number of simulated consumers
+    n.sim = 100
+    
+    #Standard normal distribution draws, one for each characteristic in X
+    #columns are simulated consumers, rows are variables in X (including constant and price)
+    v = matrix(rnorm(K * n.sim), nrow = K, ncol = n.sim)
 
     
-
-  #=================================#
-  # ==== do contraction mapping ====
-  #=================================#
-
-    # get initial guess for running delta 
-    cereal[, delta_r := 0]
-
-    # create disctributions of v1 and v2 
-    v_grid <- data.table( v1 = rnorm(1000), v2 = rnorm(1000))
- 
+    temp <-   cereal[, list( sd_mush*mushy, sd_sug*sugar) ]
+    temp <- as.matrix(temp)
     
-    # write a funciton to calculate estimated market share 
-    # start with function to be integrated 
-    #note not loving this but works for now 
-    # v1 <- .1
-    # v2 <- .2
-    # in_data <- cereal
-    # j <- 1
-    # sd_sug <-5
-    # sd_mush <- .4
+    mu.in <- temp%*%v
+    dim(mu.in)
     
-    fun_2_int <- function(in_data, v1, v2, j, sd_mush, sd_sug ){
+    # get delta guess 
+    #note doesn't need to come from cereal data.table, this is just an initial guess 
+    delta.in <- cereal[, delta_r]
+    
+    ind_sh <- function(delta.in, mu.in){
+      # This function computes the "individual" probabilities of choosing each brand
+      # Requires global variables: mkt.id, X, v
+      numer <- exp(mu.in) * matrix(rep(exp(delta.in), n.sim), ncol = n.sim)
       
-      num <- in_data[j, delta_r + sd_mush*mushy*v1 + sd_sug*sugar*v2 ]
-      denom <- 1 + sum(in_data[-j, delta_r + sd_mush*mushy*v1 + sd_sug*sugar*v2 ])
-      
-      return(num/denom)
+      denom <- as.matrix(do.call("rbind", lapply(mkt.id, function(tt){
+        1 + colSums(numer[mkt.id %in% tt, ])
+        
+      })))
+      return(numer / denom);  
+    }
+    
+    
+    blp_inner <- function(delta.in, mu.in) {
+      # Computes a single update of the BLP (1995) contraction mapping.
+      # of market level predicted shares.
+      # This single-update function is required by SQUAREM, see Varadhan and
+      # Roland (SJS, 2008), and Roland and Varadhan (ANM, 2005)
+      # INPUT
+      #   delta.in : current value of delta vector
+      #   mu.in: current mu matrix
+      # Requires global variables: s.jm
+      # OUTPUT
+      #   delta.out : delta vector that equates observed with predicted market shares
+      pred.s <- rowMeans(ind_sh(delta.in, mu.in));
+      delta.out <- delta.in + log(s.jm) - log(pred.s)
+      return(delta.out)
     }
     
 
-    mapply(fun_2_int, v1 = v_grid$v1, v2 = v_grid$v2, MoreArgs = list(in_data = cereal, j = 1, sd_mush = sd_mush, sd_sug = sd_sug), SIMPLIFY = FALSE)
     
-    # write a function for contraction mappinj g 
-    in_data = cereal 
-    in_v_grid = v_grid 
-    contr_map <- function(in_data, in_v_grid){
-      
-      diff <- 1
-      while(diff > .001){
-        
-        # get estimated market shares 
-        
-        # use them to update deltas 
-        in_data[, delta_new := delta_r + log()]
-        
-      }
-    }
     
- 
+
 #===============================#
 # ==== save output to latex ====
 #===============================#
