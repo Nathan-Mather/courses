@@ -272,12 +272,13 @@ setnames(q1dt, colnames(q1dt), c("y", "x1", "x2", "z"))
     sd_mush <- .1 
     sd_sug <- .2 
 
-    # clear variables we don't need 
-    cereal <- cereal[, c(1:10, 12,13), with = FALSE]
+    # drop missing IV observations 
+    cereal <- cereal[!is.na(i1_sugar)]
     
-    #===============================#
-    # ====  ====
-    #===============================#
+  #===============================#
+  # ==== fgirue out functions ====
+  #===============================#
+
     # create a market variale 
     cereal[, mkt := paste0(city, "_", quarter)]
     
@@ -328,7 +329,7 @@ setnames(q1dt, colnames(q1dt), c("y", "x1", "x2", "z"))
     
     # get delta guess 
     #note doesn't need to come from cereal data.table, this is just an initial guess 
-    delta.in <- cereal[, delta_r]
+    delta.in <- cereal[, m_u]
     
     ind_sh <- function(delta.in, mu.in){
       # This function computes the "individual" probabilities of choosing each brand
@@ -359,10 +360,57 @@ setnames(q1dt, colnames(q1dt), c("y", "x1", "x2", "z"))
       return(delta.out)
     }
     
+    
+    # for now use matrices we made above 
+    mu  <- mu.in
+    delta <- delta.in
 
+    print("Running SQUAREM contraction mapping")
+    print(system.time(
+      squarem.output <- squarem(par = delta, fixptfn = blp_inner, mu.in = mu, control = list(trace = TRUE))
+    ));
+    delta <- squarem.output$par
+    
+    print(summary(cereal[, m_u] - delta));
+    cereal[, delta_r := delta]
+    
+    # 
+    prc.iv.flds = c("i1_sugar",
+                    "i1_mushy")
+    
+    str.ivreg.y <- "delta_r ~ "
+    str.ivreg.x <- paste(x.var.flds, collapse = " + ")
+    str.ivreg.prc <- paste(prc.fld, collapse = " + ")
+    str.ivreg.iv <- paste(prc.iv.flds, collapse = " + ")
+    print(fm.ivreg <- paste0(str.ivreg.y, str.ivreg.x, " + ", str.ivreg.prc, " | ", str.ivreg.x, " + ", str.ivreg.iv))
+    
+    # define Z matrix 
+    Z <- as.matrix(cereal[!is.na(i1_sugar),c("sugar", "mushy", "i1_sugar", "i1_mushy"), with = FALSE])
+    PZ <- Z %*% solve(t(Z) %*% Z) %*% t(Z)
+    
+    # B <- solve(crossprod(z, x))%*%(crossprod(z, y))
     
     
 
+      # make weighting matrix
+      W.inv <- diag(1, 4, 4 )
+    
+   
+      # first step 
+      PX.inv <- solve(t(X) %*% PZ %*% X)
+      # finsih getting theta 
+      theta1 <- PX.inv %*% t(X) %*% PZ %*% delta
+      
+      # get xi hat 
+      xi.hat <- delta - X %*% theta1
+      
+
+      # come ack to this when we have these defined better 
+      # print(beta.est <<- data.frame(beta.est = theta1, beta.se = tsls.se, sigma.est = theta2))
+
+    
+    f <- t(xi.hat) %*% Z %*% W.inv %*% t(Z) %*% xi.hat;
+    
 #===============================#
 # ==== save output to latex ====
 #===============================#
