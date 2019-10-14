@@ -14,17 +14,26 @@ library(data.table)
 library(stats4)
 library(broom)
 library(AER)
+library(xtable)
+library(Matrix)
+library(BLPestimatoR)
+library(SQUAREM)
+library(BB)
 
 # set save option 
 
 opt_save <- TRUE 
 
+# set path for output 
+f_out <- "C:/Users/Nmath_000/Documents/Code/courses/econ 631/ps1/tex/"
+
 #=====================#
 # ==== Question 1 ====
 #=====================#
 
-# lad data 
+# laod data 
 q1dt <- fread("file:///C:/Users/Nmath_000/Documents/MI_school/Third Year/Econ 631/ps1/ps1.dat")
+
 
 
 # create variable names 
@@ -147,8 +156,6 @@ setnames(q1dt, colnames(q1dt), c("y", "x1", "x2", "z"))
       
     }
     
-    
-    
     # create startign values 
     p6_start <- list(th0 = 0,
                       th1 = 0.0,
@@ -161,7 +168,7 @@ setnames(q1dt, colnames(q1dt), c("y", "x1", "x2", "z"))
   
     # run the mle function 
     p6_res <- mle(p6_llf, start = p6_start)
-    
+    logLik(p6_res)
     # get the results I need 
     p6_res_tab <- data.table(variable = rownames(summary(p6_res)@coef),
                              summary(p6_res)@coef)
@@ -191,6 +198,10 @@ setnames(q1dt, colnames(q1dt), c("y", "x1", "x2", "z"))
     # create column for mean utility 
     cereal[, m_u := log(share) - log(s0)]
     
+    #============#
+    # ==== a ====
+    #============#
+
 
     # run ols, tidy it up, make it a data.table 
     q2_p3_ols <- data.table(tidy(lm(m_u ~ mushy + sugar + price , data = cereal)))
@@ -198,7 +209,13 @@ setnames(q1dt, colnames(q1dt), c("y", "x1", "x2", "z"))
     # round p value 
     q2_p3_ols[, p.value := round(p.value, 6)]
     
+    #============#
+    # ==== b ====
+    #============#
+
+    
     # create  sugar instroment 
+    cereal[, (.N-1), c('firm_id', "city", "quarter")]
     cereal[, i1_sugar := (sum(sugar) - sugar)/ (.N-1), c('firm_id', "city", "quarter")]
 
     # create mush intrument
@@ -208,11 +225,17 @@ setnames(q1dt, colnames(q1dt), c("y", "x1", "x2", "z"))
     cereal[, i1_price := (sum(price) - price)/ (.N-1), c('firm_id', "city", "quarter")]
     
     # now do 2sls, tidy it up, make it a data.table 
-    q2_p3_iv1 <- data.table(tidy(ivreg(m_u ~ mushy + sugar + price + firm_id - 1 | i1_sugar + i1_mushy + i1_price + firm_id, data = cereal)))
+    q2_p3_iv1 <- data.table(tidy(ivreg(m_u ~ mushy + sugar + price | i1_sugar + i1_mushy +  mushy + sugar , data = cereal)))
     
     q2_p3_iv1[, p.value := round(p.value,6)]
     
+    
+    #============#
+    # ==== c ====
+    #============#
+
     # now create second set of instroments 
+    # would be ideal to write functino for this, but who has the time
     # create  sugar instroment
     # start by getting sum of sugar for firm 
     cereal[, f_sugar_sum := sum(sugar), c( "city", "quarter", "firm_id")]
@@ -224,11 +247,86 @@ setnames(q1dt, colnames(q1dt), c("y", "x1", "x2", "z"))
     # divide by number of products minus the products for this firm that we subtracted off 
     cereal[, i2_sugar := (sum(sugar) - f_sugar_sum)/ (.N-f_nprod), c("city", "quarter")]
     
-    # now do the same for the other two things 
+    # now do the same for the other
+    cereal[, f_mushy_sum := sum(mushy), c( "city", "quarter", "firm_id")]
+    cereal[, i2_mushy := (sum(mushy) - f_mushy_sum)/ (.N-f_nprod), c("city", "quarter")]
     
-    # run the IV 
+    # #note dont actually need this 
+    # cereal[, f_price_sum := sum(price), c( "city", "quarter", "firm_id")]
+    # cereal[, i2_price := (sum(price) - f_price_sum)/ (.N-f_nprod), c("city", "quarter")]
+    
+    # now do 2sls 
+    ivreg_out <- ivreg(m_u ~ mushy + sugar + price | i2_sugar + i2_mushy + mushy + sugar , data = cereal)
+    q2_p3_iv2 <- data.table(tidy(ivreg(m_u ~ mushy + sugar + price | i2_sugar + i2_mushy + mushy + sugar , data = cereal)))
+    
+    q2_p3_iv2[, p.value := round(p.value,6)]
     
   
+    
+    
+#=====================#
+# ==== Question 3 ====
+#=====================#
+
+    # clear variables we don't need 
+    cereal <- cereal[, c(1:10, 12,13), with = FALSE]
+    
+    
+    #===============================#
+    # ==== Use code tyler found ====
+    #===============================#
+
+    
+
+  #=================================#
+  # ==== do contraction mapping ====
+  #=================================#
+
+    # get initial guess for running delta 
+    cereal[, delta_r := 0]
+
+    # create disctributions of v1 and v2 
+    v_grid <- data.table( v1 = rnorm(1000), v2 = rnorm(1000))
+ 
+    
+    # write a funciton to calculate estimated market share 
+    # start with function to be integrated 
+    #note not loving this but works for now 
+    # v1 <- .1
+    # v2 <- .2
+    # in_data <- cereal
+    # j <- 1
+    # sd_sug <-5
+    # sd_mush <- .4
+    
+    fun_2_int <- function(in_data, v1, v2, j, sd_mush, sd_sug ){
+      
+      num <- in_data[j, delta_r + sd_mush*mushy*v1 + sd_sug*sugar*v2 ]
+      denom <- 1 + sum(in_data[-j, delta_r + sd_mush*mushy*v1 + sd_sug*sugar*v2 ])
+      
+      return(num/denom)
+    }
+    
+
+    mapply(fun_2_int, v1 = v_grid$v1, v2 = v_grid$v2, MoreArgs = list(in_data = cereal, j = 1, sd_mush = sd_mush, sd_sug = sd_sug), SIMPLIFY = FALSE)
+    
+    # write a function for contraction mappinj g 
+    in_data = cereal 
+    in_v_grid = v_grid 
+    contr_map <- function(in_data, in_v_grid){
+      
+      diff <- 1
+      while(diff > .001){
+        
+        # get estimated market shares 
+        
+        # use them to update deltas 
+        in_data[, delta_new := delta_r + log()]
+        
+      }
+    }
+    
+ 
 #===============================#
 # ==== save output to latex ====
 #===============================#
@@ -237,13 +335,39 @@ setnames(q1dt, colnames(q1dt), c("y", "x1", "x2", "z"))
     
     
     print(xtable(probit_res, type = "latex"), 
-          file = paste0(f_out, ""),
+          file = paste0(f_out, "q1_p1.tex"),
           include.rownames = FALSE,
           floating = FALSE)
     
     
+    print(xtable(logit_res, type = "latex"), 
+          file = paste0(f_out, "q1_p3.tex"),
+          include.rownames = FALSE,
+          floating = FALSE)
     
     
+    print(xtable(p6_res_tab, type = "latex"), 
+          file = paste0(f_out, "q1_p6.tex"),
+          include.rownames = FALSE,
+          floating = FALSE)
+    
+    print(xtable(q2_p3_ols, type = "latex"), 
+          file = paste0(f_out, "q2_p3a.tex"),
+          include.rownames = FALSE,
+          floating = FALSE)
+    
+    print(xtable(q2_p3_iv1, type = "latex"), 
+          file = paste0(f_out, "q2_p3b.tex"),
+          include.rownames = FALSE,
+          floating = FALSE)
+    
+    print(xtable(q2_p3_iv2, type = "latex"), 
+          file = paste0(f_out, "q2_p3c.tex"),
+          include.rownames = FALSE,
+          floating = FALSE)
+    
+    
+  
   }
     
     
