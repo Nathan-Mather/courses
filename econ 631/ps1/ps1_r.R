@@ -1,5 +1,5 @@
 #===============================================#
-# ==== Inustrial ORganization PRoblem Set 1 ====
+# ==== Inustrial Organization Problem Set 1 ====
 #===============================================#
 
 
