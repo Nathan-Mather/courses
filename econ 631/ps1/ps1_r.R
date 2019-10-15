@@ -334,14 +334,14 @@ setnames(q1dt, colnames(q1dt), c("y", "x1", "x2", "z"))
 
     # these are all the functions we will need for a given sd_mush sd_sug guess 
     
-    # # hard code estimates for variance paremter to test funcitons 
-    # # this is what the outside loop will be optimizing over 
-    # sd_mush <- .1 
-    # sd_sug <- .2 
+    # hard code estimates for variance paremter to test funcitons
+    # this is what the outside loop will be optimizing over
+    sd_mush_test <- .1
+    sd_sug_test <- .2
     
-    # # get inital delta guess 
-    # #note doesn't need to come from cereal data.table, this is just an initial guess 
-    # delta.initial <- cereal[, m_u]
+    # get inital delta guess
+    #note doesn't need to come from cereal data.table, this is just an initial guess
+    delta.initial <- cereal[, m_u]
     
     # this function takes the data.table, V sims,  and the sd parameter estimates and returns 
     # the mu (individual utility) estimates
@@ -357,8 +357,8 @@ setnames(q1dt, colnames(q1dt), c("y", "x1", "x2", "z"))
       return(mu.out)
     }
     
-    # # test it out 
-    # mu_mat <- find_mu(cereal,sd_mush, sd_sug, v )
+    # test it out
+    mu_mat <- find_mu(cereal,sd_mush_test, sd_sug_test, v )
     
     # This computes a matrix of share estiamtes. rows are estimates for every product 
     # columns are estimates for every simulated V 
@@ -373,8 +373,8 @@ setnames(q1dt, colnames(q1dt), c("y", "x1", "x2", "z"))
       return(numer / denom);  
     }
     
-    # # test it out 
-    # sj_mat <- ind_sh(delta.initial, mu_mat, mkt.id)
+    # test it out
+    sj_mat <- ind_sh(delta.initial, mu_mat, mkt.id)
     
     
     blp_inner <- function(delta.in, mu.in, s.jm.in, mkt.id.in) {
@@ -392,9 +392,9 @@ setnames(q1dt, colnames(q1dt), c("y", "x1", "x2", "z"))
       return(delta.out)
     }
     
-    # # test it out 
-    # delta_new <- blp_inner(delta.initial, mu_mat, s.jm, mkt.id)
-    
+    # test it out
+    delta_new <- blp_inner(delta.initial, mu_mat, s.jm, mkt.id)
+
     
     # The function to iterate the contraction mapping is genereic. WE don't need to write it
     # here is an example #note it is dependent on output of above examples 
