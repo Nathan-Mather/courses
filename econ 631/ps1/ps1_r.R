@@ -155,16 +155,17 @@ setnames(q1dt, colnames(q1dt), c("y", "x1", "x2", "z"))
       return(-sum_llf)
       
     }
-    
-    # create startign values 
-    p6_start <- list(th0 = 0,
-                      th1 = 0.0,
-                      th2 = 0.0,
-                      th3 = 0.0,
-                      th4 = 0.0,
-                      th5 = 0.0,
-                      p = .01,
-                      sig = 2)
+
+  second_stage <- glm(y ~ x1+ x2, 
+            family = binomial(link = "probit"), 
+     data = dt)
+
+  first_stage <- lm(x2 ~ x1 + z, data = dt)
+
+  p6_start <- as.list(c(second_stage$coefficients, first_stage$coefficients, .1, 1))
+
+  names(p6_start) <- c("th0", "th1", "th2", "th3", "th4", "th5", "p", "sig")
+
   
     # run the mle function 
     p6_res <- mle(p6_llf, start = p6_start)
