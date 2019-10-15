@@ -256,7 +256,9 @@ p6_res_tab
 #=====================#
 # ==== Question 3 ====
 #=====================#
-
+# load cereal data 
+    cereal <- data.table(readxl::read_excel("C:/Users/Nmath_000/Documents/MI_school/Third Year/Econ 631/ps1/cereal_data.xlsx"))
+      
   #====================================#
   # ==== set up data for functions ====
   #====================================#
@@ -296,6 +298,10 @@ p6_res_tab
     # put shares into a vector 
     s.jm <- as.vector(cereal[, get(share.fld)]);
     
+    # define market share of the outside option
+    #note: should this happen before or after we drop the obs with missing instruments?
+    cereal[, s0 := 1-sum(share), mkt.id]
+
     # put shates into a vector  
     s.j0 <- cereal[, s0 ]
     
