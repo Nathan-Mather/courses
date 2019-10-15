@@ -268,29 +268,27 @@ setnames(q1dt, colnames(q1dt), c("y", "x1", "x2", "z"))
 #=====================#
 # ==== Question 3 ====
 #=====================#
-    
-    # make guess for this to work on code 
-    sd_mush <- .1 
-    sd_sug <- .2 
 
-    # drop missing IV observations 
+  #====================================#
+  # ==== set up data for functions ====
+  #====================================#
+
+    #note these are data manipulations that can happen outside the outer loop. We 
+    # just need to convert some things to matrices since we actually need to 
+    # use matrix algebra in this question 
+    
+    # drop obsercations with missing instruments. Missing becasue firm only has one product 
     cereal <- cereal[!is.na(i1_sugar)]
     
-  #===============================#
-  # ==== fgirue out functions ====
-  #===============================#
-
-    # create a market variale 
+    # create a single market variale. Don't have to referece two variables then 
     cereal[, mkt := paste0(city, "_", quarter)]
     
-    # redo s0 
-    cereal[, s0 := 1-sum(share), c("mkt")]
-    
     # defint some variables 
-    # this just gives the code some generalizability I guess 
+    # I'm not crazy about doing this. I think this either needs to be written as a function 
+    # or else we should just hard code the column names. This is like a weird middle ground 
+    # of generalizability that isn't that helpful 
     share.fld =     "share"
     prod.id.fld =   "product_id"
-    #note they don't have quarter but I think we should 
     mkt.id.fld =    "mkt"
     prc.fld =       "price"
     x.var.flds =    c("sugar",
@@ -300,52 +298,86 @@ setnames(q1dt, colnames(q1dt), c("y", "x1", "x2", "z"))
     cereal <- setorder(cereal, "city", "product_id")
     JM <- nrow(cereal)
     
-    # make some matrix 
+    # make matrix of controls X 
     X <- as.matrix(cereal[, c(x.var.flds), with = FALSE])
     K <- ncol(X)
-
-    #market object
+    
+    # put market into a vector 
     mkt.id <- cereal[, get(mkt.id.fld)]
     
-    #shares object
+    # put shares into a vector 
     s.jm <- as.vector(cereal[, get(share.fld)]);
     
-    # get s0 object 
+    # put shates into a vector  
     s.j0 <- cereal[, s0 ]
-
-    ## Matrix of individuals' characteristics ##
-    #number of simulated consumers
+    
+    # set number of simulated consumers
     n.sim = 100
-    
-    #Standard normal distribution draws, one for each characteristic in X
-    #columns are simulated consumers, rows are variables in X (including constant and price)
+     
+    # Standard normal distribution draws, one for each characteristic in X
+    # columns are simulated consumers, rows are variables in X (including constant and price)
+    # as Ying pointed out we want to do this once outside the outer loop to get faster convergence 
     v = matrix(rnorm(K * n.sim), nrow = K, ncol = n.sim)
+    
+    # Z matrix needed for gmm function 
+    Z <- as.matrix(cereal[!is.na(i1_sugar),c("sugar", "mushy", "i1_sugar", "i1_mushy"), with = FALSE])
+    
+    # PZ matrix needed for GMM function 
+    PZ <- Z %*% solve(t(Z) %*% Z) %*% t(Z)
+    
+    # make weighting matrix. Also used in GMM function 
+    W.inv <- diag(1, 4, 4 )
+    
+  #===============================#
+  # ==== functions for search ====
+  #===============================#
 
+    # these are all the functions we will need for a given sd_mush sd_sug guess 
     
-    temp <-   cereal[, list( sd_mush*mushy, sd_sug*sugar) ]
-    temp <- as.matrix(temp)
+    # # hard code estimates for variance paremter to test funcitons 
+    # # this is what the outside loop will be optimizing over 
+    # sd_mush <- .1 
+    # sd_sug <- .2 
     
-    mu.in <- temp%*%v
-    dim(mu.in)
+    # # get inital delta guess 
+    # #note doesn't need to come from cereal data.table, this is just an initial guess 
+    # delta.initial <- cereal[, m_u]
     
-    # get delta guess 
-    #note doesn't need to come from cereal data.table, this is just an initial guess 
-    delta.in <- cereal[, m_u]
+    # this function takes the data.table, V sims,  and the sd parameter estimates and returns 
+    # the mu (individual utility) estimates
+    #note I am hard coding this for mushy and sugar as the relavent variables. 
+    # could write this in a more general way if we wanted and have it take a list of theta parms 
+    # and a list of corresponding variabe names 
+    find_mu <- function(in_data, sd_mush.in, sd_sug.in, v.in){
+      
+      temp <-   as.matrix(in_data[, list( sd_mush.in*mushy, sd_sug.in*sugar) ])
+      
+      mu.out <- temp%*%v.in
+      
+      return(mu.out)
+    }
     
-    ind_sh <- function(delta.in, mu.in){
+    # # test it out 
+    # mu_mat <- find_mu(cereal,sd_mush, sd_sug, v )
+    
+    # This computes a matrix of share estiamtes. rows are estimates for every product 
+    # columns are estimates for every simulated V 
+    ind_sh <- function(delta.in, mu.in, mkt.id.in){
       # This function computes the "individual" probabilities of choosing each brand
-      # Requires global variables: mkt.id, X, v
       numer <- exp(mu.in) * matrix(rep(exp(delta.in), n.sim), ncol = n.sim)
       
-      denom <- as.matrix(do.call("rbind", lapply(mkt.id, function(tt){
-        1 + colSums(numer[mkt.id %in% tt, ])
+      denom <- as.matrix(do.call("rbind", lapply(mkt.id.in, function(tt){
+        1 + colSums(numer[mkt.id.in %in% tt, ])
         
       })))
       return(numer / denom);  
     }
     
+    # # test it out 
+    # sj_mat <- ind_sh(delta.initial, mu_mat, mkt.id)
     
-    blp_inner <- function(delta.in, mu.in) {
+    
+    blp_inner <- function(delta.in, mu.in, s.jm.in, mkt.id.in) {
       # Computes a single update of the BLP (1995) contraction mapping.
       # of market level predicted shares.
       # This single-update function is required by SQUAREM, see Varadhan and
@@ -353,64 +385,189 @@ setnames(q1dt, colnames(q1dt), c("y", "x1", "x2", "z"))
       # INPUT
       #   delta.in : current value of delta vector
       #   mu.in: current mu matrix
-      # Requires global variables: s.jm
       # OUTPUT
       #   delta.out : delta vector that equates observed with predicted market shares
-      pred.s <- rowMeans(ind_sh(delta.in, mu.in));
-      delta.out <- delta.in + log(s.jm) - log(pred.s)
+      pred.s <- rowMeans(ind_sh(delta.in, mu.in, mkt.id.in));
+      delta.out <- delta.in + log(s.jm.in) - log(pred.s)
       return(delta.out)
     }
     
-    
-    # for now use matrices we made above 
-    mu  <- mu.in
-    delta <- delta.in
-
-    print("Running SQUAREM contraction mapping")
-    print(system.time(
-      squarem.output <- squarem(par = delta, fixptfn = blp_inner, mu.in = mu, control = list(trace = TRUE))
-    ));
-    delta <- squarem.output$par
-    
-    print(summary(cereal[, m_u] - delta));
-    cereal[, delta_r := delta]
-    
-    # 
-    prc.iv.flds = c("i1_sugar",
-                    "i1_mushy")
-    
-    str.ivreg.y <- "delta_r ~ "
-    str.ivreg.x <- paste(x.var.flds, collapse = " + ")
-    str.ivreg.prc <- paste(prc.fld, collapse = " + ")
-    str.ivreg.iv <- paste(prc.iv.flds, collapse = " + ")
-    print(fm.ivreg <- paste0(str.ivreg.y, str.ivreg.x, " + ", str.ivreg.prc, " | ", str.ivreg.x, " + ", str.ivreg.iv))
-    
-    # define Z matrix 
-    Z <- as.matrix(cereal[!is.na(i1_sugar),c("sugar", "mushy", "i1_sugar", "i1_mushy"), with = FALSE])
-    PZ <- Z %*% solve(t(Z) %*% Z) %*% t(Z)
-    
-    # B <- solve(crossprod(z, x))%*%(crossprod(z, y))
+    # # test it out 
+    # delta_new <- blp_inner(delta.initial, mu_mat, s.jm, mkt.id)
     
     
-
-      # make weighting matrix
-      W.inv <- diag(1, 4, 4 )
+    # The function to iterate the contraction mapping is genereic. WE don't need to write it
+    # here is an example #note it is dependent on output of above examples 
+    #note I have to pass additonal variables so that we are not pulling objects from global enviorment
+      squarem.output <- squarem(par       = delta.initial, 
+                                fixptfn   = blp_inner, 
+                                mu.in     = mu_mat, 
+                                s.jm.in   = s.jm,
+                                mkt.id.in = mkt.id,
+                                control   = list(trace = TRUE))
+      delta <- squarem.output$par
+      summary(delta.initial - delta)
     
-   
+      
+    gmm_obj_f <- function(delta.in, X.in, Z.in, PZ.in, W.inv.in){
+      
       # first step 
-      PX.inv <- solve(t(X) %*% PZ %*% X)
+      PX.inv <- solve(t(X.in) %*% PZ.in %*% X.in)
+      
       # finsih getting theta 
-      theta1 <- PX.inv %*% t(X) %*% PZ %*% delta
+      theta1 <- PX.inv %*% t(X.in) %*% PZ.in %*% delta.in
       
       # get xi hat 
-      xi.hat <- delta - X %*% theta1
+      xi.hat <- delta - X.in %*% theta1
       
-
-      # come ack to this when we have these defined better 
-      # print(beta.est <<- data.frame(beta.est = theta1, beta.se = tsls.se, sigma.est = theta2))
+      # get function value 
+      return(t(xi.hat) %*% Z.in %*% W.inv.in %*% t(Z.in) %*% xi.hat)
+      
+    }
+    
+    # test it out 
+    f <- gmm_obj_f(delta.initial, X, Z, PZ, W.inv)
 
     
-    f <- t(xi.hat) %*% Z %*% W.inv %*% t(Z) %*% xi.hat;
+    
+    
+  # #OLD CODE 
+  # #===============================#
+  # # ==== fgirue out functions ====
+  # #===============================#
+  #   #Note WILL DELETE THIS SECITON LATER 
+  #   
+  #   # make guess for this to work on code 
+  #   sd_mush <- .1 
+  #   sd_sug <- .2 
+  #   
+  #   # defint some variables 
+  #   # this just gives the code some generalizability I guess 
+  #   share.fld =     "share"
+  #   prod.id.fld =   "product_id"
+  #   #note they don't have quarter but I think we should 
+  #   mkt.id.fld =    "mkt"
+  #   prc.fld =       "price"
+  #   x.var.flds =    c("sugar",
+  #                     "mushy")
+  #   
+  #   # order data and get nrows 
+  #   cereal <- setorder(cereal, "city", "product_id")
+  #   JM <- nrow(cereal)
+  #   
+  #   # make some matrix 
+  #   X <- as.matrix(cereal[, c(x.var.flds), with = FALSE])
+  #   K <- ncol(X)
+  # 
+  #   #market object
+  #   mkt.id <- cereal[, get(mkt.id.fld)]
+  #   
+  #   #shares object
+  #   s.jm <- as.vector(cereal[, get(share.fld)]);
+  #   
+  #   # get s0 object 
+  #   s.j0 <- cereal[, s0 ]
+  # 
+  #   ## Matrix of individuals' characteristics ##
+  #   #number of simulated consumers
+  #   n.sim = 100
+  #   
+  #   #Standard normal distribution draws, one for each characteristic in X
+  #   #columns are simulated consumers, rows are variables in X (including constant and price)
+  #   v = matrix(rnorm(K * n.sim), nrow = K, ncol = n.sim)
+  # 
+  #   
+  #   temp <-   cereal[, list( sd_mush*mushy, sd_sug*sugar) ]
+  #   temp <- as.matrix(temp)
+  #   
+  #   mu.in <- temp%*%v
+  #   dim(mu.in)
+  #   
+  #   # get delta guess 
+  #   #note doesn't need to come from cereal data.table, this is just an initial guess 
+  #   delta.in <- cereal[, m_u]
+  #   
+  #   ind_sh <- function(delta.in, mu.in){
+  #     # This function computes the "individual" probabilities of choosing each brand
+  #     # Requires global variables: mkt.id, X, v
+  #     numer <- exp(mu.in) * matrix(rep(exp(delta.in), n.sim), ncol = n.sim)
+  #     
+  #     denom <- as.matrix(do.call("rbind", lapply(mkt.id, function(tt){
+  #       1 + colSums(numer[mkt.id %in% tt, ])
+  #       
+  #     })))
+  #     return(numer / denom);  
+  #   }
+  #   
+  #   
+  #   blp_inner <- function(delta.in, mu.in) {
+  #     # Computes a single update of the BLP (1995) contraction mapping.
+  #     # of market level predicted shares.
+  #     # This single-update function is required by SQUAREM, see Varadhan and
+  #     # Roland (SJS, 2008), and Roland and Varadhan (ANM, 2005)
+  #     # INPUT
+  #     #   delta.in : current value of delta vector
+  #     #   mu.in: current mu matrix
+  #     # Requires global variables: s.jm
+  #     # OUTPUT
+  #     #   delta.out : delta vector that equates observed with predicted market shares
+  #     pred.s <- rowMeans(ind_sh(delta.in, mu.in));
+  #     delta.out <- delta.in + log(s.jm) - log(pred.s)
+  #     return(delta.out)
+  #   }
+  #   
+  #   
+  #   # for now use matrices we made above 
+  #   mu  <- mu.in
+  #   delta <- delta.in
+  # 
+  #   print("Running SQUAREM contraction mapping")
+  #   print(system.time(
+  #     squarem.output <- squarem(par = delta, fixptfn = blp_inner, mu.in = mu, control = list(trace = TRUE))
+  #   ));
+  #   delta <- squarem.output$par
+  #   
+  #   print(summary(cereal[, m_u] - delta));
+  #   cereal[, delta_r := delta]
+  #   
+  #   # 
+  #   prc.iv.flds = c("i1_sugar",
+  #                   "i1_mushy")
+  #   
+  #   str.ivreg.y <- "delta_r ~ "
+  #   str.ivreg.x <- paste(x.var.flds, collapse = " + ")
+  #   str.ivreg.prc <- paste(prc.fld, collapse = " + ")
+  #   str.ivreg.iv <- paste(prc.iv.flds, collapse = " + ")
+  #   print(fm.ivreg <- paste0(str.ivreg.y, str.ivreg.x, " + ", str.ivreg.prc, " | ", str.ivreg.x, " + ", str.ivreg.iv))
+  #   
+  #   # define Z matrix 
+  #   Z <- as.matrix(cereal[!is.na(i1_sugar),c("sugar", "mushy", "i1_sugar", "i1_mushy"), with = FALSE])
+  #   PZ <- Z %*% solve(t(Z) %*% Z) %*% t(Z)
+  #   
+  #   # B <- solve(crossprod(z, x))%*%(crossprod(z, y))
+  #   
+  #   
+  # 
+  #     # make weighting matrix
+  #     W.inv <- diag(1, 4, 4 )
+  #   
+  #  
+  #     # first step 
+  #     PX.inv <- solve(t(X) %*% PZ %*% X)
+  #     # finsih getting theta 
+  #     theta1 <- PX.inv %*% t(X) %*% PZ %*% delta
+  #     
+  #     # get xi hat 
+  #     xi.hat <- delta - X %*% theta1
+  #     
+  # 
+  #     # come ack to this when we have these defined better 
+  #     # print(beta.est <<- data.frame(beta.est = theta1, beta.se = tsls.se, sigma.est = theta2))
+  # 
+  #   
+  #     f <- t(xi.hat) %*% Z %*% W.inv %*% t(Z) %*% xi.hat;
+  #     
+   
     
 #===============================#
 # ==== save output to latex ====
