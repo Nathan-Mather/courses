@@ -261,16 +261,30 @@ p6_res_tab
   # ==== set up data for functions ====
   #====================================#
 
+    # load cereal data 
+    cereal <- data.table(readxl::read_excel("C:/Users/Nmath_000/Documents/MI_school/Third Year/Econ 631/ps1/cereal_data.xlsx"))
+
     #note these are data manipulations that can happen outside the outer loop. We 
     # just need to convert some things to matrices since we actually need to 
     # use matrix algebra in this question 
     
-    # drop obsercations with missing instruments. Missing becasue firm only has one product 
+    # drop observations with missing instruments. Missing becasue firm only has one product 
     cereal <- cereal[!is.na(i1_sugar)]
     
     # create a single market variale. Don't have to referece two variables then 
     cereal[, mkt := paste0(city, "_", quarter)]
     
+    # get total market share by city year 
+    #note: should we do this before or after dropping obs with missing instruments? 
+    cereal[, s0 := 1-sum(share), mkt]
+
+    # create  sugar instrument
+    cereal[, (.N-1), c('firm_id', "city", "quarter")]
+    cereal[, i1_sugar := (sum(sugar) - sugar)/ (.N-1), c('firm_id', "city", "quarter")]
+
+    # create mush instrument
+    cereal[, i1_mushy := (sum(mushy) - mushy)/(.N-1), c('firm_id', "city", "quarter")]
+
     # defint some variables 
     # I'm not crazy about doing this. I think this either needs to be written as a function 
     # or else we should just hard code the column names. This is like a weird middle ground 
