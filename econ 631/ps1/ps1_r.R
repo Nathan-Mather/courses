@@ -158,13 +158,13 @@ setnames(q1dt, colnames(q1dt), c("y", "x1", "x2", "z"))
 
   second_stage <- glm(y ~ x1+ x2, 
             family = binomial(link = "probit"), 
-     data = dt)
+     data = q1dt)
 
-  first_stage <- lm(x2 ~ x1 + z, data = dt)
+  first_stage <- lm(x2 ~ x1 + z, data = q1dt)
 
   p6_start <- as.list(c(second_stage$coefficients, first_stage$coefficients, .1, 1))
 
-  names(p6_start) <- c("th0", "th1", "th2", "th3", "th4", "th5", "p", "sig")
+  names(p6_start) <- c( paste0("th", 0:5), "p", "sig")
 
   
     # run the mle function 
