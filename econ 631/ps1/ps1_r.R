@@ -475,7 +475,8 @@ p6_res_tab
     
    Results <-  optim(par         = c(.1,.1),
                       fn          =  gmm_obj_f,
-                      control       = list(reltol = 5),
+                     # # uncomment if you want fast convergence 
+                      # control       = list(reltol = 5),
                       delta.in    = delta.initial,
                       X.in        = X,
                       XP.in       = XP,
@@ -513,10 +514,133 @@ p6_res_tab
   
    
    # get m(parms) moment condition 
-   m_final <- Z*(delta_final - XP%*%theta_final)
+   temp <- delta_final - XP%*%theta_final
+   temp <- cbind(temp, temp, temp, temp)
+   m_final <- Z*(temp)
    
-   S_final <- m_final%*%t(m_final)
+
+   S_final <- (1/nrow(m_final))*t(m_final)%*%m_final
    
+   # get derivative of moment condition for Beta
+   temp <- cbind(X[,1],X[,1],X[,1],X[,1])
+   dmdb1 <- -Z*temp
+   
+   temp <- cbind(X[,2],X[,2],X[,2],X[,2])
+   dmdb2 <- -Z*temp
+   
+   # now for p 
+   temp <- cbind(P,P,P,P)
+   dmda <- Z*temp
+    
+   
+   #=======================#
+   # ==== now get dmds ====
+   #=======================#
+
+     #========================#
+     # ==== Get first one ====
+     #========================#
+
+       # set phi 
+       phi <- .001 
+       # first get delta with + phi 
+       # get new MU matrix 
+       mu <- find_mu(X, sd_sug.in = sd_final[[1]] + phi, sd_mush.in = sd_final[[2]], v)
+       
+       # update delta 
+       squarem.output <- squarem(par       = delta.initial, 
+                                 fixptfn   = blp_inner, 
+                                 mu.in     = mu, 
+                                 s.jm.in   = s.jm,
+                                 mkt.id.in = mkt.id,
+                                 control   = list(trace = TRUE))
+       delta_phi_p0 <- squarem.output$par
+       temp <- delta_phi_p0 - XP%*%theta_final
+       temp <- cbind(temp, temp, temp, temp)
+       m_p0 <- Z*(temp)
+       
+       
+       # do it again 
+       mu <- find_mu(X, sd_sug.in = sd_final[[1]] - phi, sd_mush.in = sd_final[[2]], v)
+       
+       # update delta 
+       squarem.output <- squarem(par       = delta.initial, 
+                                 fixptfn   = blp_inner, 
+                                 mu.in     = mu, 
+                                 s.jm.in   = s.jm,
+                                 mkt.id.in = mkt.id,
+                                 control   = list(trace = TRUE))
+       delta_phi_m0 <- squarem.output$par
+       temp <- delta_phi_m0 - XP%*%theta_final
+       temp <- cbind(temp, temp, temp, temp)
+       m_m0 <- Z*(temp)
+       
+       # now get first dmds 
+       dmds1 <- (m_p0 - m_m0)/(2*phi)
+       
+       
+     #=========================#
+     # ==== get second one ====
+     #=========================#
+
+       mu <- find_mu(X, sd_sug.in = sd_final[[1]], sd_mush.in = sd_final[[2]] + phi, v)
+       
+       # update delta 
+       squarem.output <- squarem(par       = delta.initial, 
+                                 fixptfn   = blp_inner, 
+                                 mu.in     = mu, 
+                                 s.jm.in   = s.jm,
+                                 mkt.id.in = mkt.id,
+                                 control   = list(trace = TRUE))
+       delta_phi_0p <- squarem.output$par
+       
+       temp <- delta_phi_0p - XP%*%theta_final
+       temp <- cbind(temp, temp, temp, temp)
+       m_0p <- Z*(temp)
+       
+       
+       mu <- find_mu(X, sd_sug.in = sd_final[[1]], sd_mush.in = sd_final[[2]] - phi, v)
+       
+       # update delta 
+       squarem.output <- squarem(par       = delta.initial, 
+                                 fixptfn   = blp_inner, 
+                                 mu.in     = mu, 
+                                 s.jm.in   = s.jm,
+                                 mkt.id.in = mkt.id,
+                                 control   = list(trace = TRUE))
+       delta_phi_0m <- squarem.output$par
+       
+       
+       temp <- delta_phi_0m - XP%*%theta_final
+       temp <- cbind(temp, temp, temp, temp)
+       m_0m <- Z*(temp)
+       
+       # Now finish getting dmds
+       
+       dmds2 <- (m_0p - m_0m)/(2*phi)
+     
+    #==============================#
+    # ==== get standard errors ====
+    #==============================#
+
+       isSymmetric(S_final)
+       
+       S_final
+       m_final
+       
+       dmdb1
+       dmdb2
+       dmda
+       dmds1
+       dmds2
+     
+       Rho <- t(rbind(colMeans(dmdb1),
+                    colMeans(dmdb2),
+                    colMeans(dmda),
+                    colMeans(dmds1),
+                    colMeans(dmds2)))
+       
+    SE_final <- (1/JM)*(solve(t(Rho) %*% Rho) %*% (t(Rho) %*% S_final %*% Rho) %*% solve(t(Rho) %*% Rho))
     
   # #OLD CODE 
   # #===============================#
