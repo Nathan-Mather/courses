@@ -309,6 +309,13 @@ p6_res_tab
     X <- as.matrix(cereal[, c(x.var.flds), with = FALSE])
     K <- ncol(X)
     
+    # make a matrix that includes price
+    cereal[, n_price := -price]
+    XP <- as.matrix(cereal[, c("sugar", "mushy", "n_price"), with = FALSE])
+    
+    # make a vector for price 
+    P <- as.matrix(cereal[, price])
+    
     # put market into a vector 
     mkt.id <- cereal[, get(mkt.id.fld)]
     
@@ -319,7 +326,7 @@ p6_res_tab
     s.j0 <- cereal[, s0 ]
     
     # set number of simulated consumers
-    n.sim = 100
+    n.sim = 20
      
     # Standard normal distribution draws, one for each characteristic in X
     # columns are simulated consumers, rows are variables in X (including constant and price)
@@ -418,7 +425,7 @@ p6_res_tab
     # function to runn GMM 
     # a lot of inputs here but this is how you get around using global objects 
     # THis is supposed to be better practice but it doe sget a bit wild with all these 
-    gmm_obj_f <- function(sd_vector.in, delta.in, X.in, Z.in, PZ.in, W.inv.in, s.jm.in, mkt.id.in, v.in){
+    gmm_obj_f <- function(sd_vector.in, delta.in, X.in,  XP.in,  Z.in, PZ.in, W.inv.in, s.jm.in, mkt.id.in, v.in){
       
       sd_sug.in <- sd_vector.in[[1]]
       sd_mush.in <- sd_vector.in[[2]]
@@ -436,13 +443,13 @@ p6_res_tab
       delta_new <- squarem.output$par
       
       # first step 
-      PX.inv <- solve(t(X.in) %*% PZ.in %*% X.in)
+      PX.inv <- solve(t(XP.in) %*% PZ.in %*% XP.in)
       
       # finsih getting theta 
-      theta1 <- PX.inv %*% t(X.in) %*% PZ.in %*% delta_new
+      theta1 <- PX.inv %*% t(XP.in) %*% PZ.in %*% delta_new
       
       # get xi hat 
-      xi.hat <- delta_new - X.in %*% theta1
+      xi.hat <- delta_new - XP.in %*% theta1
       
       result <- t(xi.hat) %*% Z.in %*% W.inv.in %*% t(Z.in) %*% xi.hat
       # get function value 
@@ -451,12 +458,13 @@ p6_res_tab
     }
     
     # make sd_vector 
-    sd_vector <- c(sd_sug_test, sd_mush_test)
+    sd_vector <- c(3, .5)
     
     # test it out 
     f <- gmm_obj_f(sd_vector.in = sd_vector,
                    delta.in    = delta.initial,
                    X.in        = X,
+                   XP.in       = XP,
                    Z.in        = Z,
                    PZ.in       = PZ,
                    W.inv.in    = W.inv, 
@@ -465,16 +473,50 @@ p6_res_tab
                    v.in        = v)
 
     
-   Results <-  optim(par         = c(0,0),
+   Results <-  optim(par         = c(.1,.1),
                       fn          =  gmm_obj_f,
+                      control       = list(reltol = 5),
                       delta.in    = delta.initial,
                       X.in        = X,
+                      XP.in       = XP,
                       Z.in        = Z,
                       PZ.in       = PZ,
                       W.inv.in    = W.inv, 
                       s.jm.in     = s.jm,
                       mkt.id.in   = mkt.id,
                       v.in        = v)
+   
+   # grab out values 
+   sd_final <- Results$par
+   sd_final
+   
+   
+   
+   # get betas 
+   # get new MU matrix 
+   mu <- find_mu(X, sd_sug.in = sd_final[[1]], sd_mush.in = sd_final[[2]], v)
+   
+   # update delta 
+   squarem.output <- squarem(par       = delta.initial, 
+                             fixptfn   = blp_inner, 
+                             mu.in     = mu, 
+                             s.jm.in   = s.jm,
+                             mkt.id.in = mkt.id,
+                             control   = list(trace = TRUE))
+   delta_final <- squarem.output$par
+   
+   # first step 
+   PX.inv <- solve(t(XP) %*% PZ %*% XP)
+   
+   # finsih getting theta 
+   theta_final <- PX.inv %*% t(XP) %*% PZ %*% delta_new
+  
+   
+   # get m(parms) moment condition 
+   m_final <- Z*(delta_final - XP%*%theta_final)
+   
+   S_final <- m_final%*%t(m_final)
+   
     
   # #OLD CODE 
   # #===============================#
