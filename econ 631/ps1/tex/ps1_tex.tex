@@ -176,30 +176,59 @@ $$\delta_{jct} = \text{ln}(s_{jct}) - \text{ln}(s_{0ct})$$
 %-------------------------------------------------------------
 % Question 3
 %-------------------------------------------------------------
+\section{BLP - Random Coefficients}
+\subsection{}
+The market share for product $j$ in period $ct$ is given by 
 
-\section{Question 3}
-
-\subsection{Part 1}
-
-Market share is 
-
-$$ s_j(\bm p, \bm x, \bm \xi, \theta) = 
-\int \frac{\exp (\bm x_{j} \bm \beta - p_j\alpha + \xi_j + \sum_k \sigma_k x_j v_{ki})}
-{1 + \sum_{j'} \exp(\bm x_{j'} \bm \beta - p'_j \alpha + \xi'_j + \sum_k \sigma_k x_{j'} c_{ki})}
-dF_v(v_{i1}, ..., v_{iK}, v_{\alpha i})
+$$ s_{jct}(\bm p, \bm x, \bm \xi, \theta) = 
+\int \frac{\exp (\bm x_{jct} \bm \beta_i - p_{jct}\alpha + \xi_{jct})}
+{1 + \sum_{j'} \exp(\bm x_{j'ct} \bm \beta_i - p_{j'ct} \alpha + \xi_{j'ct})}
+dF_{\bm \beta_{i1}, \bm \beta_{i2}}(\bm \beta_{i1}, \bm \beta_{i2})
 $$
 
-or 
-$$ s_j(\bm p, \bm x, \bm \delta_j, \theta) = 
-\int \frac{\exp (\bm \delta_j  + \sum_k \sigma_k x_j v_{ki})}
-{1 + \sum_{j'} \exp(\bm \delta_{j'} + \sum_k \sigma_k x_{j'} c_{ki})}
-dF_v(v_{i1}, ..., v_{iK}, v_{\alpha i})
+Given our functional form assumptions we can rewrite $\bm \beta_{ik} = \bm \beta_{k} + \sigma_{k} v_{ik}$ where $\beta_k$ is the mean of the coefficient and $\sigma_{k}$ is the standard deviation. 
+$$ s_{jct}(\bm p, \bm x, \bm \xi, \theta) = 
+\int \frac{\exp (\bm x_{jct} \bm \beta - p_{jct}\alpha + \xi_{jct} + \sum_k \sigma_k x_{jct} v_{ki})}
+{1 + \sum_{j'} \exp(\bm x_{j'ct} \bm \beta - p_{j'ct} \alpha + \xi_{j'ct} + \sum_k \sigma_k x_{j'ct} v_{ki})}
+dF_v(v_{i1},v_{i2})
 $$
 
+Finally we can define $\delta_j = \bm x_{j} \bm \beta - p_j\alpha + \xi_j$ as the mean utility for purchasing product $j$, and rewrite the above expression only in terms of $\delta_j$ and the $\sigma_k$.
 
+$$ s_{jct}(\bm p, \bm x, \bm \delta, \bm \sigma) = 
+\int \frac{\exp (\delta_j  + \sigma_1 x_j v_{1i} + \sigma_2 x_j v_{2i})}
+{1 + \sum_{j'} \exp(\delta_{j'} + \sigma_1 x_j v_{1i} + \sigma_2 x_j v_{2i})}
+dF_v(v_{i1},v_{i2})
+$$
 
-\subsection{part 2}
+\subsection{}
+The moment condition are are trying to match is
+$$\E [z_j\xi_j]= 0$$
+Where for the sample moments we get $\xi_j$ from the relationship $\delta_j(\bm p, \bm x, \bm s, \bm \sigma) = \bm x_j \bm \beta - p_j \alpha + \xi_j$. If $z_j$ is the average characteristics for other products produced by the same firm we can write $$z_{j} =\frac{(\sum_{j'}\1(\text{j and j' produced by same firm})x_j') - x_j}{(\sum_{j'}\1(\text{j and j' produced by same firm}))-1}$$.
+Note that $z_j$ is a vector over mushiness and sugar content. Then the objective function is
 
+$$\text{min}_{\alpha, \beta, \sigma}(\delta(\bm p, \bm x, \bm s, \bm \sigma) - \bm x \bm \beta + p\alpha)'\bm z W \bm z'(\delta(\bm p, \bm x, \bm s, \bm \sigma) - \bm x \bm \beta + p\alpha)$$
+
+Where $z$ is defined as above and $W$ is the identity matrix.
+
+In practice we note that the moment conditions are linear in $\bm \beta$ and $\alpha$ conditional on the $\bm \sigma$ and can be calculated from the overidentified IV formula referenced in the notes. Thus we actually seek to minimize the objective function below: 
+
+$$\text{min}_{\bm \sigma}(\delta(\bm p, \bm x, \bm s, \bm \sigma) - \bm x \hat{\bm \beta}(\bm \sigma)+ p\hat{\alpha}(\bm \sigma))'\bm z W \bm z'(\delta(\bm p, \bm x, \bm s, \bm \sigma) - \bm x \hat{\bm \beta}(\bm \sigma)+ p\hat{\alpha}(\bm \sigma))$$
+
+\subsection{}
+
+The results of the model are as follows:
+
+\begin{center}
+	\centering
+	\textbf{BLP Random Coefficients Results}\par\medskip
+	\scalebox{1}{
+		\input{q3_p5.tex}
+	}
+\end{center}
+
+\subsection{}
+Based off of our understanding of the necessary conditions for identifying $\bm \sigma$ this dataset does $\textbf{not}$ have the necessary exogenous variation to identify the $\bm \sigma$. To estimate $\bm \sigma$ we need variation in the choice sets across markets, which does not appear to be the case here -- each product in the dataset has positive market share in every market. Therefore we do not have the variation in the choice sets needed to identify $\bm \sigma$.
 %------------------------------------------------
 % APPENDIX
 %------------------------------------------------
