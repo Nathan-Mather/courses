@@ -268,8 +268,7 @@ p6_res_tab
     # just need to convert some things to matrices since we actually need to 
     # use matrix algebra in this question 
     
-    # drop observations with missing instruments. Missing becasue firm only has one product 
-    cereal <- cereal[!is.na(i1_sugar)]
+  
     
     # create a single market variale. Don't have to referece two variables then 
     cereal[, mkt := paste0(city, "_", quarter)]
@@ -277,6 +276,9 @@ p6_res_tab
     # get total market share by city year 
     #note: should we do this before or after dropping obs with missing instruments? 
     cereal[, s0 := 1-sum(share), mkt]
+    
+    # create column for mean utility 
+    cereal[, m_u := log(share) - log(s0)]
 
     # create  sugar instrument
     cereal[, (.N-1), c('firm_id', "city", "quarter")]
@@ -285,6 +287,9 @@ p6_res_tab
     # create mush instrument
     cereal[, i1_mushy := (sum(mushy) - mushy)/(.N-1), c('firm_id', "city", "quarter")]
 
+    # drop observations with missing instruments. Missing becasue firm only has one product 
+    cereal <- cereal[!is.na(i1_sugar)]
+    
     # defint some variables 
     # I'm not crazy about doing this. I think this either needs to be written as a function 
     # or else we should just hard code the column names. This is like a weird middle ground 
@@ -350,17 +355,15 @@ p6_res_tab
     #note I am hard coding this for mushy and sugar as the relavent variables. 
     # could write this in a more general way if we wanted and have it take a list of theta parms 
     # and a list of corresponding variabe names 
-    find_mu <- function(in_data, sd_mush.in, sd_sug.in, v.in){
+    find_mu <- function(X, sd_sug.in,  sd_mush.in, v.in){
       
-      temp <-   as.matrix(in_data[, list( sd_mush.in*mushy, sd_sug.in*sugar) ])
-      
-      mu.out <- temp%*%v.in
-      
-      return(mu.out)
+       X %*% diag(x = c(sd_sug.in, sd_mush.in ), 2, 2) %*%v.in
     }
     
     # test it out
-    mu_mat <- find_mu(cereal,sd_mush_test, sd_sug_test, v )
+    mu_mat <- find_mu(X, sd_sug_test, sd_mush_test, v )
+
+    
     
     # This computes a matrix of share estiamtes. rows are estimates for every product 
     # columns are estimates for every simulated V 
@@ -410,28 +413,68 @@ p6_res_tab
       delta <- squarem.output$par
       summary(delta.initial - delta)
     
+    
       
-    gmm_obj_f <- function(delta.in, X.in, Z.in, PZ.in, W.inv.in){
+    # function to runn GMM 
+    # a lot of inputs here but this is how you get around using global objects 
+    # THis is supposed to be better practice but it doe sget a bit wild with all these 
+    gmm_obj_f <- function(sd_vector.in, delta.in, X.in, Z.in, PZ.in, W.inv.in, s.jm.in, mkt.id.in, v.in){
+      
+      sd_sug.in <- sd_vector.in[[1]]
+      sd_mush.in <- sd_vector.in[[2]]
+     
+       # get new MU matrix 
+      mu <- find_mu(X.in, sd_sug.in = sd_sug.in, sd_mush.in = sd_mush.in, v.in)
+      
+      # update delta 
+      squarem.output <- squarem(par       = delta.in, 
+                                fixptfn   = blp_inner, 
+                                mu.in     = mu, 
+                                s.jm.in   = s.jm.in,
+                                mkt.id.in = mkt.id.in,
+                                control   = list(trace = TRUE))
+      delta_new <- squarem.output$par
       
       # first step 
       PX.inv <- solve(t(X.in) %*% PZ.in %*% X.in)
       
       # finsih getting theta 
-      theta1 <- PX.inv %*% t(X.in) %*% PZ.in %*% delta.in
+      theta1 <- PX.inv %*% t(X.in) %*% PZ.in %*% delta_new
       
       # get xi hat 
-      xi.hat <- delta - X.in %*% theta1
+      xi.hat <- delta_new - X.in %*% theta1
       
+      result <- t(xi.hat) %*% Z.in %*% W.inv.in %*% t(Z.in) %*% xi.hat
       # get function value 
-      return(t(xi.hat) %*% Z.in %*% W.inv.in %*% t(Z.in) %*% xi.hat)
+      return(result)
       
     }
     
+    # make sd_vector 
+    sd_vector <- c(sd_sug_test, sd_mush_test)
+    
     # test it out 
-    f <- gmm_obj_f(delta.initial, X, Z, PZ, W.inv)
+    f <- gmm_obj_f(sd_vector.in = sd_vector,
+                   delta.in    = delta.initial,
+                   X.in        = X,
+                   Z.in        = Z,
+                   PZ.in       = PZ,
+                   W.inv.in    = W.inv, 
+                   s.jm.in     = s.jm,
+                   mkt.id.in   = mkt.id,
+                   v.in        = v)
 
     
-    
+   Results <-  optim(par         = c(0,0),
+                      fn          =  gmm_obj_f,
+                      delta.in    = delta.initial,
+                      X.in        = X,
+                      Z.in        = Z,
+                      PZ.in       = PZ,
+                      W.inv.in    = W.inv, 
+                      s.jm.in     = s.jm,
+                      mkt.id.in   = mkt.id,
+                      v.in        = v)
     
   # #OLD CODE 
   # #===============================#
