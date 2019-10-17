@@ -425,10 +425,10 @@ p6_res_tab
     # function to runn GMM 
     # a lot of inputs here but this is how you get around using global objects 
     # THis is supposed to be better practice but it doe sget a bit wild with all these 
-    gmm_obj_f <- function(sd_vector.in, delta.in, X.in,  XP.in,  Z.in, PZ.in, W.inv.in, s.jm.in, mkt.id.in, v.in){
+    gmm_obj_f <- function(parm_vector.in, delta.in, X.in,  XP.in,  Z.in, PZ.in, W.inv.in, s.jm.in, mkt.id.in, v.in){
       
-      sd_sug.in <- sd_vector.in[[1]]
-      sd_mush.in <- sd_vector.in[[2]]
+      sd_sug.in <- exp(parm_vector.in[[1]])
+      sd_mush.in <- exp(parm_vector.in[[2]])
      
        # get new MU matrix 
       mu <- find_mu(X.in, sd_sug.in = sd_sug.in, sd_mush.in = sd_mush.in, v.in)
@@ -458,10 +458,10 @@ p6_res_tab
     }
     
     # make sd_vector 
-    sd_vector <- c(3, .5)
+    parm_vector <- c(3, 3)
     
     # test it out 
-    f <- gmm_obj_f(sd_vector.in = sd_vector,
+    f <- gmm_obj_f(parm_vector.in = parm_vector,
                    delta.in    = delta.initial,
                    X.in        = X,
                    XP.in       = XP,
@@ -473,7 +473,7 @@ p6_res_tab
                    v.in        = v)
 
     
-   Results <-  optim(par         = c(.1,.1),
+   Results <-  optim(par         = c(3,3),
                       fn          =  gmm_obj_f,
                      # # uncomment if you want fast convergence 
                       # control       = list(reltol = 5),
@@ -488,7 +488,7 @@ p6_res_tab
                       v.in        = v)
    
    # grab out values 
-   sd_final <- Results$par
+   sd_final <- exp(Results$par)
    sd_final
    
    
@@ -641,143 +641,6 @@ p6_res_tab
                     colMeans(dmds2)))
        
     SE_final <- (1/JM)*(solve(t(Rho) %*% Rho) %*% (t(Rho) %*% S_final %*% Rho) %*% solve(t(Rho) %*% Rho))
-    
-  # #OLD CODE 
-  # #===============================#
-  # # ==== fgirue out functions ====
-  # #===============================#
-  #   #Note WILL DELETE THIS SECITON LATER 
-  #   
-  #   # make guess for this to work on code 
-  #   sd_mush <- .1 
-  #   sd_sug <- .2 
-  #   
-  #   # defint some variables 
-  #   # this just gives the code some generalizability I guess 
-  #   share.fld =     "share"
-  #   prod.id.fld =   "product_id"
-  #   #note they don't have quarter but I think we should 
-  #   mkt.id.fld =    "mkt"
-  #   prc.fld =       "price"
-  #   x.var.flds =    c("sugar",
-  #                     "mushy")
-  #   
-  #   # order data and get nrows 
-  #   cereal <- setorder(cereal, "city", "product_id")
-  #   JM <- nrow(cereal)
-  #   
-  #   # make some matrix 
-  #   X <- as.matrix(cereal[, c(x.var.flds), with = FALSE])
-  #   K <- ncol(X)
-  # 
-  #   #market object
-  #   mkt.id <- cereal[, get(mkt.id.fld)]
-  #   
-  #   #shares object
-  #   s.jm <- as.vector(cereal[, get(share.fld)]);
-  #   
-  #   # get s0 object 
-  #   s.j0 <- cereal[, s0 ]
-  # 
-  #   ## Matrix of individuals' characteristics ##
-  #   #number of simulated consumers
-  #   n.sim = 100
-  #   
-  #   #Standard normal distribution draws, one for each characteristic in X
-  #   #columns are simulated consumers, rows are variables in X (including constant and price)
-  #   v = matrix(rnorm(K * n.sim), nrow = K, ncol = n.sim)
-  # 
-  #   
-  #   temp <-   cereal[, list( sd_mush*mushy, sd_sug*sugar) ]
-  #   temp <- as.matrix(temp)
-  #   
-  #   mu.in <- temp%*%v
-  #   dim(mu.in)
-  #   
-  #   # get delta guess 
-  #   #note doesn't need to come from cereal data.table, this is just an initial guess 
-  #   delta.in <- cereal[, m_u]
-  #   
-  #   ind_sh <- function(delta.in, mu.in){
-  #     # This function computes the "individual" probabilities of choosing each brand
-  #     # Requires global variables: mkt.id, X, v
-  #     numer <- exp(mu.in) * matrix(rep(exp(delta.in), n.sim), ncol = n.sim)
-  #     
-  #     denom <- as.matrix(do.call("rbind", lapply(mkt.id, function(tt){
-  #       1 + colSums(numer[mkt.id %in% tt, ])
-  #       
-  #     })))
-  #     return(numer / denom);  
-  #   }
-  #   
-  #   
-  #   blp_inner <- function(delta.in, mu.in) {
-  #     # Computes a single update of the BLP (1995) contraction mapping.
-  #     # of market level predicted shares.
-  #     # This single-update function is required by SQUAREM, see Varadhan and
-  #     # Roland (SJS, 2008), and Roland and Varadhan (ANM, 2005)
-  #     # INPUT
-  #     #   delta.in : current value of delta vector
-  #     #   mu.in: current mu matrix
-  #     # Requires global variables: s.jm
-  #     # OUTPUT
-  #     #   delta.out : delta vector that equates observed with predicted market shares
-  #     pred.s <- rowMeans(ind_sh(delta.in, mu.in));
-  #     delta.out <- delta.in + log(s.jm) - log(pred.s)
-  #     return(delta.out)
-  #   }
-  #   
-  #   
-  #   # for now use matrices we made above 
-  #   mu  <- mu.in
-  #   delta <- delta.in
-  # 
-  #   print("Running SQUAREM contraction mapping")
-  #   print(system.time(
-  #     squarem.output <- squarem(par = delta, fixptfn = blp_inner, mu.in = mu, control = list(trace = TRUE))
-  #   ));
-  #   delta <- squarem.output$par
-  #   
-  #   print(summary(cereal[, m_u] - delta));
-  #   cereal[, delta_r := delta]
-  #   
-  #   # 
-  #   prc.iv.flds = c("i1_sugar",
-  #                   "i1_mushy")
-  #   
-  #   str.ivreg.y <- "delta_r ~ "
-  #   str.ivreg.x <- paste(x.var.flds, collapse = " + ")
-  #   str.ivreg.prc <- paste(prc.fld, collapse = " + ")
-  #   str.ivreg.iv <- paste(prc.iv.flds, collapse = " + ")
-  #   print(fm.ivreg <- paste0(str.ivreg.y, str.ivreg.x, " + ", str.ivreg.prc, " | ", str.ivreg.x, " + ", str.ivreg.iv))
-  #   
-  #   # define Z matrix 
-  #   Z <- as.matrix(cereal[!is.na(i1_sugar),c("sugar", "mushy", "i1_sugar", "i1_mushy"), with = FALSE])
-  #   PZ <- Z %*% solve(t(Z) %*% Z) %*% t(Z)
-  #   
-  #   # B <- solve(crossprod(z, x))%*%(crossprod(z, y))
-  #   
-  #   
-  # 
-  #     # make weighting matrix
-  #     W.inv <- diag(1, 4, 4 )
-  #   
-  #  
-  #     # first step 
-  #     PX.inv <- solve(t(X) %*% PZ %*% X)
-  #     # finsih getting theta 
-  #     theta1 <- PX.inv %*% t(X) %*% PZ %*% delta
-  #     
-  #     # get xi hat 
-  #     xi.hat <- delta - X %*% theta1
-  #     
-  # 
-  #     # come ack to this when we have these defined better 
-  #     # print(beta.est <<- data.frame(beta.est = theta1, beta.se = tsls.se, sigma.est = theta2))
-  # 
-  #   
-  #     f <- t(xi.hat) %*% Z %*% W.inv %*% t(Z) %*% xi.hat;
-  #     
    
     
 #===============================#
@@ -819,6 +682,10 @@ p6_res_tab
           include.rownames = FALSE,
           floating = FALSE)
     
+    print(xtable(q3_p5, type = "latex"), 
+          file = paste0(f_out, "q3_p5.tex"),
+          include.rownames = FALSE,
+          floating = FALSE)
     
   
   }
