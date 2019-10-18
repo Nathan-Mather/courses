@@ -1,3 +1,19 @@
+---
+title: "pset 1 631"
+output: pdf_document
+theme: journal
+self_contained: TRUE
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+
+```{r , eval=FALSE, echo=TRUE, warning = FALSE, message = FALSE}
+
+
 #===============================================#
 # ==== Inustrial Organization Problem Set 1 ====
 #===============================================#
@@ -711,3 +727,9 @@ p6_res_tab
     
 
    
+
+    
+    
+    ```
+
+  
