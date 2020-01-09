@@ -92,9 +92,9 @@
 	\begin{enumerate}
 		\setlength{\itemsep}{8mm}
 		 \large
-		 \item Show (or remind) us why typical welfare estimations are a flawed tool for normative economics 
-		\item Outline the general idea of what I hope to do 
-		\item Show the shell of a method 
+		 \item Show (or remind) us why typical welfare estimations are an imperfect tool for normative economics 
+		\item Outline the general goal of what I hope to do 
+		\item Show the idea of a method for Micro BLP type estimation
 	\end{enumerate}
 \end{frame}
 
@@ -127,6 +127,9 @@
 
 \end{frame}
 
+
+
+
 % frame 2 
 \begin{frame}
 \frametitle{Motivating Example}
@@ -140,9 +143,11 @@
 	
 	\item Jeff -``I mean it’s one banana Nathan. What could it cost, \$10? look I'd pay \$100"\footnote[frame]{Not an actual quote} 
 	
-	\item Nate - ``I missed lunch and am really hungry, I would pay \$5"\footnote[frame]{Also not an actual quote. \$5 for a banana?} 
+	\item Nate - ``I missed lunch and am really hungry, I would pay \$5"\footnote[frame]{Also not an actual quote.} 
 	
-	\item Who get's more welfare from the banana?
+	\item Who get's more welfare from the banana? Does Jeff get 20 times more welfare? 
+	
+	\item Traditional Econ 101 essentially says yes
 \end{itemize}
 
 \end{frame}
@@ -186,7 +191,7 @@
 	\item Allowing a merger that raises the price of low quality goods but lowers price and cost of high quality goods 
 	\item Deciding on health-care mandates, subsidies or restrictions 
 	\item Replacing old technology with new
-	\item In these examples the normative equity trade-offs are harder to wrap our heads around
+	\item In these examples the normative equity trade-offs are more burdensome for the reader 
 	
 \end{itemize}
 
@@ -211,39 +216,6 @@
 
 \end{frame}
 
-% frame 
-\begin{frame}
-\frametitle{Basic Example}
-
-Let $CS =$ Consumer Surplus, $D(i)=$ demand for consumer $i$, $P =$ Price, $K =$ Number of consumers, $\bar{M} =$ mean income, $I_i =$ Income, $W = $ Welfare   
-
- Discrete consumer surplus could be calculated like so: 
- 
- $$  CS = \sum_{Q = 1}^{K} (D(i) - P) $$
- 
- But, from the answer to our above question we can derive a willingess to pay to ``welfare" weights 
- 
- $$ N(i) = \frac{\bar{M}}{I_i^2} $$
- 
- Now we can derive a truly normative metric for welfare in the market 
- 
-  $$  W = \sum_{Q = 1}^{K} (D(i) - P) \cdot \frac{\bar{M}}{I_i^2}  $$
-
- 
-
-\end{frame}
-
-
-% frame 
-\begin{frame}
-\frametitle{BLP Example}
-
-
-
-
-\end{frame}
-
-
 
 
 %frame 
@@ -254,8 +226,6 @@ Let $CS =$ Consumer Surplus, $D(i)=$ demand for consumer $i$, $P =$ Price, $K =$
 	
 	\item Use something like the following:
 	\begin{itemize}
-		
-		
 		\item For which X would the following make roughly the same difference? One thousand dollars to a family with an income like yours, or $X$ dollars to a family with half your family's income? 
 	\end{itemize}
 	
@@ -263,8 +233,117 @@ Let $CS =$ Consumer Surplus, $D(i)=$ demand for consumer $i$, $P =$ Price, $K =$
 	\item Outcome is normative (as it shouold be) 
 	\item We can provide welfare analysis for a menu of different responses and report them back
 \end{itemize}	
+\end{frame}
 
 
+% frame 
+\begin{frame}
+\frametitle{Basic Idea}
+
+Let $CS =$ Consumer Surplus, $D(i)=$ demand for consumer $i$, $P =$ Price, $K =$ Number of consumers, 
+$\bar{M} =$ mean income, $I_i =$ Income, $W = $ Welfare   
+
+\vspace{.2cm}
+Discrete consumer surplus could be calculated like so: 
+
+$$  CS = \sum_{Q = 1}^{K} (D(i) - P) $$
+
+But, from the answer to our above question we can derive a willingess to pay to ``welfare" weights 
+
+$$ N(i) = \frac{\bar{M}}{I_i^2} $$
+
+Now we can derive a truly normative metric for welfare
+
+$$  W = \sum_{Q = 1}^{K} (D(i) - P) \cdot \frac{\bar{M}}{I_i^2}  $$
+
+
+
+\end{frame}
+
+
+
+% frame 
+\begin{frame}
+\frametitle{BLP Idea}
+
+\begin{itemize}
+	\item $\mu_{ij} = U_{ij} + \epsilon_{ij}$, $\mu_{i0} = \epsilon_{i0}$
+	\item $\epsilon_{ij}$ i.i.d. $\sim$ type-1 extreme value distribution 
+	\item $U_{ij}$ is linear in price with coefficient $\alpha_i$
+	\vspace{.2cm}
+	
+	Now we can get compensating variation as 
+	
+	$$ CV_i = \frac{V_i^1 - V_i^0}{\alpha_i} N(i) $$ 
+	
+	where 
+	$$ V_i = ln(1 + \sum_{j = 1}^{J} e^{U_{ij}})$$ 
+	
+	Now we can take the expecation of this over observable demographics (including income which impacts our weights) and unobservable taste shocks 
+	
+\end{itemize}
+
+\end{frame}
+
+
+% frame 
+\begin{frame}
+\frametitle{Discussion}
+\begin{itemize}
+	\item Welfare results are no longer in dollars. Only meaningful up to a normalization
+	
+	\begin{itemize}
+		\item I would argue this isn't as bad as it sounds 
+		\item Everything is relative (Policy A vs what?) 
+		\item Surplus is in dollars but the quantities are hard to wrap our heads around without a comparison to another market/policy anyway
+	\end{itemize}
+	
+	\item The weights will have to rely on parametric assumptions of preferences for equity 
+	\begin{itemize}
+		\item The current approach also relies on a parametric assumption that willingness to pay = welfare
+	\end{itemize}
+	
+
+	
+\end{itemize}
+
+
+
+\end{frame}
+
+
+% frame 
+\begin{frame}
+\frametitle{Discussion }
+
+\begin{itemize}
+		\setlength{\itemsep}{5mm}
+	\item We also care about other metrics like consumption, wealth, or health
+\begin{itemize}
+	\item Given the data, we could incorporate these issues as well
+\end{itemize}
+
+
+		\item Connection between willingness to pay and welfare may differ between different goods 
+	\begin{itemize}
+		\item In health-care, willingness to pay is basically ability to pay 
+	\end{itemize}
+
+\end{itemize}
+\end{frame}
+
+%fram 
+\begin{frame}
+\frametitle{Possible Paper Paths}
+
+\begin{itemize}
+		\setlength{\itemsep}{5mm}
+\item Rerun the analysis of past Micro BLP papers using this technique 
+
+\item Try to estimate weights using exogenous shocks to income
+
+\item Tie the weights to a verifiable policy outcome. Like a target intergenerational transmission. 
+\end{itemize}
 \end{frame}
 
 
