@@ -101,19 +101,19 @@ This approach could be justified because knowing our willingness to pay is infor
 This idea can be achieved in a basic binary choice demand setting with little effort. This first example should emphasize that, at its core, what I am proposing is not complicated. To start, consider the following question:  ``For which X would the following make roughly the same difference? One thousand dollars to a family with an income like yours, or X dollars to a family with half your family's income?" The answer to this question informs the normative ``equity parameter" which weights a given consumer's willingness to pay based on their income. This is subjective, so the best option is to choose a range of responses and provide a menu of calculations to the reader. 
 
 Let $CS =$ Consumer Surplus, $D(i)=$ demand for consumer $i$, $P =$ Price, $K =$ Number of consumers, 
-$\bar{M} =$ mean income, $I_i =$ Income, $W = $ Welfare   
+$\bar{M} =$ mean income, $I_i =$ Income, $\phi =$ Equity parameter, $W = $ Welfare   
 
 Discrete consumer surplus could be calculated like so: 
 
 $$  CS = \sum_{Q = 1}^{K} (D(i) - P) $$
 
-But, from the answer to our above question we can derive a ``willingess to pay" to ``welfare" weighting function. This function is in utils and so is simply normalized to 1 at the mean income. 
+But, from the answer to our above normative question we can derive a ``willingess to pay" to ``welfare" weighting function. This function maps the answer to the income question to the parameter $\phi$. Note that this function is in utils and so is simply normalized to 1 at the mean income. 
 
-$$ N(i) = \frac{\bar{M}}{I_i^2} $$
+$$ N(i) = \frac{\bar{M}}{I_i^\phi} $$
 
 Now we can derive a truly normative metric for welfare
 
-$$  W = \sum_{Q = 1}^{K} (D(i) - P) \cdot \frac{\bar{M}}{I_i^2}  $$
+$$  W = \sum_{Q = 1}^{K} (D(i) - P) \cdot \frac{\bar{M}}{I_i^\phi}  $$
 
 While I stand by the idea that this is not a complicated extension in theory, actually estimating this parameter is another story. To calculate this exactly we would need to know every person's willingness to pay and their matched incomes. While this seems like a challenge we do not literally need this information for every consumer to get an estimate. Just like with willingness to pay, we can estimate our welfare weights $N(i)$. The general Idea is laid out below. 
 
@@ -138,7 +138,7 @@ Now we can take the expectation of this over observable demographics (including 
 
 This idea certainly has some setbacks. That being said I believe the issues are minor and advantages large. One of the most apparent issues with this approach is that the welfare metric is no longer in dollars. In fact it is now only unique up to a linear transformation. In the equations above I normalized the welfare metric using mean income. On it's face this seems like we are giving up a lot. However, dollar quantities of surplus are a bit vague and hard to consider in isolation anyway. What is a million dollars of surplus? How does this compare to a million dollars in the hands of the government or an individual? The most effective way to understand this quantity is to compare it to the surplus of an alternate scenario or market. For comparisons like these, a metric in utils works just as well as one in dollars. 
 
-A potentially complicated issue is extending this concept beyond consumer surplus. If we are measuring producer surplus as well, how do we weight that in utils? Since businesses are owned by people ideally I would propose we weight producer surplus by the expected income weights of the owners of the firm. This, however, may be difficult to ascertain. One way to address this issue is to add an additional normative parameter for weighting of consumer and producer surplus. This way the reader can consider the range of possible answer from zero weight on producers to all weight on producers. This does however leave us with two normative parameters and increase the dimensionality of our menu of potential answers. This may be expectable but the farther we move away from a definitive and clear answer the less useful the analysis may be. Perhaps including a reasonable estimate for the firm owner's income as well as a range around that is a reasonable option. 
+A potentially complicated issue is extending this concept beyond consumer surplus. If we are measuring producer surplus as well, how do we weight that in utils? Since businesses are owned by people ideally I would propose we weight producer surplus by the expected income weights of the owners of the firm. This, however, may be difficult to ascertain. One way to address this issue is to add an additional normative parameter for weighting of consumer and producer surplus. This way the reader can consider the range of possible answer from zero weight on producers to all weight on producers. This does however leave us with two normative parameters and increase the dimensionality of our menu of potential answers. This may be acceptable but the farther we move away from a definitive and clear answer the less useful the analysis may be. Perhaps including a reasonable estimate for the firm owner's income as well as a range around that is a reasonable option. 
 
 Another issue that could be raised is the implicit assumption that the equity parameter is quadratic in income. It could easily be different, but we do need some type of parametric assumption. In relative terms this is actually a strength and not a weakness. Economic surplus also assumes a functional form of $ n(i) = 1$ and is in fact a special case of my metric.
  
